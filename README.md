@@ -1,3 +1,3 @@
 # utf_strings
 
-Regenerated project scaffold with C++23 UTF template classes.
+Modern C++23 UTF utilities + scaffolding (Premake + Conan 2) with GTest, Google Benchmark, and CodeQL.
