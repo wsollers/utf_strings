@@ -1,2 +1,3 @@
 # utf_strings
-Vibe coding some utf-8 code in cpp
+
+Regenerated project scaffold with C++23 UTF template classes.
