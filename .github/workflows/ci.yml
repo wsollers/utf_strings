@@ -1,3 +1,4 @@
+
 name: ci
 on:
   push:
@@ -13,36 +14,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: conan-io/conan-action@v1
-      - name: Install deps
-        run: conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
-      - name: Generate build files
+
+      - name: Conan install
         run: |
-          cd build
-          if [[ "$RUNNER_OS" == "Windows" ]]; then premake5 vs2022; else premake5 gmake2; fi
-        shell: bash
-      - name: Build
+          conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+
+      - name: Configure (CMake)
         run: |
-          cd build
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            MSBuild.exe utf_strings.sln -p:Configuration=${{ matrix.build_type }}
-          else
-            if [[ "${{ matrix.build_type }}" == "Debug" ]]; then make config=debug; else make config=release; fi
-          fi
-        shell: bash
-      - name: Run unit tests
+          cmake -S . -B build/${{ matrix.build_type }}             -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build (CMake)
+        run: cmake --build build/${{ matrix.build_type }} --config ${{ matrix.build_type }} -- -j 2
+
+      - name: Test (ctest)
         run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./build/bin/${{ matrix.build_type }}/utf_strings-tests.exe
-          else
-            ./build/bin/${{ matrix.build_type }}/utf_strings-tests
-          fi
-        shell: bash
-      - name: Run benchmark (Release only)
+          ctest --test-dir build/${{ matrix.build_type }} -C ${{ matrix.build_type }} --output-on-failure
+
+      - name: Benchmark (Release only)
         if: matrix.build_type == 'Release'
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./build/bin/Release/utf_strings-bench.exe --benchmark_min_time=0.05
+            ./build/Release/utf_strings-bench.exe --benchmark_min_time=0.05
           else
-            ./build/bin/Release/utf_strings-bench --benchmark_min_time=0.05
+            ./build/Release/utf_strings-bench --benchmark_min_time=0.05
           fi
         shell: bash

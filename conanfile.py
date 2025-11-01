@@ -1,26 +1,34 @@
+
 from conan import ConanFile
 from conan.tools.files import copy
-from conan.tools.premake import PremakeDeps, PremakeToolchain
+from conan.tools.cmake import CMakeDeps, CMakeToolchain
+
 class UtfStrings(ConanFile):
     name = "utf_strings"
     version = "0.1.0"
-    settings = "os","arch","compiler","build_type"
+    settings = "os", "arch", "compiler", "build_type"
     package_type = "application"
     exports = "LICENSE"
-    options = {"with_gperftools":[True,False]}
+    options = {"with_gperftools": [True, False]}
     default_options = {"with_gperftools": True}
+
     def requirements(self):
         self.requires("gtest/1.14.0", run=True)
         self.requires("benchmark/1.9.4", run=True)
         if self.options.with_gperftools:
             self.requires("gperftools/2.13.0", run=True)
+
     def generate(self):
-        PremakeToolchain(self).generate()
-        PremakeDeps(self).generate()
+        tc = CMakeToolchain(self); tc.generate()
+        deps = CMakeDeps(self); deps.generate()
+
     def layout(self):
         self.folders.source = "."
         self.folders.build = "build"
         self.cpp.source.includedirs = ["include"]
         self.cpp.source.srcdirs = ["src"]
+
     def build(self): pass
-    def package(self): copy(self, "LICENSE", self.source_folder, self.package_folder)
+
+    def package(self):
+        copy(self, "LICENSE", self.source_folder, self.package_folder)

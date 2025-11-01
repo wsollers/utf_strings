@@ -1,6 +1,30 @@
+
 #include <benchmark/benchmark.h>
 #include <string>
 #include "utf/utf_strings.hpp"
-static void BM_Len(benchmark::State& s){ std::u8string t; for(int i=0;i<1000;++i) t+=u8"Héllø 🌍"; for(auto _ : s){ auto n=utf::length<char8_t, utf::endian::big>(t); benchmark::DoNotOptimize(n);}}
-BENCHMARK(BM_Len);
-BENCHMARK_MAIN();
+
+#ifdef HAVE_GPERFTOOLS
+#include <gperftools/profiler.h>
+#endif
+
+static void BM_Length_Mixed(benchmark::State& state) {
+    std::u8string s;
+    for (int i = 0; i < 1000; ++i) s += u8"Héllø 🌍";
+    for (auto _ : state) {
+        auto n = utf::length<char8_t, utf::endian::big>(s);
+        benchmark::DoNotOptimize(n);
+    }
+}
+BENCHMARK(BM_Length_Mixed);
+
+int main(int argc, char** argv) {
+#ifdef HAVE_GPERFTOOLS
+    ProfilerStart("utf_strings.prof");
+#endif
+    benchmark::Initialize(&argc, argv);
+    benchmark::RunSpecifiedBenchmarks();
+#ifdef HAVE_GPERFTOOLS
+    ProfilerStop();
+#endif
+    return 0;
+}
