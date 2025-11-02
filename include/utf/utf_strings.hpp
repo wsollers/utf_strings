@@ -11,6 +11,9 @@
 
 #ifdef _MSC_VER
 #include <intrin.h>
+// Suppress MSVC warning C4251 for standard library types in DLL interface
+#pragma warning(push)
+#pragma warning(disable : 4251)
 #endif
 
 #include "../src/export.hpp"
@@ -317,3 +320,7 @@ template <class Unit, endian E>
 }
 
 }  // namespace utf
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif

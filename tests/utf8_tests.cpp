@@ -24,9 +24,9 @@ TEST(UTF8, ValidMultibyte) {
   auto u32 = s.to_u32();
   ASSERT_TRUE(u32.has_value());
   EXPECT_EQ((*u32)[0], U'H');
-  EXPECT_EQ((*u32)[1], U'é');   // U+00E9
-  EXPECT_EQ((*u32)[4], U'ø');   // U+00F8
-  EXPECT_EQ((*u32)[6], U'🌍');  // U+1F30D
+  EXPECT_EQ((*u32)[1], U'\u00E9');      // é (U+00E9)
+  EXPECT_EQ((*u32)[4], U'\u00F8');      // ø (U+00F8)
+  EXPECT_EQ((*u32)[6], U'\U0001F30D');  // 🌍 (U+1F30D)
 }
 
 TEST(UTF8, RejectOverlong) {
@@ -45,7 +45,7 @@ TEST(UTF16BE, SurrogatePair) {
   EXPECT_EQ(*n, 1u);
   auto u32 = be.to_u32();
   ASSERT_TRUE(u32.has_value());
-  EXPECT_EQ((*u32)[0], U'🌍');
+  EXPECT_EQ((*u32)[0], U'\U0001F30D');  // 🌍 (U+1F30D)
   auto round = be.to_native();
   EXPECT_EQ(round, native);
 }
@@ -58,7 +58,7 @@ TEST(UTF16LE, SurrogatePair) {
 }
 
 TEST(UTF32BE, Basic) {
-  std::u32string nat{U'H', U'é', U'ø', U'🌍'};
+  std::u32string nat{U'H', U'\u00E9', U'\u00F8', U'\U0001F30D'};  // H, é, ø, 🌍
   auto be = utf32be_string::from_native(nat);
   EXPECT_TRUE(be.valid());
   EXPECT_EQ(*be.length(), 4u);

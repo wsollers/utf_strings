@@ -89,8 +89,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(SECURITY_FLAGS
         /GS                               # Buffer Security Check
         /sdl                              # Enable Additional Security Checks  
-        /DYNAMICBASE                      # Address Space Layout Randomization (ASLR)
-        /NXCOMPAT                         # Data Execution Prevention (DEP)
         /D_CRT_SECURE_NO_WARNINGS         # Disable MSVC security warnings for standard functions
     )
     
