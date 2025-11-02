@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762118478180,
+  "lastUpdate": 1762118500142,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1778,6 +1778,36 @@ window.BENCHMARK_DATA = {
             "value": 7030.992836567646,
             "unit": "ns/iter",
             "extra": "iterations: 197531\ncpu: 7030.273916499183 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "5de336b7b63300ff156a365d9745e8c26d8e2e3b",
+          "message": "Fix version number to 0.0.2\n\nCorrect version progression from existing v0.0.1 tag:\n- Previous: v0.0.1 (initial release)\n- Current: v0.0.2 (performance monitoring patch)\n\nMajor features added in v0.0.2:\n- 🔥 Interactive SVG flamegraph generation with perf profiling\n- 📊 Real-time performance dashboard with Jekyll integration\n- 📈 Historical benchmark tracking with regression detection\n- 🌐 GitHub Pages deployment with automated data updates\n- 🎯 Multiple benchmark output formats (JSON, CSV, console)\n- 💻 System information and build context reporting",
+          "timestamp": "2025-11-02T16:19:59-05:00",
+          "tree_id": "9902d53a06937e621cc9b6e5cacae45edb9c63f5",
+          "url": "https://github.com/wsollers/utf_strings/commit/5de336b7b63300ff156a365d9745e8c26d8e2e3b"
+        },
+        "date": 1762118499885,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7039.460781343108,
+            "unit": "ns/iter",
+            "extra": "iterations: 198018\ncpu: 7037.616297508309 ns\nthreads: 1"
           }
         ]
       }
