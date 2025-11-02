@@ -149,3 +149,44 @@ All builds include:
 - Cross-platform compatibility verification
 
 Your pull request must pass all CI checks before merging. The CI automatically tests your changes across all supported compiler and platform combinations.
+
+## 🤖 AI Assistant Guidelines
+
+This project includes context files to improve AI assistant interactions:
+
+### Using AI Assistants Effectively
+
+**Context Files Available:**
+- **`.ai-context`** - Comprehensive project overview and guidelines
+- **`.copilot-instructions.md`** - GitHub Copilot-specific patterns
+
+**Best Practices:**
+1. **Reference project context**: "Use the coding patterns from .ai-context"
+2. **Specify C++23 requirements**: "Follow C++23 standards and UTF handling patterns"  
+3. **Request comprehensive testing**: "Include unit tests and consider fuzz testing scenarios"
+4. **Mention performance**: "Consider performance implications and benchmarking"
+
+**Effective Prompts:**
+```
+# For new features
+"Generate a UTF-16 to UTF-8 converter following the UTF Strings project context and C++23 patterns"
+
+# For optimization  
+"Optimize this UTF processing function for performance, considering SIMD and the project's benchmarking approach"
+
+# For testing
+"Create comprehensive tests for this UTF validation function, including edge cases and invalid sequences"
+
+# For debugging
+"Help debug this endianness issue in UTF-32 conversion, using the project's endian policy patterns"
+```
+
+**Code Generation Guidelines:**
+- Always use C++23 features appropriately
+- Follow project naming conventions (snake_case functions, PascalCase types)
+- Include proper error handling and input validation
+- Consider endianness for multi-byte encodings
+- Add appropriate documentation comments
+- Create corresponding unit tests
+
+The AI context ensures consistent, high-quality assistance across ChatGPT, Claude, and GitHub Copilot! 🚀

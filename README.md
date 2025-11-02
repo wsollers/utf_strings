@@ -123,3 +123,36 @@ cmake --preset conan-debug \
 - `USE_MSVC_LTO`: `ON|OFF` - MSVC-specific LTO flags (`/LTCG`, `/GL`)
 - `USE_LIBC_PLUS_PLUS`: `ON|OFF` - Use libc++ instead of libstdc++ (Clang only)
 - `ENABLE_SHARED_LIBRARY`: `ON|OFF` - Build shared libraries
+
+## 🤖 AI Assistant Integration
+
+This project includes comprehensive context files to help AI assistants (ChatGPT, Claude, GitHub Copilot) provide accurate assistance:
+
+### Context Files
+- **`.ai-context`** - Complete project overview, standards, and guidelines
+- **`.copilot-instructions.md`** - GitHub Copilot-specific coding patterns and conventions
+
+### For Best AI Assistance
+When working with AI assistants on this project:
+
+1. **Reference the context**: "Use the project context from .ai-context"
+2. **Specify the domain**: "This is for the UTF Strings C++23 library"  
+3. **Mention requirements**: "Follow the project's C++23 standards and UTF handling patterns"
+4. **Ask for tests**: "Include appropriate unit tests and consider fuzz testing"
+
+### Common AI Prompts
+```
+# For code generation
+"Generate a UTF-8 to UTF-16 converter following the UTF Strings project patterns in .ai-context"
+
+# For debugging  
+"Help debug this UTF conversion issue, considering the project context and C++23 standards"
+
+# For optimization
+"Optimize this UTF processing code for performance, following the project's benchmarking approach"
+
+# For testing
+"Create comprehensive tests for this UTF function, including edge cases and fuzz targets"
+```
+
+The AI context files ensure consistent, project-appropriate assistance across all AI platforms! 🚀

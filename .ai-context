@@ -1,0 +1,113 @@
+# AI Assistant Context for UTF Strings Library
+
+## Project Overview
+This is a high-performance UTF-8/16/32 string processing library written in modern C++23. The library provides cross-platform support for Unicode string manipulation with comprehensive testing and benchmarking.
+
+## Key Information for AI Assistants
+
+### Project Structure
+- **Language**: C++23 (requires GCC 13+, Clang 16+, MSVC 2022+)
+- **Build System**: CMake 3.25+ with Conan package manager
+- **Testing**: Google Test framework with extensive unit tests
+- **Benchmarking**: Google Benchmark for performance measurement
+- **Fuzzing**: libFuzzer for security testing
+- **CI/CD**: GitHub Actions with comprehensive workflows
+
+### Important Directories
+- `include/utf/`: Public header files (main API)
+- `src/`: Implementation source files
+- `tests/`: Unit tests using Google Test
+- `benchmarks/`: Performance benchmarks
+- `fuzz/`: Fuzz testing harnesses
+- `.github/workflows/`: CI/CD workflows
+- `docs/`: Documentation and performance reports
+
+### Coding Standards
+- **C++ Standard**: C++23 with no extensions
+- **Formatting**: clang-format (enforced in CI)
+- **Naming**: snake_case for functions/variables, PascalCase for types
+- **Headers**: Use #pragma once, include guards for compatibility
+- **Namespaces**: All code in `utf` namespace
+
+### Build Commands
+```bash
+# Quick setup (Debug)
+./bootstrap_cmake.sh --compiler gcc --config Debug
+
+# Release build
+./bootstrap_cmake.sh --compiler gcc --config Release
+
+# With fuzzing (Clang only)
+./bootstrap_cmake.sh --compiler clang --config Debug --enable-fuzz
+
+# Run tests
+cd build/build && ./utf_strings-tests
+
+# Run benchmarks
+cd build/build && ./utf_strings-bench
+```
+
+### Key Files to Understand
+- `CMakeLists.txt`: Main build configuration
+- `conanfile.py`: Dependency management
+- `include/utf/utf_strings.hpp`: Main library header
+- `include/utf/version.hpp`: Version information
+- `src/utf_strings.cpp`: Core implementation
+
+### Common Tasks
+1. **Adding new UTF conversion functions**: Update both header and implementation
+2. **Adding tests**: Create test files in `tests/` directory
+3. **Performance optimization**: Add benchmarks in `benchmarks/`
+4. **Security testing**: Add fuzz targets in `fuzz/`
+
+### Dependencies
+- **Build**: Conan, CMake, C++23 compiler
+- **Testing**: GTest (via Conan)
+- **Benchmarking**: Google Benchmark (via Conan)
+- **Optional**: gperftools for profiling
+
+### Platform Support
+- **Linux**: GCC 13+, Clang 16+ (primary development)
+- **Windows**: MSVC 2022, Clang-CL (CI tested)
+- **Architectures**: x64 (primary), others untested
+
+### Performance Considerations
+- Focus on zero-copy operations where possible
+- SIMD optimization opportunities (AVX2, NEON)
+- Memory alignment considerations for UTF-32
+- Branch prediction optimization for common cases
+
+### Security Focus
+- Input validation for all UTF conversion functions
+- Buffer overflow prevention
+- Fuzz testing for all encoding variants
+- Static analysis with multiple tools (Cppcheck, Clang-tidy, etc.)
+
+### Git Workflow
+- **Main branch**: `main` (protected)
+- **Releases**: Tagged as `v*.*.* ` (semantic versioning)
+- **CI**: All PRs must pass comprehensive CI including tests, formatting, security scans
+- **Commits**: Use conventional commit format (feat:, fix:, docs:, etc.)
+
+## Helpful Context for Code Generation
+
+When suggesting code:
+1. **Always use C++23 features** when beneficial
+2. **Include proper error handling** and input validation
+3. **Consider endianness** for multi-byte encodings (UTF-16/32)
+4. **Add unit tests** for any new functionality
+5. **Consider performance implications** - this is a performance-focused library
+6. **Follow existing patterns** in the codebase
+7. **Include appropriate documentation** comments
+
+## Current Version
+- Version: 0.0.1 (initial release)
+- See `include/utf/version.hpp` for version constants
+
+## Questions to Ask
+When helping with this project, consider asking:
+- What UTF encodings are involved?
+- Are there performance requirements?
+- Should this handle invalid sequences gracefully?
+- Is this for a specific platform or cross-platform?
+- Are there security considerations?
