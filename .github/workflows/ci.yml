@@ -54,7 +54,7 @@ jobs:
         fi
         echo "Detected GCC version: $GCC_VERSION"
         if [ -n "$GCC_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
         else
           echo "Warning: Could not detect GCC version, using Conan default"
         fi
@@ -210,11 +210,8 @@ jobs:
         fi
         echo "Detected Clang version: $CLANG_VERSION"
         sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-        if [ -n "$GCC_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect Clang version, using Conan default"
-          fi
+        if [ -n "$CLANG_VERSION" ]; then
+            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
         else
           echo "Warning: Could not detect Clang version, using Conan default"
         fi
@@ -365,7 +362,7 @@ jobs:
           GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Using GCC-13 version: $GCC_VERSION"
           if [ -n "$GCC_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect GCC version, using Conan default"
           fi
@@ -374,7 +371,7 @@ jobs:
           echo "Using Clang-18 version: $CLANG_VERSION"
           sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
           if [ -n "$CLANG_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect Clang version, using Conan default"
           fi
@@ -383,7 +380,7 @@ jobs:
           COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Using default compiler version: $COMPILER_VERSION"
           if [ -n "$COMPILER_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect compiler version, using Conan default"
           fi
@@ -522,7 +519,7 @@ jobs:
           GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Using GCC-13 version: $GCC_VERSION"
           if [ -n "$GCC_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect GCC version, using Conan default"
           fi
@@ -531,7 +528,7 @@ jobs:
           echo "Using Clang-18 version: $CLANG_VERSION"
           sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
           if [ -n "$CLANG_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect Clang version, using Conan default"
           fi
@@ -540,7 +537,7 @@ jobs:
           COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Using default compiler version: $COMPILER_VERSION"
           if [ -n "$COMPILER_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect compiler version, using Conan default"
           fi
@@ -621,39 +618,14 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Determine compiler and version
-        if command -v gcc-13 >/dev/null 2>&1; then
-          GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using GCC-13 version: $GCC_VERSION"
-          if [ -n "$GCC_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect GCC version, using Conan default"
-          fi
-        elif command -v clang-18 >/dev/null 2>&1; then
-          CLANG_VERSION=$(clang-18 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using Clang-18 version: $CLANG_VERSION"
-          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-          if [ -n "$CLANG_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect Clang version, using Conan default"
-          fi
-          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        else
-          COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using default compiler version: $COMPILER_VERSION"
-          if [ -n "$COMPILER_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect compiler version, using Conan default"
-          fi
-        fi
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
+        # Configure for Windows MSVC and C++23
+        # Update C++ standard and OS for Windows
+        $profile = "$env:USERPROFILE\.conan2\profiles\default"
+        (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
+        (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
+        Write-Host "=== Final Conan Profile ==="
         conan profile show --profile:host=default
+      shell: pwsh
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -749,39 +721,14 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Determine compiler and version
-        if command -v gcc-13 >/dev/null 2>&1; then
-          GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using GCC-13 version: $GCC_VERSION"
-          if [ -n "$GCC_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect GCC version, using Conan default"
-          fi
-        elif command -v clang-18 >/dev/null 2>&1; then
-          CLANG_VERSION=$(clang-18 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using Clang-18 version: $CLANG_VERSION"
-          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-          if [ -n "$CLANG_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect Clang version, using Conan default"
-          fi
-          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        else
-          COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using default compiler version: $COMPILER_VERSION"
-          if [ -n "$COMPILER_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect compiler version, using Conan default"
-          fi
-        fi
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
+        # Configure for Windows MSVC and C++23
+        # Update C++ standard and OS for Windows
+        $profile = "$env:USERPROFILE\.conan2\profiles\default"
+        (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
+        (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
+        Write-Host "=== Final Conan Profile ==="
         conan profile show --profile:host=default
+      shell: pwsh
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -799,7 +746,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
+        conan install . -s os=Windows -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake with AddressSanitizer
       run: |
@@ -856,7 +803,7 @@ jobs:
           GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Using GCC-13 version: $GCC_VERSION"
           if [ -n "$GCC_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect GCC version, using Conan default"
           fi
@@ -865,7 +812,7 @@ jobs:
           echo "Using Clang-18 version: $CLANG_VERSION"
           sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
           if [ -n "$CLANG_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect Clang version, using Conan default"
           fi
@@ -874,7 +821,7 @@ jobs:
           COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Using default compiler version: $COMPILER_VERSION"
           if [ -n "$COMPILER_VERSION" ]; then
-          sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
+            sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
           else
             echo "Warning: Could not detect compiler version, using Conan default"
           fi
