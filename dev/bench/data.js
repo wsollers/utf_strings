@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762063760336,
+  "lastUpdate": 1762066290196,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -180,6 +180,36 @@ window.BENCHMARK_DATA = {
             "value": 7921.8542492493125,
             "unit": "ns/iter",
             "extra": "iterations: 176843\ncpu: 7921.464298841345 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "ecbfd91a1d03c0354fd2def3a807a704736886dc",
+          "message": "Fix YAML syntax: Correct indentation of performance tracking steps\n\n- Fix indentation of 'Store Performance Results' step (6 spaces to align with other steps)\n- Fix indentation of 'Commit Performance Analysis Reports' step\n- Ensure proper YAML block structure within the performance-tracking job\n\nResolves: YAML syntax error 'expected <block end>, but found -' on line 1012",
+          "timestamp": "2025-11-02T01:49:48-05:00",
+          "tree_id": "ae9032d36659d4076d13e9b658de0e318a199842",
+          "url": "https://github.com/wsollers/utf_strings/commit/ecbfd91a1d03c0354fd2def3a807a704736886dc"
+        },
+        "date": 1762066289572,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7323.90452388975,
+            "unit": "ns/iter",
+            "extra": "iterations: 192865\ncpu: 7323.020988774531 ns\nthreads: 1"
           }
         ]
       }
