@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762077348176,
+  "lastUpdate": 1762077467921,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -990,6 +990,36 @@ window.BENCHMARK_DATA = {
             "value": 7032.524792577562,
             "unit": "ns/iter",
             "extra": "iterations: 198749\ncpu: 7031.871863506231 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "8c83981116650666f39e95d4302b68b140befb1a",
+          "message": "fix: Resolve bash arithmetic syntax error in Cppcheck summary\n\n- Add proper validation for grep count results to ensure numeric values\n- Prevent arithmetic expression errors when XML parsing returns empty results\n- Ensure ERROR_COUNT, WARNING_COUNT, and STYLE_COUNT are valid integers before arithmetic",
+          "timestamp": "2025-11-02T04:55:34-05:00",
+          "tree_id": "c1fdc40a551d429cf15aa4ba3c13519a1620e84a",
+          "url": "https://github.com/wsollers/utf_strings/commit/8c83981116650666f39e95d4302b68b140befb1a"
+        },
+        "date": 1762077467571,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 6990.572899633824,
+            "unit": "ns/iter",
+            "extra": "iterations: 199370\ncpu: 6989.065250539198 ns\nthreads: 1"
           }
         ]
       }
