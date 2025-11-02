@@ -23,31 +23,19 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Detect Clang-CL (appears as MSVC but uses clang-cl.exe)
-set(IS_CLANG_CL FALSE)
-
-# First check explicit flag from CI
-if(FORCE_CLANG_CL)
-    set(IS_CLANG_CL TRUE)
-    message(STATUS "Clang-CL forced via FORCE_CLANG_CL flag")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    # Check multiple ways to detect Clang-CL
-    if(CMAKE_CXX_COMPILER MATCHES "clang-cl" OR 
-       CMAKE_CXX_SIMULATE_ID STREQUAL "Clang" OR
-       CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
-        set(IS_CLANG_CL TRUE)
-        message(STATUS "Auto-detected Clang-CL compiler: ${CMAKE_CXX_COMPILER}")
-        message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}, Simulate ID: ${CMAKE_CXX_SIMULATE_ID}")
-    else()
-        message(STATUS "Detected actual MSVC compiler: ${CMAKE_CXX_COMPILER}")
-    endif()
+# External compiler-specific configuration
+# USE_MSVC_LTO: Enable MSVC-specific Link Time Optimization flags (/LTCG, /GL)
+if(NOT DEFINED USE_MSVC_LTO)
+    set(USE_MSVC_LTO ON)  # Default to enabled for compatibility
 endif()
 
-if(IS_CLANG_CL)
-    message(STATUS "Using Clang-CL specific configuration")
-else()
-    message(STATUS "Using standard MSVC configuration")
+if(NOT DEFINED ENABLE_SHARED_LIBRARY)
+    set(ENABLE_SHARED_LIBRARY ON)  # Default to enabled
 endif()
+
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} (${CMAKE_CXX_COMPILER})")
+message(STATUS "MSVC LTO enabled: ${USE_MSVC_LTO}")
+message(STATUS "Shared library enabled: ${ENABLE_SHARED_LIBRARY}")
 
 # Security and optimization flags
 set(SECURITY_FLAGS "")
@@ -125,10 +113,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     
     # Additional security flags for release builds
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        if(NOT IS_CLANG_CL)
-            # MSVC-specific LTO flag
+        # Add MSVC-specific LTO compiler flags if enabled
+        if(USE_MSVC_LTO)
             list(APPEND SECURITY_FLAGS
-                /LTCG                     # Link Time Code Generation (MSVC only)
+                /LTCG                     # Link Time Code Generation (MSVC)
             )
         endif()
         # Note: /HIGHENTROPYVA is a linker flag, moved to target_link_options below
@@ -145,10 +133,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
             /DNDEBUG                      # Disable debug assertions
         )
         
-        # Add MSVC-specific whole program optimization
-        if(NOT IS_CLANG_CL)
+        # Add MSVC-specific whole program optimization if enabled
+        if(USE_MSVC_LTO)
             list(APPEND OPTIMIZATION_FLAGS
-                /GL                       # Whole Program Optimization (MSVC only)
+                /GL                       # Whole Program Optimization (MSVC)
             )
         endif()
     endif()
@@ -259,9 +247,9 @@ function(apply_build_flags target_name)
                     /HIGHENTROPYVA            # High Entropy ASLR (64-bit)
                 )
                 
-                # Add MSVC-specific LTO flag only for actual MSVC, not Clang-CL
-                if(NOT IS_CLANG_CL)
-                    list(APPEND MSVC_LINK_FLAGS /LTCG)  # Link Time Code Generation (MSVC only)
+                # Add MSVC-specific LTO linker flag if enabled
+                if(USE_MSVC_LTO)
+                    list(APPEND MSVC_LINK_FLAGS /LTCG)  # Link Time Code Generation (MSVC)
                 endif()
                 
                 target_link_options(${target_name} PRIVATE ${MSVC_LINK_FLAGS})
@@ -358,8 +346,8 @@ target_compile_definitions(utf_strings_static PUBLIC UTF_STRINGS_STATIC_BUILD)
 target_compile_features(utf_strings_static PUBLIC cxx_std_23)
 apply_build_flags(utf_strings_static)
 
-# Create shared library (skip for Clang-CL due to export definition issues)
-if(NOT IS_CLANG_CL)
+# Create shared library based on external configuration
+if(ENABLE_SHARED_LIBRARY)
     add_library(utf_strings_shared SHARED ${UTF_STRINGS_HEADERS} ${UTF_STRINGS_SOURCES})
     target_include_directories(utf_strings_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
     target_compile_definitions(utf_strings_shared PRIVATE UTF_STRINGS_DLL)
@@ -369,7 +357,7 @@ if(NOT IS_CLANG_CL)
     
     message(STATUS "Building both static and shared libraries")
 else()
-    message(STATUS "Skipping shared library build for Clang-CL (export definition issues)")
+    message(STATUS "Shared library build disabled via configuration")
 endif()
 
 # --------------------------------------------------------------------
