@@ -1153,18 +1153,34 @@ jobs:
           gh-pages-branch: "gh-pages"
           benchmark-data-dir-path: "dev/bench"
 
-      - name: Setup Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v4
-
       - name: Upload Pages Artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/
 
+  # ============================================================================
+  # Deploy to GitHub Pages
+  # ============================================================================
+
+  deploy-pages:
+    name: "Deploy to GitHub Pages"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [performance-tracking]
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
       - name: Deploy to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: deployment
         uses: actions/deploy-pages@v4
 
   # ============================================================================
