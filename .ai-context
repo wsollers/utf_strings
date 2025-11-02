@@ -188,7 +188,7 @@ When suggesting code:
 **❌ DO NOT PUSH if ANY of these checks fail. Fix all issues before pushing to remote.**
 
 ## Current Version
-- Version: 0.0.1 (initial release)
+- Version: 0.1.0 (performance monitoring release)
 - See `include/utf/version.hpp` for version constants
 
 ## Questions to Ask
