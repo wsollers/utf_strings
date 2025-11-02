@@ -13,12 +13,154 @@ env:
 
 jobs:
   # ============================================================================
+  # YAML Validation
+  # ============================================================================
+  
+  yaml-validation:
+    name: "YAML Validation"
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, '.yml') || contains(github.event.head_commit.added, '.yml') || contains(github.event.head_commit.modified, '.yaml') || contains(github.event.head_commit.added, '.yaml')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          
+      - name: Install YAML validation tools
+        run: |
+          pip install pyyaml yamllint
+          
+      - name: Find changed YAML files
+        id: changed-files
+        run: |
+          # Get list of changed YAML files
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # For PRs, compare with base branch
+            git fetch origin ${{ github.base_ref }}
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.(yml|yaml)$' || true)
+          else
+            # For pushes, use the commit range
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep -E '\.(yml|yaml)$' || true)
+          fi
+          
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "Found changed YAML files:"
+            echo "$CHANGED_FILES"
+          else
+            echo "No YAML files changed"
+          fi
+          
+      - name: Validate YAML syntax
+        if: steps.changed-files.outputs.changed_files != ''
+        run: |
+          echo "Validating YAML syntax for changed files..."
+          echo "${{ steps.changed-files.outputs.changed_files }}" | while IFS= read -r file; do
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "🔍 Validating: $file"
+              # Basic Python YAML syntax check
+              python -c "import yaml; yaml.safe_load(open('$file', 'r'))" || {
+                echo "❌ YAML syntax error in: $file"
+                exit 1
+              }
+              echo "✅ Valid YAML syntax: $file"
+            fi
+          done
+          
+      - name: Lint YAML files with yamllint
+        if: steps.changed-files.outputs.changed_files != ''
+        run: |
+          echo "Running yamllint on changed files..."
+          # Create yamllint config for GitHub Actions workflows
+          cat > .yamllint.yml << 'EOF'
+          extends: default
+          rules:
+            line-length:
+              max: 120
+            indentation:
+              spaces: 2
+            truthy:
+              allowed-values: ['true', 'false']
+              check-keys: false
+            comments:
+              min-spaces-from-content: 1
+          EOF
+          
+          echo "${{ steps.changed-files.outputs.changed_files }}" | while IFS= read -r file; do
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              echo "🔍 Linting: $file"
+              yamllint -c .yamllint.yml "$file" || {
+                echo "❌ YAML linting failed for: $file"
+                exit 1
+              }
+              echo "✅ YAML linting passed: $file"
+            fi
+          done
+          
+      - name: Validate GitHub Actions workflow syntax
+        if: steps.changed-files.outputs.changed_files != ''
+        run: |
+          echo "Validating GitHub Actions workflow syntax..."
+          echo "${{ steps.changed-files.outputs.changed_files }}" | while IFS= read -r file; do
+            if [ -n "$file" ] && [ -f "$file" ] && [[ "$file" == .github/workflows/* ]]; then
+              echo "🔍 Validating GitHub Actions workflow: $file"
+              # Check for required fields in GitHub Actions workflows
+              python << 'PYEOF'
+          import yaml
+          import sys
+          
+          try:
+              with open("$file", 'r') as f:
+                  workflow = yaml.safe_load(f)
+              
+              # Check required fields for GitHub Actions workflows
+              if 'name' not in workflow:
+                  print(f"❌ Missing 'name' field in workflow: $file")
+                  sys.exit(1)
+              
+              if 'on' not in workflow:
+                  print(f"❌ Missing 'on' field in workflow: $file")
+                  sys.exit(1)
+              
+              if 'jobs' not in workflow:
+                  print(f"❌ Missing 'jobs' field in workflow: $file")
+                  sys.exit(1)
+              
+              # Validate each job has required fields
+              for job_name, job_config in workflow['jobs'].items():
+                  if not isinstance(job_config, dict):
+                      print(f"❌ Job '{job_name}' must be a dictionary in: $file")
+                      sys.exit(1)
+                  
+                  if 'runs-on' not in job_config:
+                      print(f"❌ Job '{job_name}' missing 'runs-on' field in: $file")
+                      sys.exit(1)
+              
+              print(f"✅ Valid GitHub Actions workflow: $file")
+          
+          except Exception as e:
+              print(f"❌ Error validating workflow {file}: {e}")
+              sys.exit(1)
+          PYEOF
+            fi
+          done
+
+  # ============================================================================
   # Linux x64 - GCC 13
   # ============================================================================
 
   linux-gcc:
     name: "Linux GCC 13 (x64)"
     runs-on: ubuntu-24.04
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped')
     strategy:
       matrix:
         build_type: [Debug, Release]
@@ -138,6 +280,8 @@ jobs:
   linux-clang:
     name: "Linux Clang 18 (x64)"
     runs-on: ubuntu-24.04
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped')
     strategy:
       matrix:
         build_type: [Debug, Release]
@@ -298,6 +442,8 @@ jobs:
   linux-clang-fuzz:
     name: "Linux Clang Fuzz Testing (x64)"
     runs-on: ubuntu-24.04
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped')
 
     steps:
       - name: Checkout
@@ -442,6 +588,8 @@ jobs:
   linux-sanitizers:
     name: "Linux Sanitizer Testing (x64)"
     runs-on: ubuntu-24.04
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped')
     strategy:
       matrix:
         sanitizer: [asan, tsan]
@@ -571,6 +719,8 @@ jobs:
     name: "Windows ${{ matrix.compiler_name }} (x64)"
     runs-on: windows-2022
     timeout-minutes: 30
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped')
     strategy:
       matrix:
         build_type: [Release] # Debug builds timeout on Windows CI
@@ -712,6 +862,8 @@ jobs:
     name: "Windows MSVC Debug (x64)"
     runs-on: windows-2022
     timeout-minutes: 30
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped')
 
     steps:
       - name: Checkout
