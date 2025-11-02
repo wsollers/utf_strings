@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762074242891,
+  "lastUpdate": 1762074387399,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -690,6 +690,36 @@ window.BENCHMARK_DATA = {
             "value": 7015.386658389932,
             "unit": "ns/iter",
             "extra": "iterations: 194924\ncpu: 7014.471322156326 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "9883846252de7128aac3647f8abf43d3a74c53db",
+          "message": "Merge branch 'main' of https://github.com/wsollers/utf_strings",
+          "timestamp": "2025-11-02T03:56:44-05:00",
+          "tree_id": "1e32e15051504c457ec1a4f373874bf3e10819cc",
+          "url": "https://github.com/wsollers/utf_strings/commit/9883846252de7128aac3647f8abf43d3a74c53db"
+        },
+        "date": 1762074387154,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7024.167892986721,
+            "unit": "ns/iter",
+            "extra": "iterations: 197882\ncpu: 7023.842512204243 ns\nthreads: 1"
           }
         ]
       }
