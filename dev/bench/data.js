@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762104233751,
+  "lastUpdate": 1762104647289,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1346,6 +1346,34 @@ window.BENCHMARK_DATA = {
             "value": 7156.406959874257,
             "unit": "ns/iter",
             "extra": "iterations: 197130\ncpu: 7155.48608025161 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "committer": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "id": "828c17649b9a5608d760e8a27dd1bf6055cd72df",
+          "message": "Remove performance README.md to enable interactive dashboard\n\nThe README.md in docs/performance/ was overriding the dynamic index.html\nperformance dashboard created by the workflow. Jekyll prioritizes README.md\nfor directory routing, so removing it allows the interactive performance\ndashboard with flame graphs and live data to be served at /performance/",
+          "timestamp": "2025-11-02T17:21:42Z",
+          "url": "https://github.com/wsollers/utf_strings/commit/828c17649b9a5608d760e8a27dd1bf6055cd72df"
+        },
+        "date": 1762104646910,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7138.423673005774,
+            "unit": "ns/iter",
+            "extra": "iterations: 198927\ncpu: 7137.4571928395835 ns\nthreads: 1"
           }
         ]
       }
