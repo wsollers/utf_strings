@@ -1,4 +1,3 @@
-
 name: "CodeQL Security Analysis"
 
 on:
@@ -9,7 +8,7 @@ on:
   release:
     types: [published]
   schedule:
-    - cron: '0 3 * * 0'  # Weekly on Sunday at 3 AM UTC
+    - cron: "0 3 * * 0" # Weekly on Sunday at 3 AM UTC
 
 jobs:
   analyze:
@@ -23,176 +22,176 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp' ]
+        language: ["cpp"]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install system dependencies
-      timeout-minutes: 15
-      run: |
-        set -e  # Exit on any error
-        
-        # Update package list first
-        sudo apt update
-        
-        # Install basic dependencies first
-        sudo apt install -y cmake python3-pip git wget curl
-        
-        # Install Clang 18 with timeout and retry logic
-        echo "Installing Clang 18 for CodeQL analysis..."
-        for i in {1..3}; do
-          if timeout 10m bash -c "
-            wget -q https://apt.llvm.org/llvm.sh &&
-            chmod +x llvm.sh &&
-            sudo ./llvm.sh 18
-          "; then
-            echo "LLVM installation successful on attempt $i"
-            break
-          else
-            echo "LLVM installation attempt $i failed, retrying..."
-            rm -f llvm.sh
-            if [ $i -eq 3 ]; then
-              echo "All LLVM installation attempts failed"
-              exit 1
+      - name: Install system dependencies
+        timeout-minutes: 15
+        run: |
+          set -e  # Exit on any error
+
+          # Update package list first
+          sudo apt update
+
+          # Install basic dependencies first
+          sudo apt install -y cmake python3-pip git wget curl
+
+          # Install Clang 18 with timeout and retry logic
+          echo "Installing Clang 18 for CodeQL analysis..."
+          for i in {1..3}; do
+            if timeout 10m bash -c "
+              wget -q https://apt.llvm.org/llvm.sh &&
+              chmod +x llvm.sh &&
+              sudo ./llvm.sh 18
+            "; then
+              echo "LLVM installation successful on attempt $i"
+              break
+            else
+              echo "LLVM installation attempt $i failed, retrying..."
+              rm -f llvm.sh
+              if [ $i -eq 3 ]; then
+                echo "All LLVM installation attempts failed"
+                exit 1
+              fi
+              sleep 30
             fi
-            sleep 30
+          done
+
+          # Install additional tools
+          sudo apt install -y clang-format-18 || {
+            echo "clang-format-18 not available, trying alternatives..."
+            sudo apt install -y clang-format || echo "clang-format installation failed"
+          }
+
+          # Set up symlinks
+          sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+          if command -v clang-format-18 >/dev/null 2>&1; then
+            sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
           fi
-        done
-        
-        # Install additional tools
-        sudo apt install -y clang-format-18 || {
-          echo "clang-format-18 not available, trying alternatives..."
-          sudo apt install -y clang-format || echo "clang-format installation failed"
-        }
-        
-        # Set up symlinks
-        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
-        if command -v clang-format-18 >/dev/null 2>&1; then
-          sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
-        fi
-        
-        # Verify installation
-        clang --version
-        clang++ --version
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+          # Verify installation
+          clang --version
+          clang++ --version
 
-    - name: Install Conan
-      run: |
-        pip3 install --user conan
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Update to use the correct Clang version and C++23
-        CLANG_VERSION=$(clang-18 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-        echo "Detected Clang version: $CLANG_VERSION"
-        sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-        if [ -n "$CLANG_VERSION" ]; then
-        sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-        else
-          echo "Warning: Could not detect Clang version, using Conan default"
-        fi
-        sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
-        conan profile show --profile:host=default
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-codeql-clang-release-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-codeql-clang-release-
-          conan-linux-clang-
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Update to use the correct Clang version and C++23
+          CLANG_VERSION=$(clang-18 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version | head -n1 | grep -o '[0-9]\+' | head -n1)
+          echo "Detected Clang version: $CLANG_VERSION"
+          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
+          if [ -n "$CLANG_VERSION" ]; then
+          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+          else
+            echo "Warning: Could not detect Clang version, using Conan default"
+          fi
+          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+          echo "=== Final Conan Profile ==="
+          conan profile show --profile:host=default
 
-    - name: Install dependencies
-      run: |
-        export CC=clang
-        export CXX=clang++
-        conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-codeql-clang-release-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-codeql-clang-release-
+            conan-linux-clang-
 
-    # Initialize CodeQL tools for scanning
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-        # Use standard security query suites for comprehensive coverage
-        queries: security-extended,security-and-quality
-        # Simple path configuration inline to avoid config file issues
-        config: |
-          paths-ignore:
-            - "build/"
-            - "conan-cache/"
-            - ".conan2/"
-            - "**/*.cmake"
-            - "**/CMakeFiles/"
+      - name: Install dependencies
+        run: |
+          export CC=clang
+          export CXX=clang++
+          conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
 
-    # Configure and build the project with Clang Release build for CodeQL analysis
-    - name: Configure CMake (Release build with Clang)
-      run: |
-        export CC=clang
-        export CXX=clang++
-        cmake --preset conan-release \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_C_COMPILER=clang \
-          -DCMAKE_CXX_COMPILER=clang++
+      # Initialize CodeQL tools for scanning
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          # Use standard security query suites for comprehensive coverage
+          queries: security-extended,security-and-quality
+          # Simple path configuration inline to avoid config file issues
+          config: |
+            paths-ignore:
+              - "build/"
+              - "conan-cache/"
+              - ".conan2/"
+              - "**/*.cmake"
+              - "**/CMakeFiles/"
 
-    - name: Build for CodeQL (Release)
-      run: |
-        cmake --build --preset conan-release --parallel
+      # Configure and build the project with Clang Release build for CodeQL analysis
+      - name: Configure CMake (Release build with Clang)
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cmake --preset conan-release \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=clang \
+            -DCMAKE_CXX_COMPILER=clang++
 
-    # Perform CodeQL Analysis
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      with:
-        category: "/language:${{matrix.language}}"
-        upload: true
+      - name: Build for CodeQL (Release)
+        run: |
+          cmake --build --preset conan-release --parallel
 
-    # Upload CodeQL database to GitHub
-    - name: Upload CodeQL Database
-      uses: github/codeql-action/upload-sarif@v2
-      if: always()
-      with:
-        sarif_file: ${{ runner.temp }}/codeql_databases
-        category: codeql-database
-        
-    - name: Upload CodeQL Database as Artifact
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: codeql-database-cpp
-        path: ${{ runner.temp }}/codeql_databases
-        retention-days: 30
-        compression-level: 6
+      # Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"
+          upload: true
 
-    # Run additional security checks on the Release build
-    - name: Run Security Tests
-      run: |
-        cd build/build
-        # Run tests to ensure the release build is secure and functional
-        ./utf_strings-tests
-        
-        # Run benchmarks to ensure performance hasn't regressed
-        ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=security_analysis_benchmarks.json
+      # Upload CodeQL database to GitHub
+      - name: Upload CodeQL Database
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: ${{ runner.temp }}/codeql_databases
+          category: codeql-database
 
-    - name: Upload security analysis artifacts
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: codeql-security-analysis-results
-        path: |
-          build/build/security_analysis_benchmarks.json
-          sarif-results/*.sarif
+      - name: Upload CodeQL Database as Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codeql-database-cpp
+          path: ${{ runner.temp }}/codeql_databases
+          retention-days: 30
+          compression-level: 6
+
+      # Run additional security checks on the Release build
+      - name: Run Security Tests
+        run: |
+          cd build/build
+          # Run tests to ensure the release build is secure and functional
+          ./utf_strings-tests
+
+          # Run benchmarks to ensure performance hasn't regressed
+          ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=security_analysis_benchmarks.json
+
+      - name: Upload security analysis artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codeql-security-analysis-results
+          path: |
+            build/build/security_analysis_benchmarks.json
+            sarif-results/*.sarif
 
   # Enhanced security analysis for releases
   release-security-analysis:
@@ -202,121 +201,121 @@ jobs:
     needs: [analyze]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install additional security tools
-      run: |
-        sudo apt update
-        sudo apt install -y clang-tools cppcheck valgrind
+      - name: Install additional security tools
+        run: |
+          sudo apt update
+          sudo apt install -y clang-tools cppcheck valgrind
 
-    - name: Install system dependencies
-      timeout-minutes: 15
-      run: |
-        set -e  # Exit on any error
-        
-        # Install basic dependencies first
-        sudo apt install -y cmake python3-pip git wget curl
-        
-        # Install Clang 18 with timeout and retry logic
-        echo "Installing Clang 18 for enhanced security analysis..."
-        for i in {1..3}; do
-          if timeout 10m bash -c "
-            wget -q https://apt.llvm.org/llvm.sh &&
-            chmod +x llvm.sh &&
-            sudo ./llvm.sh 18
-          "; then
-            echo "LLVM installation successful on attempt $i"
-            break
-          else
-            echo "LLVM installation attempt $i failed, retrying..."
-            rm -f llvm.sh
-            if [ $i -eq 3 ]; then
-              echo "All LLVM installation attempts failed"
-              exit 1
+      - name: Install system dependencies
+        timeout-minutes: 15
+        run: |
+          set -e  # Exit on any error
+
+          # Install basic dependencies first
+          sudo apt install -y cmake python3-pip git wget curl
+
+          # Install Clang 18 with timeout and retry logic
+          echo "Installing Clang 18 for enhanced security analysis..."
+          for i in {1..3}; do
+            if timeout 10m bash -c "
+              wget -q https://apt.llvm.org/llvm.sh &&
+              chmod +x llvm.sh &&
+              sudo ./llvm.sh 18
+            "; then
+              echo "LLVM installation successful on attempt $i"
+              break
+            else
+              echo "LLVM installation attempt $i failed, retrying..."
+              rm -f llvm.sh
+              if [ $i -eq 3 ]; then
+                echo "All LLVM installation attempts failed"
+                exit 1
+              fi
+              sleep 30
             fi
-            sleep 30
+          done
+
+          # Install additional tools
+          sudo apt install -y clang-format-18 || {
+            echo "clang-format-18 not available, trying alternatives..."
+            sudo apt install -y clang-format || echo "clang-format installation failed"
+          }
+
+          # Set up symlinks  
+          sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+
+          # Verify installation
+          clang --version
+          clang++ --version
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Update to use the correct Clang version and C++23
+          CLANG_VERSION=$(clang-18 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version | head -n1 | grep -o '[0-9]\+' | head -n1)
+          echo "Detected Clang version: $CLANG_VERSION"
+          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
+          if [ -n "$CLANG_VERSION" ]; then
+          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+          else
+            echo "Warning: Could not detect Clang version, using Conan default"
           fi
-        done
-        
-        # Install additional tools
-        sudo apt install -y clang-format-18 || {
-          echo "clang-format-18 not available, trying alternatives..."
-          sudo apt install -y clang-format || echo "clang-format installation failed"
-        }
-        
-        # Set up symlinks  
-        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
-        
-        # Verify installation
-        clang --version
-        clang++ --version
+          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+          echo "=== Final Conan Profile ==="
+          conan profile show --profile:host=default
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          export CC=clang
+          export CXX=clang++
+          conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
 
-    - name: Install Conan
-      run: |
-        pip3 install --user conan
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Configure and Build with Security Hardening
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cmake --preset conan-release
+          cmake --build --preset conan-release --parallel
 
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Update to use the correct Clang version and C++23
-        CLANG_VERSION=$(clang-18 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-        echo "Detected Clang version: $CLANG_VERSION"
-        sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-        if [ -n "$CLANG_VERSION" ]; then
-        sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-        else
-          echo "Warning: Could not detect Clang version, using Conan default"
-        fi
-        sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
-        conan profile show --profile:host=default
+      - name: Run Static Analysis (clang-tidy)
+        run: |
+          clang-tidy-18 --version
+          find src include -name "*.cpp" -o -name "*.hpp" | xargs clang-tidy-18 -p build/build --
 
-    - name: Install dependencies
-      run: |
-        export CC=clang
-        export CXX=clang++
-        conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
+      - name: Run Static Analysis (cppcheck)
+        run: |
+          cppcheck --enable=all --std=c++23 --inline-suppr --error-exitcode=1 \
+            --suppress=missingIncludeSystem --suppress=unmatchedSuppression \
+            src/ include/ tests/ benchmarks/
 
-    - name: Configure and Build with Security Hardening
-      run: |
-        export CC=clang
-        export CXX=clang++
-        cmake --preset conan-release
-        cmake --build --preset conan-release --parallel
+      - name: Run Memory Analysis (Valgrind)
+        run: |
+          cd build/build
+          valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all \
+            --track-origins=yes --error-exitcode=1 ./utf_strings-tests
 
-    - name: Run Static Analysis (clang-tidy)
-      run: |
-        clang-tidy-18 --version
-        find src include -name "*.cpp" -o -name "*.hpp" | xargs clang-tidy-18 -p build/build --
-
-    - name: Run Static Analysis (cppcheck)
-      run: |
-        cppcheck --enable=all --std=c++23 --inline-suppr --error-exitcode=1 \
-          --suppress=missingIncludeSystem --suppress=unmatchedSuppression \
-          src/ include/ tests/ benchmarks/
-
-    - name: Run Memory Analysis (Valgrind)
-      run: |
-        cd build/build
-        valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all \
-          --track-origins=yes --error-exitcode=1 ./utf_strings-tests
-
-    - name: Upload enhanced security results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: enhanced-security-analysis-results
-        path: |
-          clang-tidy-results.txt
-          cppcheck-results.txt
-          valgrind-results.txt
+      - name: Upload enhanced security results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enhanced-security-analysis-results
+          path: |
+            clang-tidy-results.txt
+            cppcheck-results.txt
+            valgrind-results.txt
