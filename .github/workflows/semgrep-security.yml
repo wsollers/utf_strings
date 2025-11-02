@@ -14,7 +14,7 @@ on:
         options:
           - auto
           - r/c.lang.security
-          - r/cpp.lang.security  
+          - r/cpp.lang.security
           - p/security-audit
           - p/cwe-top-25
           - p/owasp-top-10
@@ -67,11 +67,11 @@ jobs:
       - name: Test Semgrep Configuration
         run: |
           echo "Testing Semgrep with ruleset: ${{ steps.ruleset.outputs.ruleset }}"
-          
+
           # Test if ruleset exists and is accessible
           echo "=== Available Semgrep Rules Info ==="
           semgrep --version
-          
+
           # List available rulesets (limited output)
           echo "=== Testing ruleset availability ==="
           if [ "${{ steps.ruleset.outputs.ruleset }}" = "auto" ]; then
@@ -94,7 +94,7 @@ jobs:
 
           # Determine the actual config to use
           RULESET="${{ steps.ruleset.outputs.ruleset }}"
-          
+
           # Use language-specific rules for C/C++ if auto or invalid ruleset
           if [ "$RULESET" = "auto" ]; then
             # For C/C++ files, use multiple relevant configs
