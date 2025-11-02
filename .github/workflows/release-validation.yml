@@ -81,12 +81,20 @@ jobs:
           CLANG_VERSION=$(clang-18 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Detected Clang version: $CLANG_VERSION"
           sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
+        if [ -n "$CLANG_VERSION" ]; then
           sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+        else
+          echo "Warning: Could not detect Clang version, using Conan default"
+        fi
           sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
         elif [ "${{ matrix.compiler }}" = "gcc" ]; then
           GCC_VERSION=$(gcc-13 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || gcc --version | head -n1 | grep -o '[0-9]\+' | head -n1)
           echo "Detected GCC version: $GCC_VERSION"
+        if [ -n "$GCC_VERSION" ]; then
           sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
+        else
+          echo "Warning: Could not detect GCC version, using Conan default"
+        fi
         fi
         # Set C++23 and OS for all compilers
         sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
