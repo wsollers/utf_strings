@@ -271,6 +271,34 @@ jobs:
           echo "Performance analysis complete!"
           ls -la ../../docs/performance/
 
+      - name: Prepare complete docs structure for Pages deployment
+        run: |
+          echo "=== Preparing complete documentation structure ==="
+          echo "Repository docs structure:"
+          find docs/ -type f | head -20
+          
+          echo ""
+          echo "=== Performance files generated ==="
+          ls -la docs/performance/ 2>/dev/null || echo "No performance directory found"
+          
+          echo ""
+          echo "=== Jekyll configuration check ==="
+          if [ -f "docs/_config.yml" ]; then
+            echo "✅ Jekyll config exists"
+            ls -la docs/_config.yml
+          else
+            echo "❌ Jekyll config missing"
+          fi
+          
+          echo ""
+          echo "=== Main index file check ==="  
+          if [ -f "docs/index.html" ]; then
+            echo "✅ Main index exists"
+            ls -la docs/index.html
+          else
+            echo "❌ Main index missing"
+          fi
+
       - name: Upload performance docs for Pages deployment
         uses: actions/upload-artifact@v4
         with:
