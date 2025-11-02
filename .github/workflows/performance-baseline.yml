@@ -58,8 +58,11 @@ jobs:
       - name: Set perf permissions
         run: |
           # Allow perf to run without root for non-paranoid mode
-          sudo sysctl -w kernel.perf_event_paranoid=-1
-          sudo sysctl -w kernel.kptr_restrict=0
+          sudo sysctl -w kernel.perf_event_paranoid=-1 || echo "Could not set perf_event_paranoid"
+          sudo sysctl -w kernel.kptr_restrict=0 || echo "Could not set kptr_restrict"
+          # Additional perf permission settings for containers
+          echo 0 | sudo tee /proc/sys/kernel/perf_event_paranoid || echo "Could not write to perf_event_paranoid proc"
+          echo 0 | sudo tee /proc/sys/kernel/kptr_restrict || echo "Could not write to kptr_restrict proc"
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -117,6 +120,19 @@ jobs:
           # Create docs/performance directory for all performance reports
           mkdir -p ../../docs/performance
 
+          # Debug current working directory and permissions
+          echo "=== DEBUGGING INFO ==="
+          echo "Current working directory: $(pwd)"
+          echo "Directory contents:"
+          ls -la
+          echo "Benchmark executable:"
+          ls -la ./utf_strings-bench
+          echo "File permissions in current directory:"
+          ls -ld .
+          echo "Free disk space:"
+          df -h .
+          echo "=== END DEBUG ==="
+
           # 1. Standard benchmark run for historical tracking
           echo "Running standard benchmarks..."
           ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_format=json --benchmark_out=performance_baseline.json
@@ -131,17 +147,49 @@ jobs:
             # Try to run perf - may fail in containerized environment
             echo "Perf version info:"
             perf --version || echo "Could not get perf version"
-            uname -r | echo "Kernel version: $(cat)"
+            echo "Kernel version: $(uname -r)"
+            echo "Perf event paranoid setting: $(cat /proc/sys/kernel/perf_event_paranoid 2>/dev/null || echo 'unknown')"
+            echo "Kptr restrict setting: $(cat /proc/sys/kernel/kptr_restrict 2>/dev/null || echo 'unknown')"
+            echo "Available perf events: $(perf list hw 2>&1 | head -5 || echo 'could not list events')"
+            echo "Current user: $(whoami)"
+            echo "User groups: $(groups)"
             echo "Attempting perf record with diagnostic output..."
-            if perf record -F 99 -g --call-graph dwarf -- ./utf_strings-bench --benchmark_min_time=2.0s --benchmark_repetitions=5; then
-              echo "Perf recording successful, checking file format..."
-              ls -la perf.data
+            
+            # Clean up any existing perf data files in current and parent directories
+            rm -f perf.data*
+            rm -f ../perf.data*
+            rm -f ../../perf.data*
+            
+            # Show current directory before perf record
+            echo "About to run perf record in directory: $(pwd)"
+            echo "Directory listing before perf:"
+            ls -la
+            
+            # Try perf record with explicit output file and verbose output
+            echo "Trying perf record with dwarf call-graph and explicit output..."
+            PERF_OUTPUT_FILE="./perf.data"
+            if perf record -v -o "$PERF_OUTPUT_FILE" -F 99 -g --call-graph dwarf -- ./utf_strings-bench --benchmark_min_time=2.0s --benchmark_repetitions=5; then
+              echo "Perf record command completed, checking for output file..."
+              echo "Directory listing after perf record:"
+              ls -la
+              
+              if [ -f "$PERF_OUTPUT_FILE" ]; then
+                echo "SUCCESS: perf.data file found!"
+                ls -la "$PERF_OUTPUT_FILE"
+                echo "File size: $(stat -c%s "$PERF_OUTPUT_FILE") bytes"
+              else
+                echo "ERROR: perf.data file not found at expected location: $PERF_OUTPUT_FILE"
+                echo "Searching for perf.data files in current and parent directories:"
+                find . -name "perf.data*" -type f 2>/dev/null || echo "No perf.data files found"
+                find .. -name "perf.data*" -type f 2>/dev/null || echo "No perf.data files found in parent"
+                exit 1
+              fi
               
               # Check perf file format and try to process
               echo "Testing perf script compatibility..."
-              if perf script -v > /dev/null 2>&1; then
+              if perf script -i "$PERF_OUTPUT_FILE" -v > /dev/null 2>&1; then
                 echo "Perf file format compatible, generating flame graph..."
-                perf script > ../../docs/performance/perf.script
+                perf script -i "$PERF_OUTPUT_FILE" > ../../docs/performance/perf.script
                 if stackcollapse-perf.pl ../../docs/performance/perf.script > ../../docs/performance/perf.folded; then
                   flamegraph.pl ../../docs/performance/perf.folded > ../../docs/performance/flamegraph.svg
                   echo "Flame graph generated successfully"
@@ -151,34 +199,41 @@ jobs:
                 fi
               else
                 echo "Perf file format incompatible, trying alternative approach..."
-                perf script -v 2>&1 | head -20 > ../../docs/performance/perf_debug.txt || true
+                perf script -i "$PERF_OUTPUT_FILE" -v 2>&1 | head -20 > ../../docs/performance/perf_debug.txt || true
                 
                 # Try an alternative approach with simpler call graph format
                 echo "Attempting alternative perf record with fp call-graph..."
-                rm -f perf.data
-                if perf record -F 99 -g --call-graph fp -- ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_repetitions=3; then
-                  echo "Alternative perf recording successful, trying script..."
-                  if perf script > ../../docs/performance/perf.script 2>/dev/null; then
-                    echo "Alternative perf script successful, generating flame graph..."
-                    if stackcollapse-perf.pl ../../docs/performance/perf.script > ../../docs/performance/perf.folded; then
-                      flamegraph.pl ../../docs/performance/perf.folded > ../../docs/performance/flamegraph.svg
-                      echo "Flame graph generated successfully with alternative method"
+                rm -f "$PERF_OUTPUT_FILE"
+                ALT_PERF_FILE="./perf_alt.data"
+                if perf record -o "$ALT_PERF_FILE" -F 99 -g --call-graph fp -- ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_repetitions=3; then
+                  echo "Alternative perf recording successful, checking file..."
+                  if [ -f "$ALT_PERF_FILE" ]; then
+                    echo "Alternative perf file created: $(ls -la "$ALT_PERF_FILE")"
+                    if perf script -i "$ALT_PERF_FILE" > ../../docs/performance/perf.script 2>/dev/null; then
+                      echo "Alternative perf script successful, generating flame graph..."
+                      if stackcollapse-perf.pl ../../docs/performance/perf.script > ../../docs/performance/perf.folded; then
+                        flamegraph.pl ../../docs/performance/perf.folded > ../../docs/performance/flamegraph.svg
+                        echo "Flame graph generated successfully with alternative method"
+                      else
+                        echo "Stack collapse failed with alternative method"
+                        echo "Perf data processing failed during stack collapse step. File format may be incompatible." > ../../docs/performance/flamegraph_unavailable.txt
+                      fi
                     else
-                      echo "Stack collapse failed with alternative method"
-                      echo "Perf data processing failed during stack collapse step. File format may be incompatible." > ../../docs/performance/flamegraph_unavailable.txt
+                      echo "Alternative perf script also failed"
+                      echo "Perf file format incompatible with current perf version. This can happen in containerized environments. Debug info saved to perf_debug.txt" > ../../docs/performance/flamegraph_unavailable.txt
                     fi
                   else
-                    echo "Alternative perf script also failed"
-                    echo "Perf file format incompatible with current perf version. This can happen in containerized environments. Debug info saved to perf_debug.txt" > ../../docs/performance/flamegraph_unavailable.txt
+                    echo "Alternative perf file not created"
+                    echo "Perf file format incompatible with current perf version. This can happen in containerized environments." > ../../docs/performance/flamegraph_unavailable.txt
                   fi
                 else
                   echo "Alternative perf record also failed"
-                  echo "Perf file format incompatible with current perf version. This can happen in containerized environments. Debug info saved to perf_debug.txt" > ../../docs/performance/flamegraph_unavailable.txt
+                  echo "Perf file format incompatible with current perf version. This can happen in containerized environments." > ../../docs/performance/flamegraph_unavailable.txt
                 fi
               fi
             else
               echo "Perf recording failed (likely due to container restrictions), creating placeholder"
-              echo "Flame graph generation requires privileged container access. Run locally with: perf record -g ./utf_strings-bench && perf script | stackcollapse-perf.pl | flamegraph.pl > flamegraph.svg" > ../../docs/performance/flamegraph_unavailable.txt
+              echo "Flame graph generation requires privileged container access or compatible kernel. Run locally with: perf record -g ./utf_strings-bench && perf script | stackcollapse-perf.pl | flamegraph.pl > flamegraph.svg" > ../../docs/performance/flamegraph_unavailable.txt
             fi
           else
             echo "Perf not available, skipping flame graph generation"
