@@ -89,7 +89,7 @@ jobs:
             // Try to download docs from current workflow run
             const currentRunId = ${{ github.event.workflow_run.id }};
             let foundDocs = false;
-            
+
             // Check what type of workflow triggered this deployment
             if ('${{ github.event.workflow_run.name }}' === 'CI/CD Pipeline') {
               foundDocs = await downloadArtifact(currentRunId, "docs-for-pages", "docs.zip");

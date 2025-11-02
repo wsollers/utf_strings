@@ -276,11 +276,11 @@ jobs:
           echo "=== Preparing complete documentation structure ==="
           echo "Repository docs structure:"
           find docs/ -type f | head -20
-          
+
           echo ""
           echo "=== Performance files generated ==="
           ls -la docs/performance/ 2>/dev/null || echo "No performance directory found"
-          
+
           echo ""
           echo "=== Jekyll configuration check ==="
           if [ -f "docs/_config.yml" ]; then
@@ -289,7 +289,7 @@ jobs:
           else
             echo "❌ Jekyll config missing"
           fi
-          
+
           echo ""
           echo "=== Main index file check ==="  
           if [ -f "docs/index.html" ]; then
