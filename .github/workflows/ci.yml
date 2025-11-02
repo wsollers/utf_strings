@@ -265,14 +265,21 @@ jobs:
       run: |
         export CC=clang
         export CXX=clang++
-        cmake --preset conan-debug -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON
+        cmake -S . -B build/Fuzz \
+          -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DUTF_STRINGS_BUILD_TESTS=OFF \
+          -DUTF_STRINGS_BUILD_BENCHMARKS=OFF \
+          -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON \
+          -DUTF_STRINGS_WITH_GPERFTOOLS=OFF
         
     - name: Build Fuzz Targets
-      run: cmake --build --preset conan-debug --parallel
+      run: cmake --build build/Fuzz --parallel
       
     - name: Run Fuzz Tests (Short Duration for CI)
       run: |
-        cd build/Debug
+        cd build/Fuzz
         echo "Running UTF-8 fuzz tests..."
         timeout 60s ./fuzz_utf8 -max_total_time=30 -print_final_stats=1 || true
         echo "Running UTF-16 BE fuzz tests..."
@@ -290,10 +297,10 @@ jobs:
       with:
         name: fuzz-results-linux-clang
         path: |
-          build/Debug/*.log
-          build/Debug/crash-*
-          build/Debug/leak-*
-          build/Debug/timeout-*
+          build/Fuzz/*.log
+          build/Fuzz/crash-*
+          build/Fuzz/leak-*
+          build/Fuzz/timeout-*
 
   # ============================================================================
   # Linux x64 - Sanitizer Testing (GCC & Clang)
