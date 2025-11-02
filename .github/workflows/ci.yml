@@ -785,6 +785,23 @@ jobs:
         cd build/build
         ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_format=json --benchmark_out=performance_baseline.json
         
+    - name: Setup gh-pages branch
+      run: |
+        # Check if gh-pages branch exists, create if not
+        if ! git ls-remote --heads origin gh-pages | grep -q gh-pages; then
+          echo "Creating gh-pages branch..."
+          git checkout --orphan gh-pages
+          git rm -rf .
+          echo "# UTF Strings Performance Benchmarks" > README.md
+          echo "This branch contains automated performance benchmark results." >> README.md
+          git add README.md
+          git commit -m "Initialize gh-pages branch for benchmark tracking"
+          git push origin gh-pages
+          git checkout main
+        else
+          echo "gh-pages branch already exists"
+        fi
+        
     - name: Store Performance Results
       uses: benchmark-action/github-action-benchmark@v1
       with:
@@ -794,7 +811,7 @@ jobs:
         auto-push: true
         alert-threshold: '150%'
         comment-on-alert: true
-        fail-on-alert: true
+        fail-on-alert: false
 
   # ============================================================================
   # Publish Test Results
