@@ -1,9 +1,9 @@
 name: Deploy GitHub Pages
 
 on:
-  # Trigger on successful CI completion
+  # Trigger on successful CI completion OR performance baseline completion
   workflow_run:
-    workflows: ["CI/CD Pipeline"]
+    workflows: ["CI/CD Pipeline", "Performance Baseline Tracking"]
     branches: [main, master]
     types:
       - completed
@@ -27,7 +27,7 @@ jobs:
     name: "Deploy to GitHub Pages"
     runs-on: ubuntu-latest
 
-    # Only deploy if the CI workflow succeeded and we're on main/master
+    # Only deploy if the workflow succeeded and we're on main/master
     if: >
       github.event.workflow_run.conclusion == 'success' &&
       (github.event.workflow_run.head_branch == 'main' || 
@@ -41,43 +41,128 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Download the docs artifact from the completed CI run
-      - name: Download docs artifact
+      # Download documentation artifacts from both CI and Performance workflows
+      - name: Download and merge documentation artifacts
         uses: actions/github-script@v7
         with:
           script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: ${{ github.event.workflow_run.id }},
-            });
+            const fs = require('fs');
+            
+            // Function to download artifact by name from a workflow run
+            async function downloadArtifact(runId, artifactName, fileName) {
+              const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: runId,
+              });
 
-            const docsArtifact = artifacts.data.artifacts.find((artifact) => {
-              return artifact.name === "docs-for-pages";
-            });
+              const artifact = artifacts.data.artifacts.find((artifact) => {
+                return artifact.name === artifactName;
+              });
 
-            if (!docsArtifact) {
-              throw new Error('No docs-for-pages artifact found');
+              if (artifact) {
+                const download = await github.rest.actions.downloadArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id,
+                  archive_format: 'zip',
+                });
+                
+                fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/${fileName}`, Buffer.from(download.data));
+                console.log(`✅ Downloaded ${artifactName} from run ${runId}`);
+                return true;
+              }
+              return false;
+            }
+            
+            // Try to download docs from current workflow run
+            const currentRunId = ${{ github.event.workflow_run.id }};
+            let foundDocs = await downloadArtifact(currentRunId, "docs-for-pages", "docs.zip");
+            
+            // If this is a CI run, also look for recent Performance Baseline artifacts
+            if ('${{ github.event.workflow_run.name }}' === 'CI/CD Pipeline') {
+              console.log('🔍 CI workflow triggered - looking for recent Performance Baseline artifacts...');
+              
+              // Get recent Performance Baseline workflow runs
+              const workflowRuns = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'performance-baseline.yml',
+                branch: 'main',
+                status: 'completed',
+                per_page: 5
+              });
+              
+              // Find the most recent successful performance run
+              const recentPerfRun = workflowRuns.data.workflow_runs.find(run => 
+                run.conclusion === 'success' && 
+                new Date(run.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000) // Within 24 hours
+              );
+              
+              if (recentPerfRun) {
+                console.log(`🎯 Found recent performance run: ${recentPerfRun.id}`);
+                await downloadArtifact(recentPerfRun.id, "docs-for-pages", "perf-docs.zip");
+              }
+            } else if ('${{ github.event.workflow_run.name }}' === 'Performance Baseline Tracking') {
+              console.log('🔥 Performance Baseline workflow triggered - looking for CI docs...');
+              
+              // Get recent CI workflow runs for base documentation
+              const workflowRuns = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'ci.yml',
+                branch: 'main',
+                status: 'completed',
+                per_page: 5
+              });
+              
+              const recentCIRun = workflowRuns.data.workflow_runs.find(run => 
+                run.conclusion === 'success' &&
+                new Date(run.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000) // Within 24 hours
+              );
+              
+              if (recentCIRun) {
+                console.log(`📋 Found recent CI run: ${recentCIRun.id}`);
+                await downloadArtifact(recentCIRun.id, "docs-for-pages", "ci-docs.zip");
+              }
+            }
+            
+            if (!foundDocs) {
+              throw new Error('No docs-for-pages artifact found in workflow run');
             }
 
-            const download = await github.rest.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: docsArtifact.id,
-              archive_format: 'zip',
-            });
-
-            const fs = require('fs');
-            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/docs.zip`, Buffer.from(download.data));
-
-      - name: Extract docs artifact
+      - name: Extract and merge documentation artifacts
         run: |
           # Remove any existing docs directory to avoid conflicts
           rm -rf docs/
 
-          # Extract with overwrite flag to avoid prompts
-          unzip -o docs.zip -d docs/
-          ls -la docs/
+          echo "🔧 Extracting documentation artifacts..."
+          
+          # Extract CI docs first (base documentation)
+          if [ -f "docs.zip" ]; then
+            echo "📋 Extracting CI documentation..."
+            unzip -o docs.zip -d docs/
+            echo "✅ CI docs extracted"
+          elif [ -f "ci-docs.zip" ]; then
+            echo "📋 Extracting CI documentation from separate artifact..."
+            unzip -o ci-docs.zip -d docs/
+            echo "✅ CI docs extracted"
+          fi
+          
+          # Extract performance docs second (will overlay/merge with CI docs)
+          if [ -f "perf-docs.zip" ]; then
+            echo "🔥 Extracting performance documentation..."
+            unzip -o perf-docs.zip -d docs/
+            echo "✅ Performance docs extracted and merged"
+          fi
+          
+          echo ""
+          echo "📁 Final merged documentation structure:"
+          find docs/ -type f | sort
+          
+          echo ""
+          echo "🔍 Performance files check:"
+          ls -la docs/performance/ 2>/dev/null || echo "❌ No performance directory found"
 
       - name: Prepare Jekyll site for Pages deployment
         run: |

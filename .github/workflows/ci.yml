@@ -991,34 +991,34 @@ jobs:
     runs-on: ubuntu-latest
     needs: [yaml-validation]
     if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped') && github.ref == 'refs/heads/main'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Validate docs directory
         run: |
           echo "🔍 Validating documentation structure..."
-          
+
           if [ ! -d "docs" ]; then
             echo "❌ docs/ directory not found!"
             exit 1
           fi
-          
+
           if [ ! -f "docs/index.html" ] && [ ! -f "docs/index.md" ]; then
             echo "❌ No index.html or index.md found in docs/"
             exit 1
           fi
-          
+
           echo "✅ Documentation structure validation passed"
           echo ""
           echo "📁 Documentation contents:"
           find docs/ -type f | sort
-          
+
       - name: Prepare documentation for Jekyll
         run: |
           echo "🔧 Preparing documentation for Jekyll processing..."
-          
+
           # Ensure proper Jekyll configuration exists
           if [ ! -f "docs/_config.yml" ]; then
             echo "⚠️  No _config.yml found, creating default configuration..."
@@ -1028,70 +1028,70 @@ jobs:
           remote_theme: pages-themes/primer
           plugins:
             - jekyll-remote-theme
-          
+
           # Build settings
           markdown: kramdown
           highlighter: rouge
-          
+
           # Navigation
           header_pages:
             - index.html
             - README.md
-          
+
           # Enable GitHub metadata
           github: [metadata]
           EOF
           fi
-          
+
           # Create assets directory and CSS if needed
           mkdir -p docs/assets/css
-          
+
           if [ ! -f "docs/assets/css/style.scss" ]; then
             echo "🎨 Creating custom CSS override..."
             cat > docs/assets/css/style.scss << 'EOF'
           ---
           ---
-          
+
           @import "{{ site.theme }}";
-          
+
           /* Custom styles for UTF Strings documentation */
           .main-content {
             max-width: 1200px;
           }
-          
+
           code {
             background-color: #f6f8fa;
             border-radius: 3px;
             padding: 0.2em 0.4em;
           }
-          
+
           pre code {
             background-color: transparent;
             padding: 0;
           }
           EOF
           fi
-          
+
           echo "✅ Jekyll preparation completed"
-          
+
       - name: Create documentation artifact
         run: |
           echo "📦 Creating documentation artifact..."
-          
+
           # Create a clean copy of docs for artifact
           rm -rf docs-artifact/
           cp -r docs/ docs-artifact/
-          
+
           # Remove any Jekyll build artifacts from source
           rm -rf docs-artifact/_site docs-artifact/.jekyll-cache docs-artifact/.sass-cache
-          
+
           # Set proper permissions
           chmod -R 755 docs-artifact/
           find docs-artifact/ -type f -exec chmod 644 {} \;
-          
+
           echo "📄 Final artifact contents:"
           find docs-artifact/ -type f | sort
-          
+
       - name: Upload docs artifact for Pages
         uses: actions/upload-artifact@v4
         with:
@@ -1099,7 +1099,7 @@ jobs:
           path: docs-artifact/
           retention-days: 1
           if-no-files-found: error
-          
+
       - name: Documentation build summary
         run: |
           echo "✅ Documentation build completed successfully!"
