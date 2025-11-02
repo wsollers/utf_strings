@@ -64,9 +64,9 @@
 #ifndef UTF_CODEPOINT_HPP
 #define UTF_CODEPOINT_HPP
 
-#define UTF_CODEPOINT_VERSION_MAJOR 1
+#define UTF_CODEPOINT_VERSION_MAJOR 0
 #define UTF_CODEPOINT_VERSION_MINOR 0
-#define UTF_CODEPOINT_VERSION_PATCH 0
+#define UTF_CODEPOINT_VERSION_PATCH 2
 
 // Require C++23 (accept both partial and full implementations)
 
@@ -77,12 +77,6 @@
 #include <optional>
 #include <span>
 #include <version>
-
-// Check for required standard library features after including headers
-// TODO: Re-enable when GCC 13 properly reports C++23 feature macros
-// #if !defined(__cpp_lib_byteswap) || __cpp_lib_byteswap < 202110L
-// #error "std::byteswap is required (C++23)"
-// #endif
 
 namespace utf {
 
