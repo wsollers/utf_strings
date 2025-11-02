@@ -965,6 +965,13 @@ jobs:
           echo "Performance analysis complete!"
           ls -la ../../docs/performance/
 
+      - name: Upload docs for Pages deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-for-pages
+          path: docs/
+          retention-days: 1
+
       - name: Setup docs directory and create performance index
         run: |
           # Configure git identity for GitHub Actions
@@ -1153,11 +1160,7 @@ jobs:
           gh-pages-branch: "gh-pages"
           benchmark-data-dir-path: "dev/bench"
 
-      - name: Upload Pages Artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/
+
 
   # ============================================================================
   # Deploy to GitHub Pages
@@ -1176,8 +1179,19 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - name: Download docs artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-for-pages
+          path: docs/
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
 
       - name: Deploy to GitHub Pages
         id: deployment
