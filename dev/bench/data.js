@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762078035526,
+  "lastUpdate": 1762078128947,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1050,6 +1050,36 @@ window.BENCHMARK_DATA = {
             "value": 7028.842807135333,
             "unit": "ns/iter",
             "extra": "iterations: 196542\ncpu: 7028.255492464714 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "e5ec6d55d55f378f4fc22c5e0d781d63b8ca20d9",
+          "message": "FIx Workflows",
+          "timestamp": "2025-11-02T05:04:37-05:00",
+          "tree_id": "ff5b966384fc811a22b95ef64212ff6aa42e4442",
+          "url": "https://github.com/wsollers/utf_strings/commit/e5ec6d55d55f378f4fc22c5e0d781d63b8ca20d9"
+        },
+        "date": 1762078128516,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7030.701712676289,
+            "unit": "ns/iter",
+            "extra": "iterations: 198111\ncpu: 7030.271882934313 ns\nthreads: 1"
           }
         ]
       }
