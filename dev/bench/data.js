@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762097237300,
+  "lastUpdate": 1762097353365,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1170,6 +1170,36 @@ window.BENCHMARK_DATA = {
             "value": 7018.079361321643,
             "unit": "ns/iter",
             "extra": "iterations: 198535\ncpu: 7016.849860226158 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "270a7c1d78ed55aa9250b65b3204d8e8a1cc9f7a",
+          "message": "docs: Add Create Release workflow documentation\n\n- Added comprehensive documentation for create-release.yml workflow\n- Documented platform matrix (Linux GCC/Clang, Windows MSVC/Clang)\n- Explained release asset structure and contents\n- Added usage examples for tag-based and manual release creation\n- Updated workflow matrix table to include Create Release column\n- Enhanced running workflows section with release creation commands\n\nThe documentation now covers the complete automated release system\nwith cross-platform binary distribution and GitHub release creation.",
+          "timestamp": "2025-11-02T10:27:26-05:00",
+          "tree_id": "ee148d6abc8ba4e5163aec54a274fb669710aeab",
+          "url": "https://github.com/wsollers/utf_strings/commit/270a7c1d78ed55aa9250b65b3204d8e8a1cc9f7a"
+        },
+        "date": 1762097353010,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 6845.794470090796,
+            "unit": "ns/iter",
+            "extra": "iterations: 205790\ncpu: 6845.07918752126 ns\nthreads: 1"
           }
         ]
       }
