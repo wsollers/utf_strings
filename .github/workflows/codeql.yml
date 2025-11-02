@@ -56,7 +56,7 @@ jobs:
         conan profile detect --force
 
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-codeql-clang-release-${{ hashFiles('conanfile.py') }}
@@ -109,7 +109,7 @@ jobs:
         ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=security_analysis_benchmarks.json
 
     - name: Upload security analysis artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: codeql-security-analysis-results
@@ -186,7 +186,7 @@ jobs:
           --track-origins=yes --error-exitcode=1 ./utf_strings-tests
 
     - name: Upload enhanced security results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: enhanced-security-analysis-results

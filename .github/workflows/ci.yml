@@ -48,7 +48,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-linux-gcc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
@@ -99,7 +99,7 @@ jobs:
       run: cmake --build --preset conan-release --target format-check
       
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results-linux-gcc-${{ matrix.build_type }}
@@ -150,7 +150,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-linux-clang-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
@@ -201,7 +201,7 @@ jobs:
       run: cmake --build --preset conan-release --target format-check
       
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results-linux-clang-${{ matrix.build_type }}
@@ -249,7 +249,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-linux-clang-fuzz-${{ hashFiles('conanfile.py') }}
@@ -285,7 +285,7 @@ jobs:
         timeout 60s ./fuzz_utf32_le -max_total_time=30 -print_final_stats=1 || true
         
     - name: Upload fuzz artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: fuzz-results-linux-clang
@@ -338,7 +338,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-linux-${{ matrix.compiler }}-${{ matrix.sanitizer }}-${{ hashFiles('conanfile.py') }}
@@ -374,7 +374,7 @@ jobs:
         ./utf_strings-tests --gtest_output=xml:test_results_${{ matrix.compiler }}_${{ matrix.sanitizer }}.xml
         
     - name: Upload sanitizer results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: sanitizer-results-${{ matrix.compiler }}-${{ matrix.sanitizer }}
@@ -409,7 +409,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-windows-msvc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
@@ -469,7 +469,7 @@ jobs:
         cmake --build --preset conan-release --target format-check
         
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results-windows-msvc-${{ matrix.build_type }}
@@ -504,7 +504,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-windows-msvc-asan-${{ hashFiles('conanfile.py') }}
@@ -534,7 +534,7 @@ jobs:
         .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_asan.xml
         
     - name: Upload sanitizer results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: sanitizer-results-windows-msvc-asan
@@ -573,7 +573,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-performance-baseline-${{ hashFiles('conanfile.py') }}
@@ -619,7 +619,7 @@ jobs:
     
     steps:
     - name: Download all artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2

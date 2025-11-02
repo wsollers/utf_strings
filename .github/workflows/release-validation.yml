@@ -78,7 +78,7 @@ jobs:
         conan profile detect --force
         
     - name: Cache Conan packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.conan2
         key: conan-release-${{ matrix.os }}-${{ matrix.compiler }}-${{ hashFiles('conanfile.py') }}
@@ -156,7 +156,7 @@ jobs:
       shell: bash
       
     - name: Upload release artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: release-artifacts-${{ matrix.name }}
         path: |
@@ -280,7 +280,7 @@ jobs:
         done
         
     - name: Upload security analysis results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: release-security-analysis
@@ -301,7 +301,7 @@ jobs:
     
     steps:
     - name: Download all artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       
     - name: Create release summary
       run: |
@@ -359,7 +359,7 @@ jobs:
         done
         
     - name: Upload release summary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: release-summary
         path: release-summary.md
