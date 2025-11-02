@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762070110587,
+  "lastUpdate": 1762070447499,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -420,6 +420,36 @@ window.BENCHMARK_DATA = {
             "value": 7401.280336207924,
             "unit": "ns/iter",
             "extra": "iterations: 192262\ncpu: 7400.36684836317 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "fddfca9ded95987725f329b1bcc14f30097cc01b",
+          "message": "fix windows again",
+          "timestamp": "2025-11-02T02:58:00-05:00",
+          "tree_id": "630d2779bf94e3a9765b6e842a1b18382f70daa1",
+          "url": "https://github.com/wsollers/utf_strings/commit/fddfca9ded95987725f329b1bcc14f30097cc01b"
+        },
+        "date": 1762070446843,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7290.099673272256,
+            "unit": "ns/iter",
+            "extra": "iterations: 187312\ncpu: 7289.718293542325 ns\nthreads: 1"
           }
         ]
       }
