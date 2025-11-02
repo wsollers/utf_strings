@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762071625853,
+  "lastUpdate": 1762071954734,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -540,6 +540,36 @@ window.BENCHMARK_DATA = {
             "value": 7347.9812939330495,
             "unit": "ns/iter",
             "extra": "iterations: 189778\ncpu: 7347.335729115072 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "3a10f3827471a25f0badc6210f404577b94e51b1",
+          "message": "Comprehensive Clang-CL build fixes\n\n- Add FORCE_CLANG_CL flag from CI to explicitly identify Clang-CL builds\n- Clean build directories before each Windows matrix job to prevent conflicts\n- Enhanced detection with explicit CI flag as primary method\n- Improved debug output to track compiler identification\n- Should resolve LTCG flag issues and shared library export problems\n- Clean separation between MSVC and Clang-CL build configurations",
+          "timestamp": "2025-11-02T03:22:50-05:00",
+          "tree_id": "1f4c1a8416897e2d47b859b1c3d2c5b76d61f415",
+          "url": "https://github.com/wsollers/utf_strings/commit/3a10f3827471a25f0badc6210f404577b94e51b1"
+        },
+        "date": 1762071954082,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7314.752576997171,
+            "unit": "ns/iter",
+            "extra": "iterations: 191890\ncpu: 7313.753384751681 ns\nthreads: 1"
           }
         ]
       }
