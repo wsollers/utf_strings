@@ -15,25 +15,25 @@ jobs:
   # ============================================================================
   # YAML Validation
   # ============================================================================
-  
+
   yaml-validation:
     name: "YAML Validation"
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.modified, '.yml') || contains(github.event.head_commit.added, '.yml') || contains(github.event.head_commit.modified, '.yaml') || contains(github.event.head_commit.added, '.yaml')
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-          
+
       - name: Install YAML validation tools
         run: |
           pip install pyyaml yamllint
-          
+
       - name: Find changed YAML files
         id: changed-files
         run: |
@@ -46,18 +46,18 @@ jobs:
             # For pushes, use the commit range
             CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep -E '\.(yml|yaml)$' || true)
           fi
-          
+
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          
+
           if [ -n "$CHANGED_FILES" ]; then
             echo "Found changed YAML files:"
             echo "$CHANGED_FILES"
           else
             echo "No YAML files changed"
           fi
-          
+
       - name: Validate YAML syntax
         if: steps.changed-files.outputs.changed_files != ''
         run: |
@@ -73,7 +73,7 @@ jobs:
               echo "✅ Valid YAML syntax: $file"
             fi
           done
-          
+
       - name: Lint YAML files with yamllint
         if: steps.changed-files.outputs.changed_files != ''
         run: |
@@ -92,7 +92,7 @@ jobs:
             comments:
               min-spaces-from-content: 1
           EOF
-          
+
           echo "${{ steps.changed-files.outputs.changed_files }}" | while IFS= read -r file; do
             if [ -n "$file" ] && [ -f "$file" ]; then
               echo "🔍 Linting: $file"
@@ -103,7 +103,7 @@ jobs:
               echo "✅ YAML linting passed: $file"
             fi
           done
-          
+
       - name: Validate GitHub Actions workflow syntax
         if: steps.changed-files.outputs.changed_files != ''
         run: |
@@ -115,7 +115,7 @@ jobs:
               python << 'PYEOF'
           import yaml
           import sys
-          
+
           try:
               with open("$file", 'r') as f:
                   workflow = yaml.safe_load(f)
@@ -144,7 +144,7 @@ jobs:
                       sys.exit(1)
               
               print(f"✅ Valid GitHub Actions workflow: $file")
-          
+
           except Exception as e:
               print(f"❌ Error validating workflow {file}: {e}")
               sys.exit(1)
@@ -981,3 +981,132 @@ jobs:
           check_name: "Unit Test Results"
           report_individual_runs: true
           deduplicate_classes_by_file_name: false
+
+  # ============================================================================
+  # Documentation Build for GitHub Pages
+  # ============================================================================
+
+  build-docs:
+    name: "Build Documentation"
+    runs-on: ubuntu-latest
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped') && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Validate docs directory
+        run: |
+          echo "🔍 Validating documentation structure..."
+          
+          if [ ! -d "docs" ]; then
+            echo "❌ docs/ directory not found!"
+            exit 1
+          fi
+          
+          if [ ! -f "docs/index.html" ] && [ ! -f "docs/index.md" ]; then
+            echo "❌ No index.html or index.md found in docs/"
+            exit 1
+          fi
+          
+          echo "✅ Documentation structure validation passed"
+          echo ""
+          echo "📁 Documentation contents:"
+          find docs/ -type f | sort
+          
+      - name: Prepare documentation for Jekyll
+        run: |
+          echo "🔧 Preparing documentation for Jekyll processing..."
+          
+          # Ensure proper Jekyll configuration exists
+          if [ ! -f "docs/_config.yml" ]; then
+            echo "⚠️  No _config.yml found, creating default configuration..."
+            cat > docs/_config.yml << 'EOF'
+          title: UTF Strings Documentation
+          description: High-performance UTF string processing library for C++
+          remote_theme: pages-themes/primer@v0.6.0
+          plugins:
+            - jekyll-remote-theme
+          
+          # Build settings
+          markdown: kramdown
+          highlighter: rouge
+          
+          # Navigation
+          header_pages:
+            - index.html
+            - README.md
+          
+          # Enable GitHub metadata
+          github: [metadata]
+          EOF
+          fi
+          
+          # Create assets directory and CSS if needed
+          mkdir -p docs/assets/css
+          
+          if [ ! -f "docs/assets/css/style.scss" ]; then
+            echo "🎨 Creating custom CSS override..."
+            cat > docs/assets/css/style.scss << 'EOF'
+          ---
+          ---
+          
+          @import "{{ site.theme }}";
+          
+          /* Custom styles for UTF Strings documentation */
+          .main-content {
+            max-width: 1200px;
+          }
+          
+          code {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            padding: 0.2em 0.4em;
+          }
+          
+          pre code {
+            background-color: transparent;
+            padding: 0;
+          }
+          EOF
+          fi
+          
+          echo "✅ Jekyll preparation completed"
+          
+      - name: Create documentation artifact
+        run: |
+          echo "📦 Creating documentation artifact..."
+          
+          # Create a clean copy of docs for artifact
+          rm -rf docs-artifact/
+          cp -r docs/ docs-artifact/
+          
+          # Remove any Jekyll build artifacts from source
+          rm -rf docs-artifact/_site docs-artifact/.jekyll-cache docs-artifact/.sass-cache
+          
+          # Set proper permissions
+          chmod -R 755 docs-artifact/
+          find docs-artifact/ -type f -exec chmod 644 {} \;
+          
+          echo "📄 Final artifact contents:"
+          find docs-artifact/ -type f | sort
+          
+      - name: Upload docs artifact for Pages
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-for-pages
+          path: docs-artifact/
+          retention-days: 1
+          if-no-files-found: error
+          
+      - name: Documentation build summary
+        run: |
+          echo "✅ Documentation build completed successfully!"
+          echo "📦 Artifact 'docs-for-pages' created and uploaded"
+          echo "🎯 Ready for GitHub Pages deployment"
+          echo ""
+          echo "📋 Build details:"
+          echo "- Jekyll configuration: $([ -f 'docs/_config.yml' ] && echo 'Present' || echo 'Missing')"
+          echo "- Custom CSS: $([ -f 'docs/assets/css/style.scss' ] && echo 'Present' || echo 'Default')"
+          echo "- Theme: $(grep 'remote_theme\|theme:' docs/_config.yml 2>/dev/null | cut -d':' -f2 | tr -d ' ' || echo 'Default')"
