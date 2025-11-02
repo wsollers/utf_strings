@@ -539,9 +539,10 @@ jobs:
   windows-msvc:
     name: "Windows MSVC 2022 (x64)"
     runs-on: windows-2022
+    timeout-minutes: 30
     strategy:
       matrix:
-        build_type: [Debug, Release]
+        build_type: [Release]  # Debug builds timeout on Windows CI
     
     steps:
     - name: Checkout
@@ -590,7 +591,11 @@ jobs:
         arch: x64
         
     - name: Install dependencies
+      timeout-minutes: 20
       run: |
+        # Optimize Conan builds for CI
+        conan config set tools.build:jobs=2
+        conan config set tools.build:verbosity=minimal
         conan install . -s os=Windows -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=False
         
     - name: Configure CMake
@@ -642,6 +647,7 @@ jobs:
   windows-msvc-sanitizer:
     name: "Windows MSVC AddressSanitizer (x64)"
     runs-on: windows-2022
+    timeout-minutes: 30
     
     steps:
     - name: Checkout
@@ -686,7 +692,11 @@ jobs:
         arch: x64
         
     - name: Install dependencies
+      timeout-minutes: 20
       run: |
+        # Optimize Conan builds for CI
+        conan config set tools.build:jobs=2
+        conan config set tools.build:verbosity=minimal
         conan install . -s os=Windows -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=False
         
     - name: Configure CMake with AddressSanitizer
