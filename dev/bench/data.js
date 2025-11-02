@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762062592260,
+  "lastUpdate": 1762062645089,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -90,6 +90,36 @@ window.BENCHMARK_DATA = {
             "value": 10462.52818013846,
             "unit": "ns/iter",
             "extra": "iterations: 134208\ncpu: 10461.982385550786 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "fb5bfa9909c25c1ef0af50ac642c7b304ba4f6b2",
+          "message": "Fix Windows build presets and test result publishing\n\nWindows preset fixes:\n- Use conan-default for configure (what's available)\n- Use conan-release for build (what's available)\n- Mixed preset approach based on actual CI preset availability\n\nTest publishing fix:\n- Change comment_mode from invalid 'create new' to 'always'\n- Valid options: off, always, changes, failures, errors, etc.\n\nBoth fixes address actual CI runtime errors.",
+          "timestamp": "2025-11-02T01:48:17-04:00",
+          "tree_id": "599865b7c8b142269b7b93433c5efab8048e0550",
+          "url": "https://github.com/wsollers/utf_strings/commit/fb5bfa9909c25c1ef0af50ac642c7b304ba4f6b2"
+        },
+        "date": 1762062644696,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7909.700005084086,
+            "unit": "ns/iter",
+            "extra": "iterations: 177023\ncpu: 7909.131361461504 ns\nthreads: 1"
           }
         ]
       }
