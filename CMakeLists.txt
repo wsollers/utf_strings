@@ -101,8 +101,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
         list(APPEND SECURITY_FLAGS
             /LTCG                         # Link Time Code Generation (similar to LTO) 
-            /HIGHENTROPYVA                # High Entropy ASLR (64-bit)
         )
+        # Note: /HIGHENTROPYVA is a linker flag, moved to target_link_options below
     endif()
     
     # Optimization flags for release builds
