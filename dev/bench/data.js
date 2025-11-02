@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762070962908,
+  "lastUpdate": 1762071169795,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -480,6 +480,36 @@ window.BENCHMARK_DATA = {
             "value": 7259.678947917883,
             "unit": "ns/iter",
             "extra": "iterations: 191620\ncpu: 7258.648361340152 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "1bd5f2c191725fb4565fd3aa1e934437fa2ee4fc",
+          "message": "Fix MSVC /HIGHENTROPYVA flag placement\n\n- Remove /HIGHENTROPYVA from compiler flags (SECURITY_FLAGS)\n- Keep /HIGHENTROPYVA only in linker flags where it belongs\n- Fixes Windows build error: 'invalid numeric argument /HIGHENTROPYVA'\n- /HIGHENTROPYVA is a linker-only flag for Windows ASLR security",
+          "timestamp": "2025-11-02T03:11:16-05:00",
+          "tree_id": "a8348e0a866e0912223a410a69d0134a5fddf0d9",
+          "url": "https://github.com/wsollers/utf_strings/commit/1bd5f2c191725fb4565fd3aa1e934437fa2ee4fc"
+        },
+        "date": 1762071169534,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7252.424406860641,
+            "unit": "ns/iter",
+            "extra": "iterations: 192577\ncpu: 7252.036691816781 ns\nthreads: 1"
           }
         ]
       }
