@@ -1,10 +1,10 @@
 {
   "context": {
-    "date": "2025-11-02T07:35:03+00:00",
+    "date": "2025-11-02T07:40:48+00:00",
     "host_name": "runnervmf2e7y",
     "executable": "./utf_strings-bench",
     "num_cpus": 4,
-    "mhz_per_cpu": 3329,
+    "mhz_per_cpu": 3244,
     "cpu_scaling_enabled": false,
     "aslr_enabled": true,
     "caches": [
@@ -33,7 +33,7 @@
         "num_sharing": 4
       }
     ],
-    "load_avg": [1.63428,0.62793,0.233398],
+    "load_avg": [1.22168,0.476562,0.180664],
     "library_version": "v1.9.4",
     "library_build_type": "release",
     "json_schema_version": 1
@@ -48,11 +48,11 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 575511,
-      "real_time": 7.2597235656659823e+03,
-      "cpu_time": 7.2591259645775663e+03,
+      "iterations": 576867,
+      "real_time": 7.2682690030804315e+03,
+      "cpu_time": 7.2676684747090740e+03,
       "time_unit": "ns",
-      "bytes_per_second": 1.6530915785945203e+09
+      "bytes_per_second": 1.6511485136889601e+09
     }
   ]
 }
