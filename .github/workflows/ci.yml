@@ -806,6 +806,7 @@ jobs:
       contents: write
       pages: write
       id-token: write
+      actions: read
 
     steps:
       - name: Checkout
@@ -976,6 +977,9 @@ jobs:
           # Ensure docs directories exist
           mkdir -p docs/dev/bench
           mkdir -p docs/performance
+          
+          # Ensure .nojekyll exists to disable Jekyll processing
+          touch docs/.nojekyll
 
           # Create performance index page
           cat > docs/performance/index.html << 'EOF'
@@ -1148,6 +1152,20 @@ jobs:
           # Use gh-pages branch for benchmark data storage
           gh-pages-branch: "gh-pages"
           benchmark-data-dir-path: "dev/bench"
+
+      - name: Setup Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages Artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v4
 
   # ============================================================================
   # Publish Test Results
