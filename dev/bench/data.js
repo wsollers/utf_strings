@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762071169795,
+  "lastUpdate": 1762071625853,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -510,6 +510,36 @@ window.BENCHMARK_DATA = {
             "value": 7252.424406860641,
             "unit": "ns/iter",
             "extra": "iterations: 192577\ncpu: 7252.036691816781 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "69cebec2dcf6beec598fcb20a10555000048f5f4",
+          "message": "Fix Clang-CL compiler compatibility issues\n\n- Add IS_CLANG_CL detection to differentiate Clang-CL from MSVC\n- Remove MSVC-specific flags (/LTCG, /GL) when using Clang-CL\n- Clang-CL uses different LTO mechanisms than MSVC\n- Prevents 'ignoring unknown option /LTCG' warnings\n- Maintains MSVC optimization flags for actual MSVC builds\n- Fixes Windows Clang-CL matrix build compatibility",
+          "timestamp": "2025-11-02T03:16:39-05:00",
+          "tree_id": "3dbcafd42fba2be27b113c625cfbd295d73688c7",
+          "url": "https://github.com/wsollers/utf_strings/commit/69cebec2dcf6beec598fcb20a10555000048f5f4"
+        },
+        "date": 1762071625582,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7347.9812939330495,
+            "unit": "ns/iter",
+            "extra": "iterations: 189778\ncpu: 7347.335729115072 ns\nthreads: 1"
           }
         ]
       }
