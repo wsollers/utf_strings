@@ -615,8 +615,14 @@ jobs:
 
       - name: Configure CMake
         run: |
-          # Windows: Configure with ${{ matrix.compiler_name }} compiler using build-type specific preset
-          $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
+          # Windows: Configure with ${{ matrix.compiler_name }} compiler using compiler-specific preset logic
+          if ("${{ matrix.compiler }}" -eq "msvc") {
+            # MSVC always uses conan-default for configure
+            $preset = "conan-default"
+          } else {
+            # Clang-CL uses build-type specific presets
+            $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
+          }
           cmake --preset $preset -DCMAKE_GENERATOR_PLATFORM=x64 ${{ matrix.cmake_args }}
 
       - name: Build
