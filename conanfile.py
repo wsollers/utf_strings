@@ -18,7 +18,7 @@ class UtfStrings(ConanFile):
     def requirements(self):
         self.requires("gtest/1.14.0", run=True)
         self.requires("benchmark/1.9.4", run=True)
-        if self.options.with_gperftools:
+        if self.options.with_gperftools and self.settings.os != "Windows":
             self.requires("gperftools/2.13.0", run=True)
 
     def generate(self):

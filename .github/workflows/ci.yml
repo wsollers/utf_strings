@@ -46,6 +46,9 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
+        conan profile update settings.compiler.cppstd=23 default
+        echo "=== Conan Profile Configuration ==="
+        conan profile show default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -58,7 +61,7 @@ jobs:
           
     - name: Install dependencies
       run: |
-        conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+        conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake
       run: |
@@ -185,6 +188,7 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
+        conan profile update settings.compiler.cppstd=23 default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -197,7 +201,7 @@ jobs:
           
     - name: Install dependencies
       run: |
-        conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+        conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake
       run: |
@@ -321,6 +325,7 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
+        conan profile update settings.compiler.cppstd=23 default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -333,7 +338,7 @@ jobs:
           
     - name: Install dependencies
       run: |
-        conan install . -s build_type=Debug --output-folder=build --build=missing
+        conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake with Fuzz Testing
       run: |
@@ -445,6 +450,7 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
+        conan profile update settings.compiler.cppstd=23 default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -456,7 +462,7 @@ jobs:
           
     - name: Install dependencies
       run: |
-        conan install . -s build_type=Debug --output-folder=build --build=missing
+        conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake with Sanitizers
       run: |
@@ -516,6 +522,7 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
+        conan profile update settings.compiler.cppstd=23 default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -537,7 +544,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+        conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake
       run: |
@@ -611,6 +618,7 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
+        conan profile update settings.compiler.cppstd=23 default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -628,7 +636,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        conan install . -s build_type=Debug --output-folder=build --build=missing
+        conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake with AddressSanitizer
       run: |
@@ -680,6 +688,7 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
+        conan profile update settings.compiler.cppstd=23 default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -691,7 +700,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        conan install . -s build_type=Release --output-folder=build --build=missing
+        conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure and Build (Release)
       run: |
