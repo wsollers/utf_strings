@@ -308,7 +308,7 @@ set(UTF_STRINGS_SOURCES
 # --------------------------------------------------------------------
 add_library(utf_strings_static STATIC ${UTF_STRINGS_HEADERS} ${UTF_STRINGS_SOURCES})
 target_include_directories(utf_strings_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_compile_definitions(utf_strings_static PRIVATE UTF_STRINGS_STATIC_BUILD)
+target_compile_definitions(utf_strings_static PUBLIC UTF_STRINGS_STATIC_BUILD)
 target_compile_features(utf_strings_static PUBLIC cxx_std_23)
 apply_build_flags(utf_strings_static)
 
