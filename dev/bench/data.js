@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762117190842,
+  "lastUpdate": 1762117461794,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1548,6 +1548,36 @@ window.BENCHMARK_DATA = {
             "value": 7049.846659799483,
             "unit": "ns/iter",
             "extra": "iterations: 199015\ncpu: 7049.328829485214 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "d6bce6df8174d1b40ed77ad0050e323e63312ad2",
+          "message": "Update workflows for proper performance page deployment\n\n- Ensure CI-generated performance pages take precedence over local files\n- Remove conflicting local performance files that override CI data",
+          "timestamp": "2025-11-02T16:02:36-05:00",
+          "tree_id": "44515bcfe79e7c17aef3e00119944fb650a587eb",
+          "url": "https://github.com/wsollers/utf_strings/commit/d6bce6df8174d1b40ed77ad0050e323e63312ad2"
+        },
+        "date": 1762117461092,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 6918.967853283851,
+            "unit": "ns/iter",
+            "extra": "iterations: 204531\ncpu: 6917.930025277341 ns\nthreads: 1"
           }
         ]
       }
