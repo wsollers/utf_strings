@@ -31,7 +31,12 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y build-essential cmake python3-pip git clang-format
+        sudo apt install -y cmake python3-pip git clang-format
+        # Install exact GCC version 13.3.0 to match local development environment
+        sudo apt install -y gcc-13 g++-13
+        # Set up alternatives to ensure we use GCC 13
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
         
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -46,22 +51,20 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Update to use the correct GCC version and C++23
-        if command -v gcc-13 >/dev/null 2>&1; then
-          GCC_VERSION=$(gcc-13 --version | head -n1 | sed -n 's/.*[^0-9]\([0-9]\+\)\.[0-9]\+\.[0-9]\+.*/\1/p')
+        # Use static profiles based on matrix compiler
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
         else
-          GCC_VERSION=$(gcc --version | head -n1 | sed -n 's/.*[^0-9]\([0-9]\+\)\.[0-9]\+\.[0-9]\+.*/\1/p')
+          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
         fi
-        echo "Detected GCC version: $GCC_VERSION"
-        if [ -n "$GCC_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
-        else
-          echo "Warning: Could not detect GCC version, using Conan default"
-        fi
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
+        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+        echo "=== Conan Profile ==="
         conan profile show --profile:host=default
         
     - name: Cache Conan packages
@@ -204,24 +207,14 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Update to use the correct Clang version and C++23
-        if command -v clang-18 >/dev/null 2>&1; then
-          CLANG_VERSION=$(clang-18 --version | head -n1 | sed -n 's/.*clang version \([0-9]\+\).*/\1/p')
-        else
-          CLANG_VERSION=$(clang --version | head -n1 | sed -n 's/.*clang version \([0-9]\+\).*/\1/p')
-        fi
-        echo "Detected Clang version: $CLANG_VERSION"
-        sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-        if [ -n "$CLANG_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-        else
-          echo "Warning: Could not detect Clang version, using Conan default"
-        fi
-        sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        # Use static profile for Clang 18 with C++23
+        sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+        sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
+        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+        echo "=== Conan Profile ==="
         conan profile show --profile:host=default
         
     - name: Cache Conan packages
@@ -361,38 +354,14 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Determine compiler and version
-        if command -v gcc-13 >/dev/null 2>&1; then
-          GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using GCC-13 version: $GCC_VERSION"
-          if [ -n "$GCC_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect GCC version, using Conan default"
-          fi
-        elif command -v clang-18 >/dev/null 2>&1; then
-          CLANG_VERSION=$(clang-18 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using Clang-18 version: $CLANG_VERSION"
-          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-          if [ -n "$CLANG_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect Clang version, using Conan default"
-          fi
-          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        else
-          COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using default compiler version: $COMPILER_VERSION"
-          if [ -n "$COMPILER_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect compiler version, using Conan default"
-          fi
-        fi
+        # Use static profile for Clang 18 with C++23 (fuzz testing)
+        sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+        sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
+        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+        echo "=== Conan Profile ==="
         conan profile show --profile:host=default
         
     - name: Cache Conan packages
@@ -476,7 +445,12 @@ jobs:
         sudo apt update
         
         # Install basic dependencies first
-        sudo apt install -y build-essential cmake python3-pip git wget curl
+        sudo apt install -y cmake python3-pip git wget curl
+        # Install exact GCC version 13.3.0 to match local development environment
+        sudo apt install -y gcc-13 g++-13
+        # Set up alternatives to ensure we use GCC 13
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
         
         # Install Clang 18 if needed, with retry logic
         if [ "${{ matrix.compiler }}" = "clang" ]; then
@@ -631,12 +605,15 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Configure for Windows MSVC and C++23
-        # Update C++ standard and OS for Windows
+        # Use static profile for MSVC 2022 with C++23
         $profile = "$env:USERPROFILE\.conan2\profiles\default"
+        (Get-Content $profile) -replace 'compiler=.*', 'compiler=msvc' | Set-Content $profile
+        (Get-Content $profile) -replace 'compiler\.version=.*', 'compiler.version=193' | Set-Content $profile
+        (Get-Content $profile) -replace 'compiler\.runtime=.*', 'compiler.runtime=dynamic' | Set-Content $profile
         (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
         (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
-        Write-Host "=== Final Conan Profile ==="
+        (Get-Content $profile) -replace 'arch=.*', 'arch=x86_64' | Set-Content $profile
+        Write-Host "=== Conan Profile ==="
         conan profile show --profile:host=default
       shell: pwsh
         
@@ -734,12 +711,15 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Configure for Windows MSVC and C++23
-        # Update C++ standard and OS for Windows
+        # Use static profile for MSVC 2022 with C++23 (sanitizer)
         $profile = "$env:USERPROFILE\.conan2\profiles\default"
+        (Get-Content $profile) -replace 'compiler=.*', 'compiler=msvc' | Set-Content $profile
+        (Get-Content $profile) -replace 'compiler\.version=.*', 'compiler.version=193' | Set-Content $profile
+        (Get-Content $profile) -replace 'compiler\.runtime=.*', 'compiler.runtime=dynamic' | Set-Content $profile
         (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
         (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
-        Write-Host "=== Final Conan Profile ==="
+        (Get-Content $profile) -replace 'arch=.*', 'arch=x86_64' | Set-Content $profile
+        Write-Host "=== Conan Profile ==="
         conan profile show --profile:host=default
       shell: pwsh
         
@@ -796,7 +776,12 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y build-essential cmake python3-pip git
+        sudo apt install -y cmake python3-pip git
+        # Install exact GCC version 13.3.0 to match local development environment
+        sudo apt install -y gcc-13 g++-13
+        # Set up alternatives to ensure we use GCC 13
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
         
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -811,38 +796,14 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Determine compiler and version
-        if command -v gcc-13 >/dev/null 2>&1; then
-          GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using GCC-13 version: $GCC_VERSION"
-          if [ -n "$GCC_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect GCC version, using Conan default"
-          fi
-        elif command -v clang-18 >/dev/null 2>&1; then
-          CLANG_VERSION=$(clang-18 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using Clang-18 version: $CLANG_VERSION"
-          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-          if [ -n "$CLANG_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect Clang version, using Conan default"
-          fi
-          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        else
-          COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using default compiler version: $COMPILER_VERSION"
-          if [ -n "$COMPILER_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect compiler version, using Conan default"
-          fi
-        fi
+        # Use static profile for GCC 13 with C++23 (performance tracking)
+        sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
+        sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
+        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
+        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+        echo "=== Conan Profile ==="
         conan profile show --profile:host=default
         
     - name: Cache Conan packages

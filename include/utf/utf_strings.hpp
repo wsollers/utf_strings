@@ -9,6 +9,10 @@
 #include <utility>
 #include <vector>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
+
 #include "../src/export.hpp"
 
 namespace utf {
@@ -17,17 +21,50 @@ namespace utf {
 enum class endian { big, little, native };
 
 constexpr bool is_native(endian e) noexcept {
-#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-  constexpr bool host_big = true;
-#else
+#if defined(__cpp_lib_endian) && __cpp_lib_endian >= 201907L
   constexpr bool host_big = (std::endian::native == std::endian::big);
+#elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+  constexpr bool host_big = true;
+#elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+  constexpr bool host_big = false;
+#elif defined(_MSC_VER) || defined(__i386__) || defined(__x86_64__) || defined(__amd64__)
+  // Most common platforms are little-endian
+  constexpr bool host_big = false;
+#else
+  // Fallback using runtime detection for portability
+  constexpr std::uint32_t test_value = 0x01020304;
+  constexpr bool host_big = (*reinterpret_cast<const std::uint8_t*>(&test_value) == 0x01);
 #endif
   return (e == endian::native) || (host_big && e == endian::big) ||
          (!host_big && e == endian::little);
 }
 
-constexpr std::uint16_t swap16(std::uint16_t v) noexcept { return std::byteswap(v); }
-constexpr std::uint32_t swap32(std::uint32_t v) noexcept { return std::byteswap(v); }
+constexpr std::uint16_t swap16(std::uint16_t v) noexcept {
+#if defined(__cpp_lib_byteswap) && __cpp_lib_byteswap >= 202110L
+  return std::byteswap(v);
+#elif defined(__GNUC__) || defined(__clang__)
+  return __builtin_bswap16(v);
+#elif defined(_MSC_VER)
+  return _byteswap_ushort(v);
+#else
+  return (v << 8) | (v >> 8);
+#endif
+}
+
+constexpr std::uint32_t swap32(std::uint32_t v) noexcept {
+#if defined(__cpp_lib_byteswap) && __cpp_lib_byteswap >= 202110L
+  return std::byteswap(v);
+#elif defined(__GNUC__) || defined(__clang__)
+  return __builtin_bswap32(v);
+#elif defined(_MSC_VER)
+  return _byteswap_ulong(v);
+#else
+  return ((v & 0xFF000000u) >> 24) |
+         ((v & 0x00FF0000u) >> 8)  |
+         ((v & 0x0000FF00u) << 8)  |
+         ((v & 0x000000FFu) << 24);
+#endif
+}
 
 inline std::uint16_t load_u16(std::uint16_t v, endian e) noexcept {
   return is_native(e) ? v : swap16(v);
