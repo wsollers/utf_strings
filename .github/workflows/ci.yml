@@ -615,13 +615,12 @@ jobs:
 
       - name: Configure CMake
         run: |
-          # Windows: Configure with ${{ matrix.compiler_name }} compiler
-          $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
-          cmake --preset $preset -DCMAKE_GENERATOR_PLATFORM=x64 ${{ matrix.cmake_args }}
+          # Windows: Configure with ${{ matrix.compiler_name }} compiler (always uses conan-default)
+          cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64 ${{ matrix.cmake_args }}
 
       - name: Build
         run: |
-          # Windows: Use available build preset with explicit configuration
+          # Windows: Use build-type specific build preset
           $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
           cmake --build --preset $preset --config ${{ matrix.build_type }} --parallel
 
