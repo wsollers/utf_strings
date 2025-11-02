@@ -607,7 +607,11 @@ jobs:
       run: |
         # Windows MSVC builds use configuration-specific subdirectories
         cd build\${{ matrix.build_type }}
-        .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_${{ matrix.build_type | lower }}.xml
+        if ("${{ matrix.build_type }}" -eq "Debug") {
+          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_debug.xml
+        } else {
+          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_release.xml
+        }
         
     - name: Benchmark (Release only)
       if: matrix.build_type == 'Release'
