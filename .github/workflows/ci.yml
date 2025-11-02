@@ -822,7 +822,12 @@ jobs:
           # Install Clang 18 for high-performance release builds
           sudo apt install -y clang-18 libc++-18-dev libc++abi-18-dev
           # Install profiling tools for flame graph generation
-          sudo apt install -y linux-tools-generic linux-tools-common perf-tools-unstable
+          # Install kernel-specific perf tools to avoid version mismatch
+          KERNEL_VERSION=$(uname -r)
+          echo "Kernel version: $KERNEL_VERSION"
+          # Try to install kernel-specific perf first, fallback to generic
+          sudo apt install -y linux-tools-$KERNEL_VERSION || sudo apt install -y linux-tools-generic linux-tools-common
+          sudo apt install -y perf-tools-unstable
           # Install FlameGraph tools
           git clone https://github.com/brendangregg/FlameGraph.git /tmp/FlameGraph
           sudo cp /tmp/FlameGraph/*.pl /usr/local/bin/
@@ -905,11 +910,16 @@ jobs:
           echo "Generating flame graphs..."
           if command -v perf >/dev/null 2>&1; then
             # Try to run perf - may fail in containerized environment
+            echo "Perf version info:"
+            perf --version || echo "Could not get perf version"
+            uname -r | echo "Kernel version: $(cat)"
             echo "Attempting perf record with diagnostic output..."
             if perf record -F 99 -g --call-graph dwarf -- ./utf_strings-bench --benchmark_min_time=2.0s --benchmark_repetitions=5; then
               echo "Perf recording successful, checking file format..."
+              ls -la perf.data
               
               # Check perf file format and try to process
+              echo "Testing perf script compatibility..."
               if perf script -v > /dev/null 2>&1; then
                 echo "Perf file format compatible, generating flame graph..."
                 perf script > ../../docs/performance/perf.script
@@ -921,9 +931,31 @@ jobs:
                   echo "Perf data processing failed during stack collapse step. File format may be incompatible." > ../../docs/performance/flamegraph_unavailable.txt
                 fi
               else
-                echo "Perf file format incompatible, creating placeholder with diagnostic info"
+                echo "Perf file format incompatible, trying alternative approach..."
                 perf script -v 2>&1 | head -20 > ../../docs/performance/perf_debug.txt || true
-                echo "Perf file format incompatible with current perf version. This can happen in containerized environments. Debug info saved to perf_debug.txt" > ../../docs/performance/flamegraph_unavailable.txt
+                
+                # Try an alternative approach with simpler call graph format
+                echo "Attempting alternative perf record with fp call-graph..."
+                rm -f perf.data
+                if perf record -F 99 -g --call-graph fp -- ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_repetitions=3; then
+                  echo "Alternative perf recording successful, trying script..."
+                  if perf script > ../../docs/performance/perf.script 2>/dev/null; then
+                    echo "Alternative perf script successful, generating flame graph..."
+                    if stackcollapse-perf.pl ../../docs/performance/perf.script > ../../docs/performance/perf.folded; then
+                      flamegraph.pl ../../docs/performance/perf.folded > ../../docs/performance/flamegraph.svg
+                      echo "Flame graph generated successfully with alternative method"
+                    else
+                      echo "Stack collapse failed with alternative method"
+                      echo "Perf data processing failed during stack collapse step. File format may be incompatible." > ../../docs/performance/flamegraph_unavailable.txt
+                    fi
+                  else
+                    echo "Alternative perf script also failed"
+                    echo "Perf file format incompatible with current perf version. This can happen in containerized environments. Debug info saved to perf_debug.txt" > ../../docs/performance/flamegraph_unavailable.txt
+                  fi
+                else
+                  echo "Alternative perf record also failed"
+                  echo "Perf file format incompatible with current perf version. This can happen in containerized environments. Debug info saved to perf_debug.txt" > ../../docs/performance/flamegraph_unavailable.txt
+                fi
               fi
             else
               echo "Perf recording failed (likely due to container restrictions), creating placeholder"
