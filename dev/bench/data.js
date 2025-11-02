@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762075193376,
+  "lastUpdate": 1762075287792,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -780,6 +780,36 @@ window.BENCHMARK_DATA = {
             "value": 7030.7052408501795,
             "unit": "ns/iter",
             "extra": "iterations: 193938\ncpu: 7030.145170105909 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "02b335a2f081e6445fd62c4227a22fa702d003b7",
+          "message": "Add Cppcheck static analysis workflow with SARIF upload\n\nFeatures:\n- Comprehensive C++23 static analysis with Cppcheck\n- SARIF format output for GitHub Code Scanning integration\n- Configurable severity levels (all, error, warning, style, performance, portability, information)\n- Daily scheduled analysis at 3 AM UTC\n- XML and human-readable report generation\n- Automatic issue creation for critical findings on scheduled runs\n- PR comments with analysis results\n- Platform-specific configuration (Unix 64-bit, C++23 standard)\n- Comprehensive suppressions for common false positives\n- Artifact upload for detailed review\n\nThis adds another layer of static analysis beyond CodeQL and Semgrep,\nspecifically focused on C++ code quality, performance, and portability issues.",
+          "timestamp": "2025-11-02T04:19:25-05:00",
+          "tree_id": "ac21023758bad2c365a05d15f38d0369c23e09f5",
+          "url": "https://github.com/wsollers/utf_strings/commit/02b335a2f081e6445fd62c4227a22fa702d003b7"
+        },
+        "date": 1762075287438,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7023.970826083015,
+            "unit": "ns/iter",
+            "extra": "iterations: 198842\ncpu: 7022.139844700817 ns\nthreads: 1"
           }
         ]
       }
