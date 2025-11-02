@@ -1008,7 +1008,7 @@ jobs:
             echo "# UTF Strings Documentation" > docs/README.md
             echo "This directory contains automated performance benchmark results and documentation." >> docs/README.md
           fi
-          
+
       - name: Store Performance Results
         uses: benchmark-action/github-action-benchmark@v1
         with:
@@ -1022,7 +1022,7 @@ jobs:
           # Use gh-pages branch for benchmark data storage
           gh-pages-branch: "gh-pages"
           benchmark-data-dir-path: "dev/bench"
-        
+
       - name: Commit Performance Analysis Reports
         run: |
           # Add all generated performance files to git
