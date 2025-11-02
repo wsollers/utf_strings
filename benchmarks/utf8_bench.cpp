@@ -34,17 +34,20 @@
 #include <gperftools/profiler.h>
 #endif
 
-static void BM_Length_Mixed(benchmark::State& state) {
-  std::u8string s;
-  for (int i = 0; i < 1000; ++i) s += u8"Héllø 🌍";
+static void BM_CodePoint_Creation(benchmark::State& state) {
+  // Benchmark UTF-8 code point creation from scalar values
+  uint32_t scalars[] = {0x48, 0x00E9, 0x00F8, 0x1F30D};  // H, é, ø, 🌍
+  std::size_t idx = 0;
+
   for (auto _ : state) {
-    auto n = utf::length<char8_t, utf::endian::big>(s);
-    benchmark::DoNotOptimize(n);
+    auto cp = utf::Utf8CodePoint::from_scalar(scalars[idx % 4]);
+    benchmark::DoNotOptimize(cp);
+    ++idx;
   }
-  state.SetComplexityN(static_cast<benchmark::ComplexityN>(s.size()));
-  state.SetBytesProcessed(state.iterations() * static_cast<int64_t>(s.size()));
+
+  state.SetItemsProcessed(state.iterations());
 }
-BENCHMARK(BM_Length_Mixed)->Complexity();
+BENCHMARK(BM_CodePoint_Creation);
 
 int main(int argc, char** argv) {
 #ifdef HAVE_GPERFTOOLS
