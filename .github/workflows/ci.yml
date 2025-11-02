@@ -96,11 +96,11 @@ jobs:
       
     - name: Test
       run: |
+        # Both Debug and Release builds use build/build directory with Conan presets
+        cd build/build
         if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          cd build/Debug
           ./utf_strings-tests --gtest_output=xml:test_results_gcc_debug.xml
         else
-          cd build/build
           ./utf_strings-tests --gtest_output=xml:test_results_gcc_release.xml
         fi
         
@@ -120,7 +120,7 @@ jobs:
       with:
         name: test-results-linux-gcc-${{ matrix.build_type }}
         path: |
-          build/Debug/test_results_gcc_debug.xml
+          build/build/test_results_gcc_debug.xml
           build/build/test_results_gcc_release.xml
           build/build/benchmark_results_gcc.json
 
@@ -246,11 +246,11 @@ jobs:
       
     - name: Test
       run: |
+        # Both Debug and Release builds use build/build directory with Conan presets
+        cd build/build
         if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          cd build/Debug
           ./utf_strings-tests --gtest_output=xml:test_results_clang_debug.xml
         else
-          cd build/build
           ./utf_strings-tests --gtest_output=xml:test_results_clang_release.xml
         fi
         
@@ -270,7 +270,7 @@ jobs:
       with:
         name: test-results-linux-clang-${{ matrix.build_type }}
         path: |
-          build/Debug/test_results_clang_debug.xml
+          build/build/test_results_clang_debug.xml
           build/build/test_results_clang_release.xml
           build/build/benchmark_results_clang.json
 
@@ -521,7 +521,8 @@ jobs:
       
     - name: Test with Sanitizers
       run: |
-        cd build/Debug
+        # Debug builds use build/build directory with Conan presets
+        cd build/build
         ./utf_strings-tests --gtest_output=xml:test_results_clang_${{ matrix.sanitizer }}.xml
         
     - name: Upload sanitizer results
@@ -529,7 +530,7 @@ jobs:
       if: always()
       with:
         name: sanitizer-results-clang-${{ matrix.sanitizer }}
-        path: build/Debug/test_results_clang_${{ matrix.sanitizer }}.xml
+        path: build/build/test_results_clang_${{ matrix.sanitizer }}.xml
 
   # ============================================================================
   # Windows x64 - MSVC 2022
