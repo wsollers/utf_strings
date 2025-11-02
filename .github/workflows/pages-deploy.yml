@@ -72,7 +72,11 @@ jobs:
 
       - name: Extract docs artifact
         run: |
-          unzip docs.zip -d docs/
+          # Remove any existing docs directory to avoid conflicts
+          rm -rf docs/
+          
+          # Extract with overwrite flag to avoid prompts
+          unzip -o docs.zip -d docs/
           ls -la docs/
 
       - name: Prepare static site for Pages deployment
