@@ -595,13 +595,13 @@ jobs:
         
     - name: Configure CMake
       run: |
-        # Windows uses conan-default preset with explicit build type configuration
-        cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_CONFIGURATION_TYPES="${{ matrix.build_type }}"
+        # Windows uses conan-release preset (multi-config generator)
+        cmake --preset conan-release -DCMAKE_GENERATOR_PLATFORM=x64
         
     - name: Build
       run: |
-        # Windows uses conan-default preset with explicit build configuration
-        cmake --build --preset conan-default --config ${{ matrix.build_type }} --parallel
+        # Windows multi-config build with explicit configuration
+        cmake --build --preset conan-release --config ${{ matrix.build_type }} --parallel
       
     - name: Test
       run: |
@@ -623,7 +623,7 @@ jobs:
       if: matrix.build_type == 'Release'
       run: |
         $env:PATH = "C:\Program Files\LLVM\bin;$env:PATH"
-        cmake --build --preset conan-default --config Release --target format-check
+        cmake --build --preset conan-release --config Release --target format-check
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -691,10 +691,10 @@ jobs:
         
     - name: Configure CMake with AddressSanitizer
       run: |
-        cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_CONFIGURATION_TYPES=Debug -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+        cmake --preset conan-release -DCMAKE_GENERATOR_PLATFORM=x64 -DUTF_STRINGS_ENABLE_SANITIZERS=ON
         
     - name: Build with AddressSanitizer
-      run: cmake --build --preset conan-default --config Debug --parallel
+      run: cmake --build --preset conan-release --config Debug --parallel
       
     - name: Test with AddressSanitizer
       run: |
