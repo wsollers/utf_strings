@@ -23,6 +23,13 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Detect Clang-CL (appears as MSVC but uses clang-cl.exe)
+set(IS_CLANG_CL FALSE)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_COMPILER MATCHES "clang-cl")
+    set(IS_CLANG_CL TRUE)
+    message(STATUS "Detected Clang-CL compiler")
+endif()
+
 # Security and optimization flags
 set(SECURITY_FLAGS "")
 set(OPTIMIZATION_FLAGS "")
@@ -90,7 +97,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
     endif()
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    # MSVC Security flags (enabled by default for all builds)
+    # MSVC/Clang-CL Security flags (enabled by default for all builds)
     set(SECURITY_FLAGS
         /GS                               # Buffer Security Check
         /sdl                              # Enable Additional Security Checks  
@@ -99,9 +106,12 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     
     # Additional security flags for release builds
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        list(APPEND SECURITY_FLAGS
-            /LTCG                         # Link Time Code Generation (similar to LTO) 
-        )
+        if(NOT IS_CLANG_CL)
+            # MSVC-specific LTO flag
+            list(APPEND SECURITY_FLAGS
+                /LTCG                     # Link Time Code Generation (MSVC only)
+            )
+        endif()
         # Note: /HIGHENTROPYVA is a linker flag, moved to target_link_options below
     endif()
     
@@ -112,10 +122,16 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
             /Oi                           # Generate Intrinsic Functions
             /Ot                           # Favor Fast Code
             /Oy                           # Omit Frame Pointers (x86 only)
-            /GL                           # Whole Program Optimization
             /arch:AVX2                    # Enable AVX2 instructions (adjust as needed)
             /DNDEBUG                      # Disable debug assertions
         )
+        
+        # Add MSVC-specific whole program optimization
+        if(NOT IS_CLANG_CL)
+            list(APPEND OPTIMIZATION_FLAGS
+                /GL                       # Whole Program Optimization (MSVC only)
+            )
+        endif()
     endif()
     
     # Debug flags for debug builds
@@ -216,14 +232,20 @@ function(apply_build_flags target_name)
                     -Wl,-z,noexecstack        # Non-executable stack
                 )
             elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-                target_link_options(${target_name} PRIVATE
-                    /LTCG                     # Link Time Code Generation
+                set(MSVC_LINK_FLAGS
                     /OPT:REF                  # Eliminate unreferenced functions and data
                     /OPT:ICF                  # Enable COMDAT folding  
                     /DYNAMICBASE              # Address Space Layout Randomization
                     /NXCOMPAT                 # Data Execution Prevention
                     /HIGHENTROPYVA            # High Entropy ASLR (64-bit)
                 )
+                
+                # Add MSVC-specific LTO flag only for actual MSVC, not Clang-CL
+                if(NOT IS_CLANG_CL)
+                    list(APPEND MSVC_LINK_FLAGS /LTCG)  # Link Time Code Generation (MSVC only)
+                endif()
+                
+                target_link_options(${target_name} PRIVATE ${MSVC_LINK_FLAGS})
             endif()
         endif()
     endif()
