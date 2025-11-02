@@ -1,6 +1,8 @@
 
 #include <benchmark/benchmark.h>
+
 #include <string>
+
 #include "utf/utf_strings.hpp"
 
 #ifdef HAVE_GPERFTOOLS
@@ -8,23 +10,25 @@
 #endif
 
 static void BM_Length_Mixed(benchmark::State& state) {
-    std::u8string s;
-    for (int i = 0; i < 1000; ++i) s += u8"Héllø 🌍";
-    for (auto _ : state) {
-        auto n = utf::length<char8_t, utf::endian::big>(s);
-        benchmark::DoNotOptimize(n);
-    }
+  std::u8string s;
+  for (int i = 0; i < 1000; ++i) s += u8"Héllø 🌍";
+  for (auto _ : state) {
+    auto n = utf::length<char8_t, utf::endian::big>(s);
+    benchmark::DoNotOptimize(n);
+  }
+  state.SetComplexityN(s.size());
+  state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(s.size()));
 }
-BENCHMARK(BM_Length_Mixed);
+BENCHMARK(BM_Length_Mixed)->Complexity();
 
 int main(int argc, char** argv) {
 #ifdef HAVE_GPERFTOOLS
-    ProfilerStart("utf_strings.prof");
+  ProfilerStart("utf_strings.prof");
 #endif
-    benchmark::Initialize(&argc, argv);
-    benchmark::RunSpecifiedBenchmarks();
+  benchmark::Initialize(&argc, argv);
+  benchmark::RunSpecifiedBenchmarks();
 #ifdef HAVE_GPERFTOOLS
-    ProfilerStop();
+  ProfilerStop();
 #endif
-    return 0;
+  return 0;
 }

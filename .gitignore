@@ -7,3 +7,7 @@
 *.user
 *.VC.db
 *.DS_Store
+
+perf.data
+
+perf.script

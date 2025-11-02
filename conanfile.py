@@ -10,7 +10,10 @@ class UtfStrings(ConanFile):
     package_type = "application"
     exports = "LICENSE"
     options = {"with_gperftools": [True, False]}
-    default_options = {"with_gperftools": True}
+    default_options = {
+        "with_gperftools": True,
+        "*:cppstd": "23"
+    }
 
     def requirements(self):
         self.requires("gtest/1.14.0", run=True)

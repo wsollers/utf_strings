@@ -61,11 +61,72 @@ check_premake() {
 }
 
 # ------------------------------------------------------------
+# Ensure clang-format is installed
+# ------------------------------------------------------------
+check_and_install_clang_format() {
+  if command -v clang-format >/dev/null 2>&1; then
+    echo "✅ clang-format found: $(clang-format --version | head -n1)"
+  else
+    echo "⚙️  clang-format not found — installing..."
+    
+    # Detect OS and install accordingly
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      # Linux
+      if command -v apt >/dev/null 2>&1; then
+        echo "Installing clang-format via apt..."
+        sudo apt update
+        sudo apt install -y clang-format
+      elif command -v yum >/dev/null 2>&1; then
+        echo "Installing clang-format via yum..."
+        sudo yum install -y clang-tools-extra
+      elif command -v dnf >/dev/null 2>&1; then
+        echo "Installing clang-format via dnf..."
+        sudo dnf install -y clang-tools-extra
+      elif command -v pacman >/dev/null 2>&1; then
+        echo "Installing clang-format via pacman..."
+        sudo pacman -S --noconfirm clang
+      else
+        echo "❌ ERROR: Unable to determine package manager. Please install clang-format manually."
+        exit 1
+      fi
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+      # macOS
+      if command -v brew >/dev/null 2>&1; then
+        echo "Installing clang-format via Homebrew..."
+        brew install clang-format
+      else
+        echo "❌ ERROR: Homebrew not found. Please install Homebrew first or install clang-format manually."
+        exit 1
+      fi
+    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+      # Windows (MSYS2/Cygwin)
+      echo "❌ ERROR: Please install clang-format manually on Windows."
+      echo "  ➤ Download from: https://releases.llvm.org/download.html"
+      echo "  ➤ Or use: scoop install llvm (if using Scoop)"
+      echo "  ➤ Or use: choco install llvm (if using Chocolatey)"
+      exit 1
+    else
+      echo "❌ ERROR: Unsupported OS: $OSTYPE. Please install clang-format manually."
+      exit 1
+    fi
+    
+    # Verify installation
+    if command -v clang-format >/dev/null 2>&1; then
+      echo "✅ clang-format installed successfully: $(clang-format --version | head -n1)"
+    else
+      echo "❌ ERROR: clang-format installation failed or not in PATH."
+      exit 1
+    fi
+  fi
+}
+
+# ------------------------------------------------------------
 # Run tool checks before proceeding
 # ------------------------------------------------------------
-echo "[0/7] Checking tools..."
+echo "[0/8] Checking tools..."
 check_and_install_conan
 check_premake
+check_and_install_clang_format
 
 
 CONFIGS=("Debug" "Release")
@@ -90,9 +151,10 @@ require() {
   command -v "$1" >/dev/null 2>&1 || { echo "ERROR: '$1' not found in PATH"; exit 1; }
 }
 
-echo "[0/7] Checking tools..."
+echo "[0/8] Checking tools..."
 require conan
 require premake5
+require clang-format
 
 # OS & generator detection
 UNAME=$(uname -s || echo "Unknown")
@@ -106,7 +168,7 @@ echo "Detected OS: $UNAME"
 echo "Using Premake generator: $GEN"
 
 if [[ $DO_CLEAN -eq 1 ]]; then
-  echo "[1/7] Cleaning ./build ..."
+  echo "[1/8] Cleaning ./build ..."
   rm -rf build
 fi
 
@@ -115,13 +177,13 @@ mkdir -p build
 # 1) Conan deps for each selected config
 step=2
 for cfg in "${CONFIGS[@]}"; do
-  echo "[$step/7] Conan install ($cfg) ..."
+  echo "[$step/8] Conan install ($cfg) ..."
   conan install . -s build_type="$cfg" --output-folder=build --build=missing
   step=$((step+1))
 done
 
 # 2) Generate project files with Premake
-echo "[$step/7] Generating project files with Premake ($GEN) ..."
+echo "[$step/8] Generating project files with Premake ($GEN) ..."
 pushd build >/dev/null
 case "$GEN" in
   gmake2) premake5 gmake2 ;;
@@ -189,10 +251,10 @@ run_bench() {
 
 # 5) Execute per config
 for cfg in "${CONFIGS[@]}"; do
-  echo "[$step/7] Building ($cfg) ..."
+  echo "[$step/8] Building ($cfg) ..."
   build_one "$cfg"
   step=$((step+1))
-  echo "[$step/7] Running unit tests ($cfg) ..."
+  echo "[$step/8] Running unit tests ($cfg) ..."
   run_tests "$cfg"
   step=$((step+1))
 done
@@ -200,10 +262,10 @@ done
 # 6) Release benchmark (unless skipped)
 if [[ $SKIP_BENCH -eq 0 ]]; then
   if printf '%s\n' "${CONFIGS[@]}" | grep -q '^Release$'; then
-    echo "[$step/7] Running benchmarks (Release) ..."
+    echo "[$step/8] Running benchmarks (Release) ..."
     run_bench
   else
-    echo "[$step/7] Skipping benchmarks (Release not built). Use: -c Release"
+    echo "[$step/8] Skipping benchmarks (Release not built). Use: -c Release"
   fi
 fi
 
