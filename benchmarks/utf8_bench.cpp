@@ -16,8 +16,8 @@ static void BM_Length_Mixed(benchmark::State& state) {
     auto n = utf::length<char8_t, utf::endian::big>(s);
     benchmark::DoNotOptimize(n);
   }
-  state.SetComplexityN(s.size());
-  state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(s.size()));
+  state.SetComplexityN(static_cast<benchmark::ComplexityN>(s.size()));
+  state.SetBytesProcessed(state.iterations() * static_cast<int64_t>(s.size()));
 }
 BENCHMARK(BM_Length_Mixed)->Complexity();
 
