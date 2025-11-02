@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762066290196,
+  "lastUpdate": 1762067348059,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -210,6 +210,36 @@ window.BENCHMARK_DATA = {
             "value": 7323.90452388975,
             "unit": "ns/iter",
             "extra": "iterations: 192865\ncpu: 7323.020988774531 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "349ea60e0050746375061614e2106bf5a589be5c",
+          "message": "Clean up trailing whitespace in performance index.html\n\n- Remove trailing spaces from JavaScript section\n- Improve code formatting consistency\n- No functional changes to flame graph detection logic",
+          "timestamp": "2025-11-02T02:07:07-05:00",
+          "tree_id": "b2d63206aaf8bc3a90c62c97154706140d3ee7fa",
+          "url": "https://github.com/wsollers/utf_strings/commit/349ea60e0050746375061614e2106bf5a589be5c"
+        },
+        "date": 1762067347805,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7265.024916253473,
+            "unit": "ns/iter",
+            "extra": "iterations: 190157\ncpu: 7264.39909653602 ns\nthreads: 1"
           }
         ]
       }
