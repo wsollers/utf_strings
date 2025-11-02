@@ -1,0 +1,66 @@
+{
+    // C++ IntelliSense Configuration
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.default.compilerPath": "/usr/bin/g++-13",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/build/_deps/**",
+        "${workspaceFolder}/build/build/_deps/**"
+    ],
+    "C_Cpp.default.defines": [
+        "UTF_STRINGS_STATIC_BUILD"
+    ],
+    // CMake Configuration  
+    "cmake.configureOnOpen": true,
+    "cmake.buildDirectory": "${workspaceFolder}/build/build",
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.preferredGenerators": [
+        "Unix Makefiles"
+    ],
+    "cmake.configureArgs": [
+        "--preset=conan-debug"
+    ],
+    "cmake.buildArgs": [
+        "--preset=conan-debug"
+    ],
+    "cmake.parallelJobs": 0,
+    "cmake.buildBeforeRun": true,
+    // Code formatting
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.clang_format_path": "/usr/bin/clang-format",
+    "C_Cpp.clang_format_style": "file",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": false,
+    // File associations
+    "files.associations": {
+        "*.hpp": "cpp",
+        "*.cpp": "cpp",
+        "*.h": "cpp",
+        "CMakeLists.txt": "cmake",
+        "*.cmake": "cmake",
+        "conanfile.py": "python"
+    },
+    // Search exclusions
+    "search.exclude": {
+        "**/build/**": true,
+        "**/.conan2/**": true,
+        "**/.git/**": true
+    },
+    "files.exclude": {
+        "**/.conan2/**": true
+    },
+    // Python for Conan
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    // Testing
+    "testMate.cpp.test.executables": [
+        {
+            "name": "UTF Strings Tests",
+            "pattern": "build/build/utf_strings-tests",
+            "cwd": "${workspaceFolder}",
+            "env": {}
+        }
+    ]
+}

@@ -1,0 +1,194 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Conan Install Debug",
+            "type": "shell",
+            "command": "conan",
+            "args": [
+                "install",
+                ".",
+                "-s",
+                "os=Linux",
+                "-s",
+                "build_type=Debug",
+                "--output-folder=build",
+                "--build=missing",
+                "-o",
+                "with_gperftools=True"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Configure CMake Debug",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--preset=conan-debug"
+            ],
+            "group": "build",
+            "dependsOn": "Conan Install Debug",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Build Debug",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset=conan-debug",
+                "--parallel"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": "Configure CMake Debug",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Build Release",
+            "type": "shell",
+            "command": "conan",
+            "args": [
+                "install",
+                ".",
+                "-s",
+                "build_type=Release",
+                "--output-folder=build-release",
+                "--build=missing"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "./utf_strings-tests",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}/build/build"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": "Build Debug",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Specific Test",
+            "type": "shell",
+            "command": "./utf_strings-tests",
+            "args": [
+                "--gtest_filter=${input:testName}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build/build"
+            },
+            "group": "test",
+            "dependsOn": "Build Debug",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Benchmarks",
+            "type": "shell",
+            "command": "./utf_strings-bench",
+            "args": [
+                "--benchmark_min_time=0.5s"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build/build"
+            },
+            "group": "test",
+            "dependsOn": "Build Debug",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Format Code",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "--preset=conan-debug",
+                "--target",
+                "format"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-rf",
+                "build",
+                "build-release"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "testName",
+            "description": "Test name filter (e.g., UTF8.ValidAscii or UTF8.*)",
+            "default": "*",
+            "type": "promptString"
+        }
+    ]
+}

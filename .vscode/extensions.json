@@ -1,0 +1,39 @@
+{
+    "recommendations": [
+        // Essential C++ Development
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        // Testing
+        "ms-vscode.test-adapter-converter",
+        "matepek.vscode-catch2-test-adapter",
+        "hbenl.vscode-test-explorer",
+        // Python (for Conan)
+        "ms-python.python",
+        "ms-python.isort",
+        // Code Quality & Formatting
+        "ms-vscode.vscode-clangd",
+        "xaver.clang-format",
+        "jeff-hykin.better-cpp-syntax",
+        // Git & Version Control
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        // Productivity & UI
+        "formulahendry.code-runner",
+        "ms-vscode.hexeditor",
+        "aaron-bond.better-comments",
+        "oderwat.indent-rainbow",
+        // Documentation & Markup
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        // Performance & Profiling
+        "webfreak.debug",
+        "ms-vscode.vscode-serial-monitor",
+        // Remote Development (if needed)
+        "ms-vscode-remote.remote-ssh",
+        "ms-vscode-remote.remote-containers"
+    ]
+}

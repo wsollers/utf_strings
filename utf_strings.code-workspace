@@ -1,0 +1,297 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        // C++ IntelliSense Configuration
+        "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+        "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+        "C_Cpp.default.cppStandard": "c++23",
+        "C_Cpp.default.cStandard": "c17",
+        "C_Cpp.default.compilerPath": "/usr/bin/g++-13",
+        // CMake Configuration
+        "cmake.configureOnOpen": true,
+        "cmake.buildDirectory": "${workspaceFolder}/build/build",
+        "cmake.sourceDirectory": "${workspaceFolder}",
+        "cmake.preferredGenerators": [
+            "Unix Makefiles"
+        ],
+        "cmake.configureArgs": [
+            "--preset=conan-debug"
+        ],
+        "cmake.buildArgs": [
+            "--preset=conan-debug"
+        ],
+        "cmake.parallelJobs": 0,
+        "cmake.buildBeforeRun": true,
+        // File associations and language settings
+        "files.associations": {
+            "*.hpp": "cpp",
+            "*.cpp": "cpp",
+            "*.h": "cpp",
+            "CMakeLists.txt": "cmake",
+            "*.cmake": "cmake",
+            "conanfile.py": "python",
+            "*.toml": "toml"
+        },
+        // Editor settings for C++
+        "editor.formatOnSave": true,
+        "editor.formatOnType": false,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        // clang-format configuration
+        "C_Cpp.formatting": "clangFormat",
+        "C_Cpp.clang_format_path": "/usr/bin/clang-format",
+        "C_Cpp.clang_format_style": "file",
+        // Git settings
+        "git.enableCommitSigning": false,
+        "git.detectSubmodules": false,
+        // Terminal settings
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.cwd": "${workspaceFolder}",
+        // Search and files
+        "search.exclude": {
+            "**/build/**": true,
+            "**/.conan2/**": true,
+            "**/node_modules/**": true,
+            "**/.git/**": true
+        },
+        "files.exclude": {
+            "**/build/**": false,
+            "**/.conan2/**": true
+        },
+        // Python settings for Conan
+        "python.defaultInterpreterPath": ".venv/bin/python",
+        "python.terminal.activateEnvironment": true,
+        // Testing configuration
+        "testMate.cpp.test.executables": [
+            {
+                "name": "UTF Strings Tests",
+                "pattern": "build/build/utf_strings-tests",
+                "cwd": "${workspaceFolder}",
+                "env": {}
+            }
+        ],
+        // Problem matchers
+        "cmake.problemMatchers": [
+            "$gcc",
+            "$cmake"
+        ]
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.cpptools",
+            "ms-vscode.cmake-tools",
+            "twxs.cmake",
+            "ms-python.python",
+            "ms-vscode.test-adapter-converter",
+            "matepek.vscode-catch2-test-adapter",
+            "formulahendry.code-runner",
+            "jeff-hykin.better-cpp-syntax",
+            "ms-vscode.vscode-json",
+            "redhat.vscode-yaml",
+            "ms-vscode.hexeditor"
+        ]
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Conan Install Dependencies",
+                "type": "shell",
+                "command": "conan",
+                "args": [
+                    "install",
+                    ".",
+                    "-s",
+                    "os=Linux",
+                    "-s",
+                    "build_type=Debug",
+                    "--output-folder=build",
+                    "--build=missing",
+                    "-o",
+                    "with_gperftools=True"
+                ],
+                "group": "build",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared",
+                    "showReuseMessage": true,
+                    "clear": false
+                },
+                "problemMatcher": []
+            },
+            {
+                "label": "Configure CMake",
+                "type": "shell",
+                "command": "cmake",
+                "args": [
+                    "--preset=conan-debug"
+                ],
+                "group": "build",
+                "dependsOn": "Conan Install Dependencies",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ]
+            },
+            {
+                "label": "Build Debug",
+                "type": "shell",
+                "command": "cmake",
+                "args": [
+                    "--build",
+                    "--preset=conan-debug",
+                    "--parallel"
+                ],
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                },
+                "dependsOn": "Configure CMake",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared"
+                },
+                "problemMatcher": [
+                    "$gcc"
+                ]
+            },
+            {
+                "label": "Run Tests",
+                "type": "shell",
+                "command": "./utf_strings-tests",
+                "args": [],
+                "options": {
+                    "cwd": "${workspaceFolder}/build/build"
+                },
+                "group": "test",
+                "dependsOn": "Build Debug",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared"
+                },
+                "problemMatcher": []
+            },
+            {
+                "label": "Run Benchmarks",
+                "type": "shell",
+                "command": "./utf_strings-bench",
+                "args": [
+                    "--benchmark_min_time=0.5s"
+                ],
+                "options": {
+                    "cwd": "${workspaceFolder}/build/build"
+                },
+                "group": "test",
+                "dependsOn": "Build Debug",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared"
+                },
+                "problemMatcher": []
+            },
+            {
+                "label": "Format Code",
+                "type": "shell",
+                "command": "cmake",
+                "args": [
+                    "--build",
+                    "--preset=conan-debug",
+                    "--target",
+                    "format"
+                ],
+                "group": "build",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared"
+                },
+                "problemMatcher": []
+            },
+            {
+                "label": "Clean Build",
+                "type": "shell",
+                "command": "rm",
+                "args": [
+                    "-rf",
+                    "build"
+                ],
+                "group": "build",
+                "presentation": {
+                    "echo": true,
+                    "reveal": "always",
+                    "focus": false,
+                    "panel": "shared"
+                },
+                "problemMatcher": []
+            }
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Debug Tests",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceFolder}/build/build/utf_strings-tests",
+                "args": [],
+                "stopAtEntry": false,
+                "cwd": "${workspaceFolder}/build/build",
+                "environment": [],
+                "externalConsole": false,
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ],
+                "preLaunchTask": "Build Debug",
+                "miDebuggerPath": "/usr/bin/gdb"
+            },
+            {
+                "name": "Debug Benchmarks",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceFolder}/build/build/utf_strings-bench",
+                "args": [
+                    "--benchmark_min_time=0.1s"
+                ],
+                "stopAtEntry": false,
+                "cwd": "${workspaceFolder}/build/build",
+                "environment": [],
+                "externalConsole": false,
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ],
+                "preLaunchTask": "Build Debug",
+                "miDebuggerPath": "/usr/bin/gdb"
+            }
+        ]
+    }
+}
