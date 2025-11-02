@@ -1008,23 +1008,23 @@ jobs:
             echo "# UTF Strings Documentation" > docs/README.md
             echo "This directory contains automated performance benchmark results and documentation." >> docs/README.md
           fi
-
-    - name: Store Performance Results
-      uses: benchmark-action/github-action-benchmark@v1
-      with:
-        tool: "googlecpp"
-        output-file-path: build/build/performance_baseline.json
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        auto-push: true
-        alert-threshold: "150%"
-        comment-on-alert: true
-        fail-on-alert: false
-        # Use gh-pages branch for benchmark data storage
-        gh-pages-branch: "gh-pages"
-        benchmark-data-dir-path: "dev/bench"
+          
+      - name: Store Performance Results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: "googlecpp"
+          output-file-path: build/build/performance_baseline.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: "150%"
+          comment-on-alert: true
+          fail-on-alert: false
+          # Use gh-pages branch for benchmark data storage
+          gh-pages-branch: "gh-pages"
+          benchmark-data-dir-path: "dev/bench"
         
-    - name: Commit Performance Analysis Reports
-      run: |
+      - name: Commit Performance Analysis Reports
+        run: |
           # Add all generated performance files to git
           git add docs/performance/
 
