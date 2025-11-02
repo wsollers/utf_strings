@@ -20,10 +20,13 @@ TEST(UTF8, ValidMultibyte) {
   ASSERT_TRUE(s.valid());
   auto n = s.length();
   ASSERT_TRUE(n.has_value());
-  EXPECT_EQ(*n, 8u);
+  EXPECT_EQ(*n, 7u);  // H-é-l-l-ø-space-🌍 = 7 code points
   auto u32 = s.to_u32();
   ASSERT_TRUE(u32.has_value());
   EXPECT_EQ((*u32)[0], U'H');
+  EXPECT_EQ((*u32)[1], U'é');  // U+00E9
+  EXPECT_EQ((*u32)[4], U'ø');  // U+00F8  
+  EXPECT_EQ((*u32)[6], U'🌍'); // U+1F30D
 }
 
 TEST(UTF8, RejectOverlong) {
