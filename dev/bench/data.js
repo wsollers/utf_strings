@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762078128947,
+  "lastUpdate": 1762078381931,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1080,6 +1080,36 @@ window.BENCHMARK_DATA = {
             "value": 7030.701712676289,
             "unit": "ns/iter",
             "extra": "iterations: 198111\ncpu: 7030.271882934313 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "13ad2a555af37c6d4e1182237eac592730105891",
+          "message": "ci: Fix unzip interactive prompt in Pages deployment\n\n- Added -o flag to unzip command to overwrite files without prompting\n- Added rm -rf docs/ before extraction to ensure clean state\n- Resolves 'replace docs/README.md? [y]es, [n]o...' interactive prompt error\n\nThis prevents the workflow from hanging on file conflicts during\ndocs artifact extraction.",
+          "timestamp": "2025-11-02T05:10:33-05:00",
+          "tree_id": "f5154e5305f4a91a0439a142584098cbb80382fc",
+          "url": "https://github.com/wsollers/utf_strings/commit/13ad2a555af37c6d4e1182237eac592730105891"
+        },
+        "date": 1762078381253,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 6831.208170874638,
+            "unit": "ns/iter",
+            "extra": "iterations: 205437\ncpu: 6830.888160360597 ns\nthreads: 1"
           }
         ]
       }
