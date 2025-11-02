@@ -21,6 +21,11 @@ include:
   - "*.csv"
   - "*.svg"
   - "*.txt"
+  - "*.md"
+
+# Keep performance data files as-is
+keep_files:
+  - performance/
 
 # Exclude from processing
 exclude:

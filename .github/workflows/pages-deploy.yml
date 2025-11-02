@@ -41,13 +41,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Backup repository docs
+        run: |
+          # Save repository docs for fallback
+          mkdir -p /tmp/repo-docs
+          if [ -d "docs" ]; then
+            cp -r docs/* /tmp/repo-docs/
+            echo "✅ Repository docs backed up"
+          else
+            echo "❌ No docs directory in repository"
+          fi
+
       # Download documentation artifacts from both CI and Performance workflows
       - name: Download and merge documentation artifacts
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            
+
             // Function to download artifact by name from a workflow run
             async function downloadArtifact(runId, artifactName, fileName) {
               const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -74,11 +85,11 @@ jobs:
               }
               return false;
             }
-            
+
             // Try to download docs from current workflow run
             const currentRunId = ${{ github.event.workflow_run.id }};
             let foundDocs = await downloadArtifact(currentRunId, "docs-for-pages", "docs.zip");
-            
+
             // If this is a CI run, also look for recent Performance Baseline artifacts
             if ('${{ github.event.workflow_run.name }}' === 'CI/CD Pipeline') {
               console.log('🔍 CI workflow triggered - looking for recent Performance Baseline artifacts...');
@@ -101,7 +112,7 @@ jobs:
               
               if (recentPerfRun) {
                 console.log(`🎯 Found recent performance run: ${recentPerfRun.id}`);
-                await downloadArtifact(recentPerfRun.id, "docs-for-pages", "perf-docs.zip");
+                await downloadArtifact(recentPerfRun.id, "performance-docs-for-pages", "perf-docs.zip");
               }
             } else if ('${{ github.event.workflow_run.name }}' === 'Performance Baseline Tracking') {
               console.log('🔥 Performance Baseline workflow triggered - looking for CI docs...');
@@ -126,7 +137,7 @@ jobs:
                 await downloadArtifact(recentCIRun.id, "docs-for-pages", "ci-docs.zip");
               }
             }
-            
+
             if (!foundDocs) {
               throw new Error('No docs-for-pages artifact found in workflow run');
             }
@@ -137,29 +148,54 @@ jobs:
           rm -rf docs/
 
           echo "🔧 Extracting documentation artifacts..."
-          
+
+          # Create base docs structure from repository
+          mkdir -p docs/performance
+
+          # Copy base documentation from repository
+          cp -r /tmp/repo-docs/* docs/ 2>/dev/null || echo "No base docs found in repo"
+
           # Extract CI docs first (base documentation)
           if [ -f "docs.zip" ]; then
             echo "📋 Extracting CI documentation..."
-            unzip -o docs.zip -d docs/
+            unzip -o docs.zip -d temp-docs/
+            # Merge with existing docs, preserving performance files
+            rsync -a temp-docs/ docs/
+            rm -rf temp-docs/
             echo "✅ CI docs extracted"
           elif [ -f "ci-docs.zip" ]; then
             echo "📋 Extracting CI documentation from separate artifact..."
-            unzip -o ci-docs.zip -d docs/
+            unzip -o ci-docs.zip -d temp-docs/
+            rsync -a temp-docs/ docs/
+            rm -rf temp-docs/
             echo "✅ CI docs extracted"
           fi
-          
+
           # Extract performance docs second (will overlay/merge with CI docs)
           if [ -f "perf-docs.zip" ]; then
             echo "🔥 Extracting performance documentation..."
-            unzip -o perf-docs.zip -d docs/
+            unzip -o perf-docs.zip -d temp-perf/
+            # Merge performance files specifically
+            if [ -d "temp-perf/performance" ]; then
+              rsync -a temp-perf/performance/ docs/performance/
+            fi
+            rm -rf temp-perf/
             echo "✅ Performance docs extracted and merged"
           fi
-          
+
+          # Ensure performance directory exists with minimum required files
+          mkdir -p docs/performance
+          if [ ! -f "docs/performance/index.html" ]; then
+            # Fallback: copy from repository if artifact doesn't have it
+            if [ -f "/tmp/repo-docs/performance/index.html" ]; then
+              cp /tmp/repo-docs/performance/index.html docs/performance/
+            fi
+          fi
+
           echo ""
           echo "📁 Final merged documentation structure:"
           find docs/ -type f | sort
-          
+
           echo ""
           echo "🔍 Performance files check:"
           ls -la docs/performance/ 2>/dev/null || echo "❌ No performance directory found"
