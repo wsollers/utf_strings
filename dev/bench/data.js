@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762078577152,
+  "lastUpdate": 1762097237300,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1140,6 +1140,36 @@ window.BENCHMARK_DATA = {
             "value": 7046.791050466543,
             "unit": "ns/iter",
             "extra": "iterations: 199340\ncpu: 7045.964091501956 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "6a91d5a013ee866c1e0417e7f943f3d6f57b2ada",
+          "message": "feat: Prepare for v0.0.1 release\n\n- Update CMakeLists.txt version from 0.1.0 to 0.0.1\n- Add include/utf/version.hpp with semantic version constants\n- Include version.hpp in main utf_strings.hpp header\n- Add comprehensive create-release.yml workflow that:\n  - Builds release and debug binaries for Linux (GCC/Clang) and Windows (MSVC/Clang)\n  - Packages binaries with headers, libraries, and documentation\n  - Creates GitHub releases with downloadable archives\n  - Supports both tag-triggered and manual workflow dispatch\n  - Generates comprehensive changelog and release notes\n\nReady for v0.0.1 tag creation and release!",
+          "timestamp": "2025-11-02T10:24:11-05:00",
+          "tree_id": "516790873816abff65793e9272cbfe0f159f4d6f",
+          "url": "https://github.com/wsollers/utf_strings/commit/6a91d5a013ee866c1e0417e7f943f3d6f57b2ada"
+        },
+        "date": 1762097236522,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7018.079361321643,
+            "unit": "ns/iter",
+            "extra": "iterations: 198535\ncpu: 7016.849860226158 ns\nthreads: 1"
           }
         ]
       }
