@@ -16,7 +16,24 @@ TEST(UTF8, ValidAscii) {
 }
 
 TEST(UTF8, ValidMultibyte) {
-  utf8_string s{std::u8string{u8"Héllø 🌍"}};
+  // Use explicit UTF-8 byte sequences to avoid source encoding issues on Windows
+  // "Héllø 🌍" = H(0x48) é(0xC3,0xA9) l(0x6C) l(0x6C) ø(0xC3,0xB8) space(0x20)
+  // 🌍(0xF0,0x9F,0x8C,0x8D)
+  std::u8string utf8_bytes;
+  utf8_bytes.push_back(0x48);  // H
+  utf8_bytes.push_back(0xC3);
+  utf8_bytes.push_back(0xA9);  // é (U+00E9)
+  utf8_bytes.push_back(0x6C);  // l
+  utf8_bytes.push_back(0x6C);  // l
+  utf8_bytes.push_back(0xC3);
+  utf8_bytes.push_back(0xB8);  // ø (U+00F8)
+  utf8_bytes.push_back(0x20);  // space
+  utf8_bytes.push_back(0xF0);
+  utf8_bytes.push_back(0x9F);  // 🌍 (U+1F30D)
+  utf8_bytes.push_back(0x8C);
+  utf8_bytes.push_back(0x8D);
+
+  utf8_string s{utf8_bytes};
   ASSERT_TRUE(s.valid());
   auto n = s.length();
   ASSERT_TRUE(n.has_value());
