@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762068064217,
+  "lastUpdate": 1762068301724,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -270,6 +270,36 @@ window.BENCHMARK_DATA = {
             "value": 7276.231446864887,
             "unit": "ns/iter",
             "extra": "iterations: 182422\ncpu: 7275.071871813707 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "465e023b334db7ace1898c4d250b3a2034574e1b",
+          "message": "fix workflows for windows clang",
+          "timestamp": "2025-11-02T02:22:34-05:00",
+          "tree_id": "98dae5d53a67d40b430d3b55d10cff2edce35c20",
+          "url": "https://github.com/wsollers/utf_strings/commit/465e023b334db7ace1898c4d250b3a2034574e1b"
+        },
+        "date": 1762068301120,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7271.629983353692,
+            "unit": "ns/iter",
+            "extra": "iterations: 189832\ncpu: 7270.7823865312475 ns\nthreads: 1"
           }
         ]
       }
