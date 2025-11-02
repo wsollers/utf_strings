@@ -4,8 +4,8 @@
 
 The UTF Strings library now supports **single bootstrap configuration** for cross-platform development:
 
-- **Linux** (x64/arm64): GCC 13+ or Clang 16+
-- **Windows** (x64): Visual Studio 2022 (MSVC)
+- **Linux** (x64/arm64): GCC 13+ or Clang 18+
+- **Windows** (x64): MSVC 2022 or Clang-CL 16+
 - **macOS** (x64/arm64): Clang 16+ (Apple Clang or LLVM)
 
 ## Key Features ✨
@@ -30,9 +30,10 @@ bootstrap_cmake.bat
 ./bootstrap_cmake.sh
 
 # Force specific compiler
-./bootstrap_cmake.sh --compiler gcc    # Linux/macOS
-./bootstrap_cmake.sh --compiler clang  # Linux/macOS  
-./bootstrap_cmake.sh --compiler msvc   # Windows (if available)
+./bootstrap_cmake.sh --compiler gcc      # Linux/macOS
+./bootstrap_cmake.sh --compiler clang    # Linux/macOS  
+./bootstrap_cmake.sh --compiler msvc     # Windows MSVC
+./bootstrap_cmake.sh --compiler clang-cl # Windows Clang-CL
 ```
 
 ### 🎯 Build Configuration Options
@@ -60,12 +61,13 @@ bootstrap_cmake.bat
 - ✅ **Fuzz Testing**: libFuzzer integration with comprehensive UTF coverage
 - ✅ **Performance Profiling**: perf integration, flame graphs, tcmalloc
 
-### Windows (MSVC 2022)
+### Windows (MSVC 2022 / Clang-CL 16+)
 - ✅ **Security Hardening**: Buffer Security Check (/GS), ASLR, DEP, High Entropy ASLR
-- ✅ **Optimization**: Whole Program Optimization (/GL), AVX2 instructions
+- ✅ **Optimization**: Whole Program Optimization (/GL), AVX2 instructions, Clang optimizations
 - ✅ **Sanitizers**: AddressSanitizer (/fsanitize=address), Static Analysis (/analyze)
-- ✅ **Fuzz Testing**: Fuzz harnesses (use with external fuzzer like WinAFL)
-- ✅ **Performance**: Link-time optimization, intrinsic functions
+- ✅ **Fuzz Testing**: Fuzz harnesses (use with external fuzzer like WinAFL or libFuzzer with Clang-CL)
+- ✅ **Performance**: Link-time optimization, intrinsic functions, Clang vectorization
+- ✅ **Compiler Choice**: Full MSVC and Clang-CL support in CI matrix
 
 ## CMake Integration
 

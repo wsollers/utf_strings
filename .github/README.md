@@ -12,15 +12,15 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 **Jobs:**
 - **Linux GCC 13** (x64): Debug + Release builds, tests, benchmarks
 - **Linux Clang 16** (x64): Debug + Release builds, tests, benchmarks  
-- **Windows MSVC 2022** (x64): Debug + Release builds, tests, benchmarks
+- **Windows MSVC 2022 & Clang-CL** (x64): Debug + Release builds, tests, benchmarks
 - **Linux Fuzz Testing**: libFuzzer with all UTF encodings (UTF-8/16/32 BE/LE)
 - **Linux Sanitizers**: AddressSanitizer + ThreadSanitizer (GCC & Clang)
-- **Windows Sanitizers**: AddressSanitizer (MSVC)
+- **Windows Sanitizers**: AddressSanitizer (MSVC & Clang-CL)
 - **Performance Tracking**: Baseline performance monitoring
 - **Test Results Publishing**: Unified test result reporting
 
 **Features:**
-- ✅ Cross-platform builds (Linux GCC/Clang, Windows MSVC)
+- ✅ Cross-platform builds (Linux GCC/Clang, Windows MSVC/Clang-CL)
 - ✅ Comprehensive testing (unit tests, fuzz tests, sanitizers)
 - ✅ Performance benchmarking with tracking
 - ✅ Code formatting validation (clang-format)
@@ -69,7 +69,7 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 **Purpose:** Comprehensive validation of release builds
 
 **Jobs:**
-- **Cross-Platform Release Builds**: Linux (GCC/Clang) + Windows (MSVC)
+- **Cross-Platform Release Builds**: Linux (GCC/Clang) + Windows (MSVC/Clang-CL)
 - **Security Validation**: Enhanced security analysis for releases
 - **Release Summary**: Automated release documentation
 
@@ -98,7 +98,7 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 |----------|----------|-------|---------|-------|------------|------|------------|----------|
 | **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
 | **Linux x64** | Clang 16 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Windows x64** | MSVC 2022 | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ |
+| **Windows x64** | MSVC 2022 & Clang-CL | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ |
 
 *Windows fuzz testing uses harnesses (no libFuzzer)  
 **Windows sanitizers: AddressSanitizer only
@@ -111,7 +111,7 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 - **cppcheck**: Comprehensive static analysis with C++23 support
 
 ### Dynamic Analysis  
-- **AddressSanitizer**: Memory error detection (Linux GCC/Clang, Windows MSVC)
+- **AddressSanitizer**: Memory error detection (Linux GCC/Clang, Windows MSVC/Clang-CL)
 - **ThreadSanitizer**: Data race detection (Linux GCC/Clang)
 - **UndefinedBehaviorSanitizer**: Undefined behavior detection (Linux GCC/Clang)
 - **LeakSanitizer**: Memory leak detection (Linux GCC/Clang)

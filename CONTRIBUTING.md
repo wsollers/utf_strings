@@ -78,7 +78,7 @@ cd build/build && ./utf_strings-bench
 
 The project runs comprehensive CI tests on:
 - **Linux**: GCC 13, Clang 18
-- **Windows**: MSVC 2022  
+- **Windows**: MSVC 2022 or Clang-CL 16+
 - **Sanitizers**: AddressSanitizer, ThreadSanitizer (Clang)
 - **Fuzzing**: libFuzzer-based testing (Clang)
 

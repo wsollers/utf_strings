@@ -62,7 +62,9 @@ The bootstrap scripts automatically detect and configure your environment:
 
 ### Windows
 ```cmd
-bootstrap_cmake.bat                  # Auto-detect MSVC
+bootstrap_cmake.bat                  # Auto-detect MSVC/Clang-CL
+bootstrap_cmake.bat --compiler msvc     # Force MSVC
+bootstrap_cmake.bat --compiler clang-cl # Force Clang-CL
 ```
 
 ## Environment Setup

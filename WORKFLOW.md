@@ -29,7 +29,7 @@ cd utf_strings
 ./bootstrap_cmake.sh --compiler clang # Force Clang
 ```
 
-**Windows (Visual Studio 2022):**
+**Windows (MSVC 2022 / Clang-CL):**
 ```cmd
 git clone <repository-url>
 cd utf_strings
@@ -69,8 +69,8 @@ The UTF Strings library supports the following platforms and compilers:
 
 | Platform | Supported Compilers | Bootstrap Script | Notes |
 |----------|-------------------|------------------|-------|
-| **Linux** | GCC 13+, Clang 16+ | `./bootstrap_cmake.sh` | Full feature support including libFuzzer |
-| **Windows** | MSVC 2022 (Visual Studio) | `bootstrap_cmake.bat` | Full feature support, fuzz harnesses only |
+| **Linux** | GCC 13+, Clang 18+ | `./bootstrap_cmake.sh` | Full feature support including libFuzzer |
+| **Windows** | MSVC 2022, Clang-CL 16+ | `bootstrap_cmake.bat` | Full feature support, matrix CI validation |
 | **macOS** | Clang 16+ (Apple/LLVM) | `./bootstrap_cmake.sh` | Full feature support |
 
 ### Prerequisites
@@ -90,7 +90,8 @@ sudo apt install build-essential cmake python3-pip git
 ```
 
 **Windows:**
-- Visual Studio 2022 with C++ tools
+- Visual Studio 2022 with C++ tools (for MSVC)
+- LLVM/Clang tools (for Clang-CL alternative)
 - Python 3.8+ from microsoft store or python.org
 - Git for Windows
 

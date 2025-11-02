@@ -22,8 +22,8 @@
 Modern C++23 UTF utilities (UTF-8/16/32) with explicit endianness policy and comprehensive testing.
 
 **Cross-Platform Support:**
-- **Linux**: GCC 13+ or Clang 16+  
-- **Windows**: Visual Studio 2022 (MSVC)
+- **Linux**: GCC 13+ or Clang 18+  
+- **Windows**: MSVC 2022 or Clang-CL 16+
 - **macOS**: Clang 16+ (Apple Clang or LLVM)
 
 **Key Features:**
