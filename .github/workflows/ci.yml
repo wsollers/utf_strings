@@ -824,7 +824,7 @@ jobs:
               echo "Flame graph generated successfully"
             else
               echo "Perf recording failed (likely due to container restrictions), creating placeholder"
-              echo "Flame graph generation requires privileged container access" > ../../docs/performance/flamegraph_unavailable.txt
+              echo "Flame graph generation requires privileged container access. Run locally with: perf record -g ./utf_strings-bench && perf script | stackcollapse-perf.pl | flamegraph.pl > flamegraph.svg" > ../../docs/performance/flamegraph_unavailable.txt
             fi
           else
             echo "Perf not available, skipping flame graph generation"
