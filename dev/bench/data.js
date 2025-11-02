@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762075503081,
+  "lastUpdate": 1762075861408,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -840,6 +840,36 @@ window.BENCHMARK_DATA = {
             "value": 7088.214226791154,
             "unit": "ns/iter",
             "extra": "iterations: 198808\ncpu: 7087.476806768339 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "d00ce48fd756d3a59e5d8e04f11565cb03745883",
+          "message": "feat: Add comprehensive SAST security scanning workflow\n\n- Create sast-scanning.yml workflow integrating multiple security tools\n- Add Trivy vulnerability and misconfiguration scanning with SARIF upload\n- Add Checkov infrastructure security analysis for GitHub Actions/Docker\n- Add Gitleaks secret detection across full git history\n- Integrate existing Cppcheck and Semgrep workflows via workflow dispatch\n- Generate comprehensive security reports with PR comments and issue creation\n- Add customized .gitleaks.toml configuration with project-specific rules\n- Update README with new SAST security scanning badge\n- Update .gitignore to exclude scan result files\n\nSecurity Tools Coverage:\n- Trivy: Vulnerability & misconfiguration scanning\n- Checkov: Infrastructure-as-Code security analysis\n- Gitleaks: Secret detection in git history\n- Cppcheck: Static code analysis (existing workflow)\n- Semgrep: Security pattern matching (existing workflow)\n\nAll tools upload SARIF results to GitHub Security tab for unified view.\nDaily scheduled scans create issues for critical findings.\nConfigurable scan intensity levels (basic/comprehensive/deep).",
+          "timestamp": "2025-11-02T04:28:03-05:00",
+          "tree_id": "afcad4980a6b3ca321b9f10e14d4b598c97b7d80",
+          "url": "https://github.com/wsollers/utf_strings/commit/d00ce48fd756d3a59e5d8e04f11565cb03745883"
+        },
+        "date": 1762075860789,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 6799.809390171721,
+            "unit": "ns/iter",
+            "extra": "iterations: 204533\ncpu: 6798.711562437357 ns\nthreads: 1"
           }
         ]
       }
