@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762070447499,
+  "lastUpdate": 1762070962908,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -450,6 +450,36 @@ window.BENCHMARK_DATA = {
             "value": 7290.099673272256,
             "unit": "ns/iter",
             "extra": "iterations: 187312\ncpu: 7289.718293542325 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "071a0a241ca5fc72e3ac0f49e288bc9845463ff0",
+          "message": "Fix Windows CMake generator configuration\n\n- Override generator to use 'Visual Studio 17 2022' for all Windows builds\n- Prevents MinGW Makefiles generator from being used on Windows\n- Fixes Clang-CL and MSVC builds that were failing with generator/platform mismatch\n- Both windows-msvc matrix job and windows-msvc-debug job updated",
+          "timestamp": "2025-11-02T03:06:28-05:00",
+          "tree_id": "7d30b5fbfab06f35bcee32de7b4ea480f30d9558",
+          "url": "https://github.com/wsollers/utf_strings/commit/071a0a241ca5fc72e3ac0f49e288bc9845463ff0"
+        },
+        "date": 1762070962644,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7259.678947917883,
+            "unit": "ns/iter",
+            "extra": "iterations: 191620\ncpu: 7258.648361340152 ns\nthreads: 1"
           }
         ]
       }
