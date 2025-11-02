@@ -742,11 +742,17 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y cmake python3-pip git
-        # Install exact GCC version 13.3.0 to match local development environment
-        sudo apt install -y gcc-13 g++-13
-        # Set up alternatives to ensure we use GCC 13
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+        # Install Clang 18 for high-performance release builds
+        sudo apt install -y clang-18 libc++-18-dev libc++abi-18-dev
+        # Install profiling tools for flame graph generation
+        sudo apt install -y linux-tools-generic linux-tools-common perf-tools-unstable
+        # Install FlameGraph tools
+        git clone https://github.com/brendangregg/FlameGraph.git /tmp/FlameGraph
+        sudo cp /tmp/FlameGraph/*.pl /usr/local/bin/
+        sudo chmod +x /usr/local/bin/*.pl
+        # Set up alternatives to use Clang 18
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
         
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -761,10 +767,10 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Use static profile for GCC 13 with C++23 (performance tracking)
-        sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
-        sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
-        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+        # Use Clang 18 with libc++ for high-performance release builds
+        sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+        sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libc++/' ~/.conan2/profiles/default
         sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
         sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
@@ -781,23 +787,82 @@ jobs:
         
     - name: Install dependencies
       run: |
-        export CC=gcc
-        export CXX=g++
+        export CC=clang-18
+        export CXX=clang++-18
         conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure and Build (Release)
       run: |
-        export CC=gcc
-        export CXX=g++
+        export CC=clang-18
+        export CXX=clang++-18
         cmake --preset conan-release
         cmake --build --preset conan-release --parallel
         
-    - name: Run Performance Benchmarks
+    - name: Run Performance Benchmarks and Generate Flame Graphs
       run: |
         cd build/build
+        
+        # Create docs/performance directory for all performance reports
+        mkdir -p ../../docs/performance
+        
+        # 1. Standard benchmark run for historical tracking
+        echo "Running standard benchmarks..."
         ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_format=json --benchmark_out=performance_baseline.json
         
-    - name: Setup docs directory
+        # 2. Extended benchmark run for detailed analysis
+        echo "Running extended benchmarks..."
+        ./utf_strings-bench --benchmark_min_time=3.0s --benchmark_format=json --benchmark_out=../../docs/performance/detailed_benchmark.json
+        
+        # 3. Generate flame graphs with perf (if available)
+        echo "Generating flame graphs..."
+        if command -v perf >/dev/null 2>&1; then
+          # Try to run perf - may fail in containerized environment
+          if perf record -F 99 -g -- ./utf_strings-bench --benchmark_min_time=2.0s --benchmark_repetitions=5 2>/dev/null; then
+            echo "Perf recording successful, generating flame graph..."
+            perf script > ../../docs/performance/perf.script
+            stackcollapse-perf.pl ../../docs/performance/perf.script > ../../docs/performance/perf.folded
+            flamegraph.pl ../../docs/performance/perf.folded > ../../docs/performance/flamegraph.svg
+            echo "Flame graph generated successfully"
+          else
+            echo "Perf recording failed (likely due to container restrictions), creating placeholder"
+            echo "Flame graph generation requires privileged container access" > ../../docs/performance/flamegraph_unavailable.txt
+          fi
+        else
+          echo "Perf not available, skipping flame graph generation"
+        fi
+        
+        # 4. Generate comprehensive benchmark report with multiple formats
+        echo "Generating comprehensive reports..."
+        ./utf_strings-bench --benchmark_format=console --benchmark_min_time=1.0s > ../../docs/performance/benchmark_console.txt
+        ./utf_strings-bench --benchmark_format=csv --benchmark_min_time=1.0s --benchmark_out=../../docs/performance/benchmark_results.csv
+        
+        # 5. System information for performance context
+        echo "Collecting system information..."
+        cat > ../../docs/performance/system_info.txt << EOF
+        Performance Benchmark System Information
+        Generated: $(date)
+        Build: Clang 18 Release with libc++
+        
+        CPU Information:
+        $(cat /proc/cpuinfo | grep "model name" | head -1)
+        $(cat /proc/cpuinfo | grep "cpu MHz" | head -1)
+        $(cat /proc/cpuinfo | grep "cache size" | head -1)
+        CPU Cores: $(nproc)
+        
+        Memory Information:
+        $(free -h)
+        
+        Compiler Version:
+        $(clang++-18 --version)
+        
+        Build Flags Used:
+        Release build with -O3 -march=native -mtune=native -flto
+        EOF
+        
+        echo "Performance analysis complete!"
+        ls -la ../../docs/performance/
+        
+    - name: Setup docs directory and create performance index
       run: |
         # Configure git identity for GitHub Actions
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -806,8 +871,138 @@ jobs:
         # Set up authentication for git push
         git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         
-        # Ensure docs directory exists
+        # Ensure docs directories exist
         mkdir -p docs/dev/bench
+        mkdir -p docs/performance
+        
+        # Create performance index page
+        cat > docs/performance/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>UTF Strings - Performance Analysis</title>
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 2rem;
+                    line-height: 1.6;
+                    color: #333;
+                }
+                .header {
+                    text-align: center;
+                    margin-bottom: 3rem;
+                    padding-bottom: 2rem;
+                    border-bottom: 2px solid #eee;
+                }
+                .card {
+                    background: #f8f9fa;
+                    border: 1px solid #e9ecef;
+                    border-radius: 8px;
+                    padding: 1.5rem;
+                    margin: 1rem 0;
+                }
+                .card h2 {
+                    margin-top: 0;
+                    color: #495057;
+                }
+                .btn {
+                    display: inline-block;
+                    padding: 0.5rem 1rem;
+                    background: #007bff;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 4px;
+                    margin: 0.5rem 0.5rem 0.5rem 0;
+                }
+                .btn:hover {
+                    background: #0056b3;
+                }
+                .flame-btn {
+                    background: #fd7e14;
+                }
+                .flame-btn:hover {
+                    background: #e8690a;
+                }
+                .data-btn {
+                    background: #28a745;
+                }
+                .data-btn:hover {
+                    background: #1e7e34;
+                }
+                .grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 1rem;
+                }
+                .build-info {
+                    background: #e7f3ff;
+                    border-left: 4px solid #007bff;
+                    padding: 1rem;
+                    margin: 1rem 0;
+                }
+                iframe {
+                    width: 100%;
+                    height: 600px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>UTF Strings Performance Analysis</h1>
+                <p>Comprehensive performance benchmarks and profiling results</p>
+                <div class="build-info">
+                    <strong>Build Configuration:</strong> Clang 18 Release with libc++, -O3 -march=native -flto
+                    <br><strong>Last Updated:</strong> <span id="timestamp"></span>
+                </div>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h2>🔥 Flame Graph Analysis</h2>
+                    <p>Interactive flame graph showing CPU time distribution and hot paths in the UTF string processing functions.</p>
+                    <a href="flamegraph.svg" class="btn flame-btn">View Flame Graph</a>
+                    <a href="perf.script" class="btn">Raw Perf Data</a>
+                </div>
+                
+                <div class="card">
+                    <h2>📊 Historical Benchmarks</h2>
+                    <p>Interactive charts showing performance trends over time with automatic regression detection.</p>
+                    <a href="../dev/bench/" class="btn">View Historical Charts</a>
+                </div>
+                
+                <div class="card">
+                    <h2>📈 Detailed Results</h2>
+                    <p>Comprehensive benchmark results in multiple formats for analysis and comparison.</p>
+                    <a href="detailed_benchmark.json" class="btn data-btn">JSON Results</a>
+                    <a href="benchmark_results.csv" class="btn data-btn">CSV Data</a>
+                    <a href="benchmark_console.txt" class="btn">Console Output</a>
+                </div>
+                
+                <div class="card">
+                    <h2>🖥️ System Information</h2>
+                    <p>Hardware and build environment details for performance context.</p>
+                    <a href="system_info.txt" class="btn">System Info</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🔥 Interactive Flame Graph</h2>
+                <p>Embedded flame graph showing function call patterns and CPU time distribution:</p>
+                <iframe src="flamegraph.svg" title="Performance Flame Graph"></iframe>
+            </div>
+            
+            <script>
+                document.getElementById('timestamp').textContent = new Date().toLocaleString();
+            </script>
+        </body>
+        </html>
+        EOF
         
         # Create a basic README for docs if it doesn't exist
         if [ ! -f docs/README.md ]; then
@@ -828,6 +1023,29 @@ jobs:
         # Store in docs folder for GitHub Pages serving from /docs
         gh-pages-branch: 'main'
         benchmark-data-dir-path: 'docs/dev/bench'
+        
+    - name: Commit Performance Analysis Reports
+      run: |
+        # Add all generated performance files to git
+        git add docs/performance/
+        
+        # Check if there are changes to commit
+        if ! git diff --cached --quiet; then
+          git commit -m "Update performance analysis reports
+
+          - Detailed benchmark results (JSON, CSV, console)
+          - Flame graph analysis (if available)
+          - System information and build context
+          - Generated on: $(date)
+          - Build: Clang 18 Release with libc++"
+          
+          # Push the performance reports
+          git push origin main
+          
+          echo "Performance reports committed and pushed successfully"
+        else
+          echo "No changes in performance reports to commit"
+        fi
 
   # ============================================================================
   # Publish Test Results
