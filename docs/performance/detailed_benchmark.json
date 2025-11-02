@@ -1,17 +1,17 @@
 {
   "context": {
-    "date": "2025-11-02T07:50:57+00:00",
+    "date": "2025-11-02T07:54:44+00:00",
     "host_name": "runnervmf2e7y",
     "executable": "./utf_strings-bench",
     "num_cpus": 4,
-    "mhz_per_cpu": 3448,
+    "mhz_per_cpu": 3241,
     "cpu_scaling_enabled": false,
     "aslr_enabled": true,
     "caches": [
       {
         "type": "Data",
         "level": 1,
-        "size": 49152,
+        "size": 32768,
         "num_sharing": 2
       },
       {
@@ -23,17 +23,17 @@
       {
         "type": "Unified",
         "level": 2,
-        "size": 1310720,
+        "size": 524288,
         "num_sharing": 2
       },
       {
         "type": "Unified",
         "level": 3,
-        "size": 50331648,
+        "size": 33554432,
         "num_sharing": 4
       }
     ],
-    "load_avg": [1.00146,0.45166,0.255371],
+    "load_avg": [0.928711,0.319336,0.116211],
     "library_version": "v1.9.4",
     "library_build_type": "release",
     "json_schema_version": 1
@@ -48,11 +48,11 @@
       "repetitions": 1,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 554768,
-      "real_time": 7.5802037662592102e+03,
-      "cpu_time": 7.5793905596573704e+03,
+      "iterations": 577923,
+      "real_time": 7.2471558096839426e+03,
+      "cpu_time": 7.2467699831984537e+03,
       "time_unit": "ns",
-      "bytes_per_second": 1.5832407507632732e+09
+      "bytes_per_second": 1.6559101541544509e+09
     }
   ]
 }
