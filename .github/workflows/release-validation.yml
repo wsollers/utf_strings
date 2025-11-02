@@ -127,6 +127,13 @@ jobs:
     - name: Install dependencies (Linux)
       if: runner.os == 'Linux'
       run: |
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          export CC=clang
+          export CXX=clang++
+        else
+          export CC=gcc
+          export CXX=g++
+        fi
         conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Install dependencies (Windows)
@@ -258,6 +265,8 @@ jobs:
         
     - name: Install dependencies
       run: |
+        export CC=clang
+        export CXX=clang++
         conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure and Build

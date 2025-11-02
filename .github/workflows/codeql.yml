@@ -117,6 +117,8 @@ jobs:
 
     - name: Install dependencies
       run: |
+        export CC=clang
+        export CXX=clang++
         conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
 
     # Initialize CodeQL tools for scanning
@@ -264,6 +266,8 @@ jobs:
 
     - name: Install dependencies
       run: |
+        export CC=clang
+        export CXX=clang++
         conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
 
     - name: Configure and Build with Security Hardening

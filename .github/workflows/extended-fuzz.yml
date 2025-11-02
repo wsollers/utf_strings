@@ -109,6 +109,8 @@ jobs:
           
     - name: Install dependencies
       run: |
+        export CC=clang
+        export CXX=clang++
         conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
         
     - name: Configure CMake with Fuzz Testing
