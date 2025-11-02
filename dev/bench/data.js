@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762074913966,
+  "lastUpdate": 1762075193376,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -750,6 +750,36 @@ window.BENCHMARK_DATA = {
             "value": 7095.001677227003,
             "unit": "ns/iter",
             "extra": "iterations: 198542\ncpu: 7094.115773992405 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "5d071248220072a0fc29db8268ad1fa6f723966d",
+          "message": "Fix GitHub Pages deployment with proper job separation\n\nIssues fixed:\n- Move Pages deployment to dedicated job with proper environment setup\n- Add required 'github-pages' environment for deployment\n- Ensure job runs after performance-tracking completion\n- Use proper permissions (pages: write, id-token: write)\n- Remove duplicate configure-pages setup from performance job\n\nThis should resolve the Jekyll build errors by ensuring GitHub Actions\ndeployment runs properly and takes precedence over legacy Jekyll builds.",
+          "timestamp": "2025-11-02T04:16:51-05:00",
+          "tree_id": "df71b2db18887de97a62304a8a3d54a15e121655",
+          "url": "https://github.com/wsollers/utf_strings/commit/5d071248220072a0fc29db8268ad1fa6f723966d"
+        },
+        "date": 1762075192721,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7030.7052408501795,
+            "unit": "ns/iter",
+            "extra": "iterations: 193938\ncpu: 7030.145170105909 ns\nthreads: 1"
           }
         ]
       }
