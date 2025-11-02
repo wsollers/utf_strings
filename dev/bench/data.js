@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762072203726,
+  "lastUpdate": 1762072741647,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -600,6 +600,36 @@ window.BENCHMARK_DATA = {
             "value": 7260.439798196922,
             "unit": "ns/iter",
             "extra": "iterations: 191672\ncpu: 7258.401680996702 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "5373a67b3ea4a6a4d9352d3398290ceaaf2712a3",
+          "message": "Fix performance baseline tracking build configuration\n\n- Disable LTO (USE_LTO=OFF) to avoid linking issues with GoogleTest\n- Use libstdc++ instead of libc++ (USE_LIBC_PLUS_PLUS=OFF) for compatibility\n- Update Conan profile to use libstdc++11 matching CMake configuration\n- Keep native architecture optimization (USE_NATIVE_ARCH=ON) for performance\n- Maintain Clang 18 optimizations without problematic LTO complexity\n\nResolves linking errors:\n- undefined reference to testing::internal::PrintTo\n- undefined reference to testing::internal::GetBoolAssertionFailureMessage\n\nPerformance tracking will still be effective with -O3 + -march=native optimizations\nwithout the LTO + mixed standard library complications.",
+          "timestamp": "2025-11-02T03:37:35-05:00",
+          "tree_id": "3831ab9df7ec116053841b1f5d1ca0c46bf75ff3",
+          "url": "https://github.com/wsollers/utf_strings/commit/5373a67b3ea4a6a4d9352d3398290ceaaf2712a3"
+        },
+        "date": 1762072741376,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7068.725592221692,
+            "unit": "ns/iter",
+            "extra": "iterations: 198912\ncpu: 7067.812640765767 ns\nthreads: 1"
           }
         ]
       }
