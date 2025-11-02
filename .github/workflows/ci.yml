@@ -963,20 +963,20 @@ jobs:
               
               <div class="grid">
                   <div class="card">
-                      <h2>🔥 Flame Graph Analysis</h2>
+                      <h2>Flame Graph Analysis</h2>
                       <p>Interactive flame graph showing CPU time distribution and hot paths in the UTF string processing functions.</p>
                       <a href="flamegraph.svg" class="btn flame-btn">View Flame Graph</a>
                       <a href="perf.script" class="btn">Raw Perf Data</a>
                   </div>
                   
                   <div class="card">
-                      <h2>📊 Historical Benchmarks</h2>
+                      <h2>Historical Benchmarks</h2>
                       <p>Interactive charts showing performance trends over time with automatic regression detection.</p>
                       <a href="../dev/bench/" class="btn">View Historical Charts</a>
                   </div>
                   
                   <div class="card">
-                      <h2>📈 Detailed Results</h2>
+                      <h2>Detailed Results</h2>
                       <p>Comprehensive benchmark results in multiple formats for analysis and comparison.</p>
                       <a href="detailed_benchmark.json" class="btn data-btn">JSON Results</a>
                       <a href="benchmark_results.csv" class="btn data-btn">CSV Data</a>
@@ -984,14 +984,14 @@ jobs:
                   </div>
                   
                   <div class="card">
-                      <h2>🖥️ System Information</h2>
+                      <h2>System Information</h2>
                       <p>Hardware and build environment details for performance context.</p>
                       <a href="system_info.txt" class="btn">System Info</a>
                   </div>
               </div>
               
               <div class="card">
-                  <h2>🔥 Interactive Flame Graph</h2>
+                  <h2>Interactive Flame Graph</h2>
                   <p>Embedded flame graph showing function call patterns and CPU time distribution:</p>
                   <iframe src="flamegraph.svg" title="Performance Flame Graph"></iframe>
               </div>
