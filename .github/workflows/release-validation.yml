@@ -25,7 +25,7 @@ jobs:
             name: "Linux GCC 13"
           - os: ubuntu-22.04
             compiler: clang
-            name: "Linux Clang 16"
+            name: "Linux Clang 18"
           - os: windows-2022
             compiler: msvc
             name: "Windows MSVC 2022"
@@ -44,10 +44,10 @@ jobs:
         if [ "${{ matrix.compiler }}" = "clang" ]; then
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 16
-          sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
-          sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
-          sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+          sudo ./llvm.sh 18
+          sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+          sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
         fi
         sudo apt update
         sudo apt install -y build-essential cmake python3-pip git clang-format
@@ -184,13 +184,13 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y clang-tools cppcheck valgrind binutils
-        # Install Clang 16
+        # Install Clang 18
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
-        sudo ./llvm.sh 16
-        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
-        sudo ln -sf /usr/bin/clang-tidy-16 /usr/bin/clang-tidy
+        sudo ./llvm.sh 18
+        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+        sudo ln -sf /usr/bin/clang-tidy-18 /usr/bin/clang-tidy
         
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -223,7 +223,7 @@ jobs:
       run: |
         echo "Running clang-tidy security analysis..."
         find src include -name "*.cpp" -o -name "*.hpp" | \
-        xargs clang-tidy-16 -p build/build \
+        xargs clang-tidy-18 -p build/build \
           --checks='-*,security-*,cert-*,bugprone-*,clang-analyzer-security*' \
           -- > clang-tidy-security-results.txt 2>&1 || true
         
@@ -324,10 +324,10 @@ jobs:
           echo "❌ **Linux GCC 13**: Build failed" >> release-summary.md
         fi
         
-        if [ -d "release-artifacts-Linux Clang 16" ]; then
-          echo "✅ **Linux Clang 16**: Build successful" >> release-summary.md
+        if [ -d "release-artifacts-Linux Clang 18" ]; then
+          echo "✅ **Linux Clang 18**: Build successful" >> release-summary.md
         else
-          echo "❌ **Linux Clang 16**: Build failed" >> release-summary.md
+          echo "❌ **Linux Clang 18**: Build failed" >> release-summary.md
         fi
         
         if [ -d "release-artifacts-Windows MSVC 2022" ]; then

@@ -40,13 +40,13 @@ jobs:
         # Install basic dependencies first
         sudo apt install -y cmake python3-pip git wget curl
         
-        # Install Clang 16 with timeout and retry logic
-        echo "Installing Clang 16 for CodeQL analysis..."
+        # Install Clang 18 with timeout and retry logic
+        echo "Installing Clang 18 for CodeQL analysis..."
         for i in {1..3}; do
           if timeout 10m bash -c "
             wget -q https://apt.llvm.org/llvm.sh &&
             chmod +x llvm.sh &&
-            sudo ./llvm.sh 16
+            sudo ./llvm.sh 18
           "; then
             echo "LLVM installation successful on attempt $i"
             break
@@ -62,16 +62,16 @@ jobs:
         done
         
         # Install additional tools
-        sudo apt install -y clang-format-16 || {
-          echo "clang-format-16 not available, trying alternatives..."
+        sudo apt install -y clang-format-18 || {
+          echo "clang-format-18 not available, trying alternatives..."
           sudo apt install -y clang-format || echo "clang-format installation failed"
         }
         
         # Set up symlinks
-        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
-        if command -v clang-format-16 >/dev/null 2>&1; then
-          sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+        if command -v clang-format-18 >/dev/null 2>&1; then
+          sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
         fi
         
         # Verify installation
@@ -186,13 +186,13 @@ jobs:
         # Install basic dependencies first
         sudo apt install -y cmake python3-pip git wget curl
         
-        # Install Clang 16 with timeout and retry logic
-        echo "Installing Clang 16 for enhanced security analysis..."
+        # Install Clang 18 with timeout and retry logic
+        echo "Installing Clang 18 for enhanced security analysis..."
         for i in {1..3}; do
           if timeout 10m bash -c "
             wget -q https://apt.llvm.org/llvm.sh &&
             chmod +x llvm.sh &&
-            sudo ./llvm.sh 16
+            sudo ./llvm.sh 18
           "; then
             echo "LLVM installation successful on attempt $i"
             break
@@ -208,14 +208,14 @@ jobs:
         done
         
         # Install additional tools
-        sudo apt install -y clang-format-16 || {
-          echo "clang-format-16 not available, trying alternatives..."
+        sudo apt install -y clang-format-18 || {
+          echo "clang-format-18 not available, trying alternatives..."
           sudo apt install -y clang-format || echo "clang-format installation failed"
         }
         
         # Set up symlinks  
-        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
         
         # Verify installation
         clang --version
@@ -249,8 +249,8 @@ jobs:
 
     - name: Run Static Analysis (clang-tidy)
       run: |
-        clang-tidy-16 --version
-        find src include -name "*.cpp" -o -name "*.hpp" | xargs clang-tidy-16 -p build/build --
+        clang-tidy-18 --version
+        find src include -name "*.cpp" -o -name "*.hpp" | xargs clang-tidy-18 -p build/build --
 
     - name: Run Static Analysis (cppcheck)
       run: |

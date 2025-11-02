@@ -255,20 +255,42 @@ check_compiler() {
         gcc)
             if ! command -v g++ >/dev/null 2>&1; then
                 log_error "GCC not found. Please install GCC 13+ first."
+                log_info "Ubuntu: sudo apt install gcc-13 g++-13"
                 exit 1
             fi
             local gcc_version
             gcc_version=$(g++ --version | head -n1 | grep -o '[0-9]\+\.[0-9]\+' | head -n1)
-            log_success "GCC found: $gcc_version"
+            
+            # Check if GCC version is compatible (13.x recommended)
+            local major_version=$(echo "$gcc_version" | cut -d. -f1)
+            if [[ "$major_version" -lt 13 ]]; then
+                log_warning "GCC $gcc_version detected. GCC 13+ recommended for CI/CD alignment."
+                log_info "Consider upgrading: sudo apt install gcc-13 g++-13"
+            elif [[ "$major_version" -eq 13 ]]; then
+                log_success "GCC found: $gcc_version ✅ (CI/CD aligned)"
+            else
+                log_success "GCC found: $gcc_version (newer than CI)"
+            fi
             ;;
         clang)
             if ! command -v clang++ >/dev/null 2>&1; then
-                log_error "Clang not found. Please install Clang 16+ first."
+                log_error "Clang not found. Please install Clang 18+ first."
+                log_info "Ubuntu: sudo apt install clang-18 clang++-18"
                 exit 1
             fi
             local clang_version
             clang_version=$(clang++ --version | head -n1 | grep -o '[0-9]\+\.[0-9]\+' | head -n1)
-            log_success "Clang found: $clang_version"
+            
+            # Check if Clang version is compatible (18.x recommended)
+            local major_version=$(echo "$clang_version" | cut -d. -f1)
+            if [[ "$major_version" -lt 18 ]]; then
+                log_warning "Clang $clang_version detected. Clang 18+ recommended for CI/CD alignment."
+                log_info "Consider upgrading: sudo apt install clang-18 clang++-18"
+            elif [[ "$major_version" -eq 18 ]]; then
+                log_success "Clang found: $clang_version ✅ (CI/CD aligned)"
+            else
+                log_success "Clang found: $clang_version (newer than CI)"
+            fi
             ;;
         msvc)
             if ! command -v cl >/dev/null 2>&1 && [[ -z "${VCINSTALLDIR:-}" ]]; then

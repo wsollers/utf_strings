@@ -112,11 +112,11 @@ jobs:
           build/build/benchmark_results_gcc.json
 
   # ============================================================================
-  # Linux x64 - Clang 16  
+  # Linux x64 - Clang 18  
   # ============================================================================
   
   linux-clang:
-    name: "Linux Clang 16 (x64)"
+    name: "Linux Clang 18 (x64)"
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -137,13 +137,13 @@ jobs:
         # Install basic dependencies first (these are fast and reliable)
         sudo apt install -y cmake python3-pip git wget curl
         
-        # Install Clang 16 with timeout and retry logic
-        echo "Installing Clang 16..."
+        # Install Clang 18 with timeout and retry logic
+        echo "Installing Clang 18..."
         for i in {1..3}; do
           if timeout 10m bash -c "
             wget -q https://apt.llvm.org/llvm.sh &&
             chmod +x llvm.sh &&
-            sudo ./llvm.sh 16
+            sudo ./llvm.sh 18
           "; then
             echo "LLVM installation successful on attempt $i"
             break
@@ -159,16 +159,16 @@ jobs:
         done
         
         # Install additional tools
-        sudo apt install -y clang-format-16 || {
-          echo "clang-format-16 not available, trying alternatives..."
+        sudo apt install -y clang-format-18 || {
+          echo "clang-format-18 not available, trying alternatives..."
           sudo apt install -y clang-format || echo "clang-format installation failed"
         }
         
         # Set up symlinks
-        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
-        if command -v clang-format-16 >/dev/null 2>&1; then
-          sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+        if command -v clang-format-18 >/dev/null 2>&1; then
+          sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
         fi
         
         # Verify installation
@@ -274,13 +274,13 @@ jobs:
         # Install basic dependencies first (these are fast and reliable)
         sudo apt install -y cmake python3-pip git wget curl
         
-        # Install Clang 16 with timeout and retry logic
-        echo "Installing Clang 16..."
+        # Install Clang 18 with timeout and retry logic
+        echo "Installing Clang 18..."
         for i in {1..3}; do
           if timeout 10m bash -c "
             wget -q https://apt.llvm.org/llvm.sh &&
             chmod +x llvm.sh &&
-            sudo ./llvm.sh 16
+            sudo ./llvm.sh 18
           "; then
             echo "LLVM installation successful on attempt $i"
             break
@@ -296,16 +296,16 @@ jobs:
         done
         
         # Install additional tools
-        sudo apt install -y clang-format-16 || {
-          echo "clang-format-16 not available, trying alternatives..."
+        sudo apt install -y clang-format-18 || {
+          echo "clang-format-18 not available, trying alternatives..."
           sudo apt install -y clang-format || echo "clang-format installation failed"
         }
         
         # Set up symlinks
-        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
-        if command -v clang-format-16 >/dev/null 2>&1; then
-          sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+        if command -v clang-format-18 >/dev/null 2>&1; then
+          sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
         fi
         
         # Verify installation
@@ -408,18 +408,18 @@ jobs:
         # Install basic dependencies first
         sudo apt install -y build-essential cmake python3-pip git wget curl
         
-        # Install Clang 16 if needed, with retry logic
+        # Install Clang 18 if needed, with retry logic
         if [ "${{ matrix.compiler }}" = "clang" ]; then
-          echo "Installing Clang 16..."
+          echo "Installing Clang 18..."
           for i in {1..3}; do
             if timeout 10m bash -c "
               wget -q https://apt.llvm.org/llvm.sh &&
               chmod +x llvm.sh &&
-              sudo ./llvm.sh 16
+              sudo ./llvm.sh 18
             "; then
               echo "LLVM installation successful on attempt $i"
-              sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
-              sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+              sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+              sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
               break
             else
               echo "LLVM installation attempt $i failed, retrying..."
