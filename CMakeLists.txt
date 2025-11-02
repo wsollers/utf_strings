@@ -25,17 +25,28 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Detect Clang-CL (appears as MSVC but uses clang-cl.exe)
 set(IS_CLANG_CL FALSE)
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+
+# First check explicit flag from CI
+if(FORCE_CLANG_CL)
+    set(IS_CLANG_CL TRUE)
+    message(STATUS "Clang-CL forced via FORCE_CLANG_CL flag")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # Check multiple ways to detect Clang-CL
     if(CMAKE_CXX_COMPILER MATCHES "clang-cl" OR 
        CMAKE_CXX_SIMULATE_ID STREQUAL "Clang" OR
        CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
         set(IS_CLANG_CL TRUE)
-        message(STATUS "Detected Clang-CL compiler: ${CMAKE_CXX_COMPILER}")
+        message(STATUS "Auto-detected Clang-CL compiler: ${CMAKE_CXX_COMPILER}")
         message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}, Simulate ID: ${CMAKE_CXX_SIMULATE_ID}")
     else()
         message(STATUS "Detected actual MSVC compiler: ${CMAKE_CXX_COMPILER}")
     endif()
+endif()
+
+if(IS_CLANG_CL)
+    message(STATUS "Using Clang-CL specific configuration")
+else()
+    message(STATUS "Using standard MSVC configuration")
 endif()
 
 # Security and optimization flags

@@ -607,6 +607,14 @@ jobs:
         with:
           arch: x64
 
+      - name: Clean build directory
+        run: |
+          # Clean build directory to prevent configuration conflicts between matrix jobs
+          if (Test-Path "build") {
+            Remove-Item -Recurse -Force "build"
+          }
+        shell: pwsh
+
       - name: Install dependencies
         timeout-minutes: 20
         run: |
@@ -619,12 +627,14 @@ jobs:
           if ("${{ matrix.compiler }}" -eq "msvc") {
             # MSVC always uses conan-default for configure
             $preset = "conan-default"
+            $clangClFlag = ""
           } else {
             # Clang-CL uses build-type specific presets
             $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
+            $clangClFlag = "-DFORCE_CLANG_CL=ON"
           }
           # Override generator for Windows builds to ensure Visual Studio generator is used
-          cmake --preset $preset -G "Visual Studio 17 2022" -A x64 ${{ matrix.cmake_args }}
+          cmake --preset $preset -G "Visual Studio 17 2022" -A x64 $clangClFlag ${{ matrix.cmake_args }}
 
       - name: Build
         run: |
@@ -714,6 +724,14 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
+
+      - name: Clean build directory
+        run: |
+          # Clean build directory to prevent configuration conflicts
+          if (Test-Path "build") {
+            Remove-Item -Recurse -Force "build"
+          }
+        shell: pwsh
 
       - name: Install dependencies
         timeout-minutes: 20
