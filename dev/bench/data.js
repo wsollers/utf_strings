@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762062645089,
+  "lastUpdate": 1762063401245,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -120,6 +120,36 @@ window.BENCHMARK_DATA = {
             "value": 7909.700005084086,
             "unit": "ns/iter",
             "extra": "iterations: 177023\ncpu: 7909.131361461504 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "2c8fc4d8812e5b7815cbd80db5a354e6941f2b0f",
+          "message": "Fix permissions for test result publishing job\n\nAdd required permissions for publish-test-results job:\n- contents: read - Access repository content\n- issues: read - Read issue information\n- checks: write - Create check runs for test results\n- pull-requests: write - Comment on pull requests\n\nFixes 403 Forbidden error: 'Resource not accessible by integration'\nwhen trying to create check runs for test result publishing.",
+          "timestamp": "2025-11-02T01:00:24-05:00",
+          "tree_id": "0dffa667610dfe5a789a8a887b5dfa7bb2912d0b",
+          "url": "https://github.com/wsollers/utf_strings/commit/2c8fc4d8812e5b7815cbd80db5a354e6941f2b0f"
+        },
+        "date": 1762063401004,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7905.403054035277,
+            "unit": "ns/iter",
+            "extra": "iterations: 173148\ncpu: 7904.647330607341 ns\nthreads: 1"
           }
         ]
       }
