@@ -299,13 +299,6 @@ jobs:
             echo "❌ Main index missing"
           fi
 
-      - name: Upload performance docs for Pages deployment
-        uses: actions/upload-artifact@v4
-        with:
-          name: performance-docs-for-pages
-          path: docs/
-          retention-days: 1
-
       - name: Setup docs directory and create performance index
         run: |
           # Configure git identity for GitHub Actions
@@ -508,6 +501,23 @@ jobs:
             echo "# UTF Strings Documentation" > docs/README.md
             echo "This directory contains automated performance benchmark results and documentation." >> docs/README.md
           fi
+
+          echo "=== Final verification of performance page ==="
+          if [ -f "docs/performance/index.html" ]; then
+            echo "✅ Enhanced performance index.html created"
+            ls -la docs/performance/index.html
+            echo "Checking for flamegraph link in HTML..."
+            grep -o 'href="flamegraph.svg"' docs/performance/index.html && echo "✅ Flamegraph link found" || echo "❌ No flamegraph link"
+          else
+            echo "❌ Performance index.html missing"
+          fi
+
+      - name: Upload performance docs for Pages deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-docs-for-pages
+          path: docs/
+          retention-days: 1
 
       - name: Commit Performance Analysis Reports
         run: |
