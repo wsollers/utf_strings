@@ -1,0 +1,333 @@
+name: "Cppcheck Static Analysis"
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run daily at 3 AM UTC for comprehensive analysis
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      severity_level:
+        description: "Cppcheck severity level"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - error
+          - warning
+          - style
+          - performance
+          - portability
+          - information
+
+jobs:
+  cppcheck-analysis:
+    name: "Cppcheck Static Analysis"
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Cppcheck
+        run: |
+          sudo apt update
+          sudo apt install -y cppcheck
+
+      - name: Verify Cppcheck installation
+        run: |
+          cppcheck --version
+          cppcheck --help
+
+      - name: Set severity level
+        id: severity
+        run: |
+          if [ -n "${{ github.event.inputs.severity_level }}" ]; then
+            echo "level=${{ github.event.inputs.severity_level }}" >> $GITHUB_OUTPUT
+          else
+            echo "level=all" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Cppcheck Analysis
+        run: |
+          echo "Running Cppcheck analysis with severity: ${{ steps.severity.outputs.level }}"
+          
+          # Create output directories
+          mkdir -p cppcheck-results
+          
+          # Set severity flags based on input
+          SEVERITY_FLAGS=""
+          case "${{ steps.severity.outputs.level }}" in
+            "all")
+              SEVERITY_FLAGS="--enable=all"
+              ;;
+            "error")
+              SEVERITY_FLAGS="--enable=error"
+              ;;
+            "warning")
+              SEVERITY_FLAGS="--enable=warning"
+              ;;
+            "style")
+              SEVERITY_FLAGS="--enable=style"
+              ;;
+            "performance")
+              SEVERITY_FLAGS="--enable=performance"
+              ;;
+            "portability")
+              SEVERITY_FLAGS="--enable=portability"
+              ;;
+            "information")
+              SEVERITY_FLAGS="--enable=information"
+              ;;
+          esac
+
+          echo "Using severity flags: $SEVERITY_FLAGS"
+
+          # Run Cppcheck with comprehensive options
+          echo "=== Running Cppcheck Analysis ==="
+          cppcheck \
+            $SEVERITY_FLAGS \
+            --std=c++23 \
+            --language=c++ \
+            --platform=unix64 \
+            --verbose \
+            --inline-suppr \
+            --suppress=missingIncludeSystem \
+            --suppress=unmatchedSuppression \
+            --suppress=unusedFunction \
+            --xml \
+            --xml-version=2 \
+            --output-file=cppcheck-results/cppcheck-results.xml \
+            --cppcheck-build-dir=cppcheck-results/build \
+            src/ include/ tests/ benchmarks/ || echo "Cppcheck completed with findings"
+
+          # Also generate human-readable output
+          echo "=== Generating Human-Readable Report ==="
+          cppcheck \
+            $SEVERITY_FLAGS \
+            --std=c++23 \
+            --language=c++ \
+            --platform=unix64 \
+            --verbose \
+            --inline-suppr \
+            --suppress=missingIncludeSystem \
+            --suppress=unmatchedSuppression \
+            --suppress=unusedFunction \
+            --template='{file}:{line}:{severity}:{id}:{message}' \
+            src/ include/ tests/ benchmarks/ > cppcheck-results/cppcheck-report.txt 2>&1 || echo "Cppcheck text report completed"
+
+      - name: Convert Cppcheck XML to SARIF
+        run: |
+          # Install required tools for SARIF conversion
+          pip3 install cppcheck-sarif-converter || pip3 install sarif-om
+
+          # Try to convert XML to SARIF format for GitHub Code Scanning
+          echo "=== Converting Cppcheck XML to SARIF ==="
+          
+          if command -v cppcheck2sarif >/dev/null 2>&1; then
+            # Use cppcheck-sarif-converter if available
+            cppcheck2sarif \
+              --input cppcheck-results/cppcheck-results.xml \
+              --output cppcheck-results/cppcheck-results.sarif
+          else
+            # Create a basic SARIF file manually if converter not available
+            echo "Creating basic SARIF format..."
+            cat > cppcheck-results/cppcheck-results.sarif << 'EOF'
+          {
+            "version": "2.1.0",
+            "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+            "runs": [
+              {
+                "tool": {
+                  "driver": {
+                    "name": "Cppcheck",
+                    "informationUri": "https://cppcheck.sourceforge.io/",
+                    "version": "$(cppcheck --version | grep -o '[0-9.]*')"
+                  }
+                },
+                "results": []
+              }
+            ]
+          }
+          EOF
+          
+            # Parse XML results and add to SARIF (basic implementation)
+            if [ -f "cppcheck-results/cppcheck-results.xml" ]; then
+              echo "XML results file found, check manually for issues"
+              # Note: Full XML to SARIF conversion would require more complex parsing
+            fi
+          fi
+
+      - name: Process Cppcheck Results
+        run: |
+          cd cppcheck-results
+          
+          echo "=== Processing Cppcheck Results ==="
+          
+          # Generate summary report
+          cat > cppcheck-summary.md << 'EOF'
+          # Cppcheck Static Analysis Report
+          
+          **Analysis Date:** $(date)
+          **Severity Level:** ${{ steps.severity.outputs.level }}
+          **Repository:** ${{ github.repository }}
+          **Commit:** ${{ github.sha }}
+          
+          ## Analysis Configuration
+          - **Standard:** C++23
+          - **Platform:** Unix 64-bit
+          - **Directories Analyzed:** src/, include/, tests/, benchmarks/
+          - **Suppressions:** missingIncludeSystem, unmatchedSuppression, unusedFunction
+          
+          ## Results Summary
+          EOF
+          
+          # Count issues by severity if XML file exists
+          if [ -f "cppcheck-results.xml" ]; then
+            echo "### Issues Found:" >> cppcheck-summary.md
+            
+            # Extract and count different severity levels
+            ERROR_COUNT=$(grep -o 'severity="error"' cppcheck-results.xml | wc -l || echo "0")
+            WARNING_COUNT=$(grep -o 'severity="warning"' cppcheck-results.xml | wc -l || echo "0")
+            STYLE_COUNT=$(grep -o 'severity="style"' cppcheck-results.xml | wc -l || echo "0")
+            PERFORMANCE_COUNT=$(grep -o 'severity="performance"' cppcheck-results.xml | wc -l || echo "0")
+            PORTABILITY_COUNT=$(grep -o 'severity="portability"' cppcheck-results.xml | wc -l || echo "0")
+            INFO_COUNT=$(grep -o 'severity="information"' cppcheck-results.xml | wc -l || echo "0")
+            
+            TOTAL_COUNT=$((ERROR_COUNT + WARNING_COUNT + STYLE_COUNT + PERFORMANCE_COUNT + PORTABILITY_COUNT + INFO_COUNT))
+            
+            echo "- **Total Issues:** $TOTAL_COUNT" >> cppcheck-summary.md
+            echo "- **Errors:** $ERROR_COUNT" >> cppcheck-summary.md
+            echo "- **Warnings:** $WARNING_COUNT" >> cppcheck-summary.md
+            echo "- **Style Issues:** $STYLE_COUNT" >> cppcheck-summary.md
+            echo "- **Performance Issues:** $PERFORMANCE_COUNT" >> cppcheck-summary.md
+            echo "- **Portability Issues:** $PORTABILITY_COUNT" >> cppcheck-summary.md
+            echo "- **Information:** $INFO_COUNT" >> cppcheck-summary.md
+            echo "" >> cppcheck-summary.md
+            
+            if [ $TOTAL_COUNT -eq 0 ]; then
+              echo "✅ **No issues found!**" >> cppcheck-summary.md
+            else
+              echo "⚠️ **Issues detected - see detailed reports for analysis**" >> cppcheck-summary.md
+            fi
+          else
+            echo "❌ **Analysis failed - no results file generated**" >> cppcheck-summary.md
+          fi
+          
+          echo "" >> cppcheck-summary.md
+          echo "## Files Analyzed" >> cppcheck-summary.md
+          echo "\`\`\`" >> cppcheck-summary.md
+          find ../src ../include ../tests ../benchmarks -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | head -20 >> cppcheck-summary.md
+          echo "\`\`\`" >> cppcheck-summary.md
+          
+          # Display the summary
+          echo "=== Cppcheck Analysis Summary ==="
+          cat cppcheck-summary.md
+
+      - name: Upload SARIF results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('cppcheck-results/cppcheck-results.sarif') != ''
+        with:
+          sarif_file: cppcheck-results/cppcheck-results.sarif
+          category: cppcheck-analysis
+
+      - name: Upload Cppcheck analysis artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cppcheck-analysis-results-${{ github.run_number }}
+          path: |
+            cppcheck-results/
+          retention-days: 30
+
+      - name: Comment on PR with results (if PR)
+        if: github.event_name == 'pull_request' && hashFiles('cppcheck-results/cppcheck-results.xml') != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const summary = fs.readFileSync('cppcheck-results/cppcheck-summary.md', 'utf8');
+              
+              const comment = `## 🔍 Cppcheck Static Analysis Results
+              
+              ${summary}
+              
+              <details>
+              <summary>📋 View detailed analysis configuration</summary>
+              
+              **Analysis Configuration:**
+              - Severity Level: \`${{ steps.severity.outputs.level }}\`
+              - C++ Standard: C++23
+              - Platform: Unix 64-bit
+              - Analyzed Directories: src/, include/, tests/, benchmarks/
+              
+              **Workflow Run:** [View Details](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              
+              </details>`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              console.log('Could not post PR comment:', error);
+            }
+
+      - name: Create issue for critical findings (scheduled runs only)
+        if: github.event_name == 'schedule' && hashFiles('cppcheck-results/cppcheck-results.xml') != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              // Check if we have critical findings (errors)
+              const xmlContent = fs.readFileSync('cppcheck-results/cppcheck-results.xml', 'utf8');
+              const errorCount = (xmlContent.match(/severity="error"/g) || []).length;
+              
+              if (errorCount > 0) {
+                const summary = fs.readFileSync('cppcheck-results/cppcheck-summary.md', 'utf8');
+                
+                const issueTitle = `🚨 Critical Cppcheck Issues Detected - ${new Date().toISOString().split('T')[0]}`;
+                const issueBody = `## Cppcheck Static Analysis - Critical Findings
+                
+                Cppcheck has detected **${errorCount}** critical error(s) during the daily static analysis scan.
+                
+                ${summary}
+                
+                ### Immediate Action Required:
+                1. Review the Cppcheck findings in the [workflow artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                2. Address critical errors promptly to maintain code quality
+                3. Consider running additional static analysis tools
+                
+                **Scan Details:**
+                - Date: ${new Date().toISOString()}
+                - Severity Level: ${{ steps.severity.outputs.level }}
+                - Total Errors: ${errorCount}
+                
+                **Workflow Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                `;
+                
+                github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: issueTitle,
+                  body: issueBody,
+                  labels: ['static-analysis', 'code-quality', 'cppcheck']
+                });
+              }
+            } catch (error) {
+              console.log('Could not create issue for critical findings:', error);
+            }

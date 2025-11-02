@@ -4,6 +4,7 @@
 [![CI/CD Pipeline](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml)
 [![CodeQL Security Analysis](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml)
 [![Semgrep Security Analysis](https://github.com/wsollers/utf_strings/actions/workflows/semgrep-security.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/semgrep-security.yml)
+[![Cppcheck Static Analysis](https://github.com/wsollers/utf_strings/actions/workflows/cppcheck-analysis.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/cppcheck-analysis.yml)
 [![Extended Fuzz Testing](https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml)
 [![Release Validation](https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml)
 
