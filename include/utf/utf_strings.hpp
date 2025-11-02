@@ -9,6 +9,9 @@
 #include <utility>
 #include <vector>
 
+// Include version information
+#include "version.hpp"
+
 #ifdef _MSC_VER
 #include <intrin.h>
 // Suppress MSVC warning C4251 for standard library types in DLL interface

@@ -1,0 +1,337 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v0.0.1, v1.2.3, etc.
+  
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 0.0.1)'
+        required: true
+        type: string
+      create_tag:
+        description: 'Create git tag if it does not exist'
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
+jobs:
+  # ============================================================================
+  # Build Release Binaries for Multiple Platforms
+  # ============================================================================
+  
+  build-release-binaries:
+    name: "Build Release Binaries"
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            compiler: gcc
+            name: "Linux-GCC-x64"
+            binary_suffix: ""
+            archive_format: "tar.gz"
+          - os: ubuntu-24.04
+            compiler: clang
+            name: "Linux-Clang-x64"
+            binary_suffix: ""
+            archive_format: "tar.gz"
+          - os: windows-2022
+            compiler: msvc
+            name: "Windows-MSVC-x64"
+            binary_suffix: ".exe"
+            archive_format: "zip"
+          - os: windows-2022
+            compiler: clang
+            name: "Windows-Clang-x64"
+            binary_suffix: ".exe"
+            archive_format: "zip"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+        shell: bash
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Conan
+        run: |
+          pip install conan
+          conan profile detect --force
+
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config
+          
+          if [ "${{ matrix.compiler }}" = "clang" ]; then
+            wget https://apt.llvm.org/llvm.sh
+            chmod +x llvm.sh
+            sudo ./llvm.sh 18
+            sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+            sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+          fi
+
+      - name: Setup MSVC (Windows)
+        if: runner.os == 'Windows' && matrix.compiler == 'msvc'
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup Clang (Windows)
+        if: runner.os == 'Windows' && matrix.compiler == 'clang'
+        run: |
+          choco install llvm --version=18.1.6 -y
+          echo "CC=clang" >> $env:GITHUB_ENV
+          echo "CXX=clang++" >> $env:GITHUB_ENV
+
+      - name: Build Release binaries
+        run: |
+          ./bootstrap_cmake.sh --compiler ${{ matrix.compiler }} --config Release --verbose
+        shell: bash
+
+      - name: Build Debug binaries
+        run: |
+          ./bootstrap_cmake.sh --compiler ${{ matrix.compiler }} --config Debug --verbose
+        shell: bash
+
+      - name: Run tests to validate binaries
+        run: |
+          # Test Release build
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build-release/build/utf_strings-tests.exe
+          else
+            ./build-release/build/utf_strings-tests
+          fi
+          
+          # Test Debug build
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            ./build/build/utf_strings-tests.exe
+          else
+            ./build/build/utf_strings-tests
+          fi
+        shell: bash
+
+      - name: Package Release binaries
+        run: |
+          mkdir -p release-package/${{ matrix.name }}
+          
+          # Create release info
+          echo "UTF Strings v${{ steps.version.outputs.VERSION }}" > release-package/${{ matrix.name }}/VERSION.txt
+          echo "Platform: ${{ matrix.name }}" >> release-package/${{ matrix.name }}/VERSION.txt
+          echo "Built: $(date -u)" >> release-package/${{ matrix.name }}/VERSION.txt
+          echo "Commit: ${{ github.sha }}" >> release-package/${{ matrix.name }}/VERSION.txt
+          
+          # Copy binaries
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            # Release binaries
+            cp build-release/build/utf_strings-tests.exe release-package/${{ matrix.name }}/utf_strings-tests-release.exe
+            cp build-release/build/utf_strings-bench.exe release-package/${{ matrix.name }}/utf_strings-bench-release.exe
+            
+            # Debug binaries
+            cp build/build/utf_strings-tests.exe release-package/${{ matrix.name }}/utf_strings-tests-debug.exe
+            cp build/build/utf_strings-bench.exe release-package/${{ matrix.name }}/utf_strings-bench-debug.exe
+            
+            # Copy any DLLs if present
+            find build-release/build/ -name "*.dll" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+            find build/build/ -name "*.dll" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+          else
+            # Release binaries
+            cp build-release/build/utf_strings-tests release-package/${{ matrix.name }}/utf_strings-tests-release
+            cp build-release/build/utf_strings-bench release-package/${{ matrix.name }}/utf_strings-bench-release
+            
+            # Debug binaries
+            cp build/build/utf_strings-tests release-package/${{ matrix.name }}/utf_strings-tests-debug
+            cp build/build/utf_strings-bench release-package/${{ matrix.name }}/utf_strings-bench-debug
+            
+            # Copy any shared libraries if present
+            find build-release/build/ -name "*.so" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+            find build/build/ -name "*.so" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+          fi
+          
+          # Copy headers
+          cp -r include/ release-package/${{ matrix.name }}/
+          
+          # Copy static libraries if present
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            find build-release/build/ -name "*.lib" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+            find build/build/ -name "*.lib" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+          else
+            find build-release/build/ -name "*.a" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+            find build/build/ -name "*.a" -exec cp {} release-package/${{ matrix.name }}/ \; || true
+          fi
+          
+          # Copy license and docs
+          cp LICENSE release-package/${{ matrix.name }}/ || true
+          cp README.md release-package/${{ matrix.name }}/ || true
+          
+          echo "=== Package contents ==="
+          find release-package/${{ matrix.name }}/ -type f | sort
+        shell: bash
+
+      - name: Create archive
+        run: |
+          cd release-package
+          
+          if [ "${{ matrix.archive_format }}" = "zip" ]; then
+            zip -r utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.zip ${{ matrix.name }}/
+            echo "ARCHIVE_NAME=utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.zip" >> $GITHUB_ENV
+          else
+            tar -czf utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.tar.gz ${{ matrix.name }}/
+            echo "ARCHIVE_NAME=utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.tar.gz" >> $GITHUB_ENV
+          fi
+          
+          ls -la utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.*
+        shell: bash
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-binaries-${{ matrix.name }}
+          path: release-package/${{ env.ARCHIVE_NAME }}
+          retention-days: 30
+
+  # ============================================================================
+  # Create GitHub Release
+  # ============================================================================
+
+  create-release:
+    name: "Create GitHub Release"
+    needs: build-release-binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Get full history for changelog
+
+      - name: Get version from tag or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+          else
+            VERSION="${{ github.event.inputs.version }}"
+            TAG_NAME="v${VERSION}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION, Tag: $TAG_NAME"
+
+      - name: Create tag if needed
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.create_tag == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if ! git tag -l "${{ steps.version.outputs.TAG_NAME }}" | grep -q "${{ steps.version.outputs.TAG_NAME }}"; then
+            git tag -a "${{ steps.version.outputs.TAG_NAME }}" -m "Release ${{ steps.version.outputs.TAG_NAME }}"
+            git push origin "${{ steps.version.outputs.TAG_NAME }}"
+          else
+            echo "Tag ${{ steps.version.outputs.TAG_NAME }} already exists"
+          fi
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts/
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets/
+          find release-artifacts/ -name "*.zip" -o -name "*.tar.gz" | while read file; do
+            cp "$file" release-assets/
+          done
+          
+          echo "=== Release assets ==="
+          ls -la release-assets/
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "## UTF Strings v${{ steps.version.outputs.VERSION }}" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "### 🚀 Features" >> $GITHUB_OUTPUT
+          echo "- High-performance UTF-8/16/32 string processing library" >> $GITHUB_OUTPUT
+          echo "- Cross-platform support (Linux, Windows)" >> $GITHUB_OUTPUT
+          echo "- Comprehensive test suite and benchmarks" >> $GITHUB_OUTPUT
+          echo "- Modern C++23 implementation" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "### 📦 Release Assets" >> $GITHUB_OUTPUT
+          echo "This release includes pre-built binaries for multiple platforms:" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          for file in release-assets/*; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              echo "- **$filename**: $(echo "$filename" | cut -d'-' -f3- | cut -d'.' -f1) binaries" >> $GITHUB_OUTPUT
+            fi
+          done
+          echo "" >> $GITHUB_OUTPUT
+          echo "### 🔧 Contents" >> $GITHUB_OUTPUT
+          echo "Each archive contains:" >> $GITHUB_OUTPUT
+          echo "- **Release binaries**: Optimized production builds" >> $GITHUB_OUTPUT
+          echo "- **Debug binaries**: Debug builds with symbols" >> $GITHUB_OUTPUT
+          echo "- **Headers**: Complete include directory" >> $GITHUB_OUTPUT
+          echo "- **Libraries**: Static libraries (.a/.lib files)" >> $GITHUB_OUTPUT
+          echo "- **Documentation**: README and LICENSE files" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "### 💻 System Requirements" >> $GITHUB_OUTPUT
+          echo "- **Linux**: glibc 2.31+ (Ubuntu 20.04+)" >> $GITHUB_OUTPUT
+          echo "- **Windows**: Windows 10+ (x64)" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "### 🔗 Commit" >> $GITHUB_OUTPUT
+          echo "Built from commit: ${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.TAG_NAME }}
+          name: "UTF Strings v${{ steps.version.outputs.VERSION }}"
+          body: ${{ steps.changelog.outputs.CHANGELOG }}
+          files: release-assets/*
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, 'alpha') || contains(steps.version.outputs.VERSION, 'beta') || contains(steps.version.outputs.VERSION, 'rc') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release Summary
+        run: |
+          echo "🎉 **Release v${{ steps.version.outputs.VERSION }} Created Successfully!**"
+          echo ""
+          echo "📦 **Assets uploaded:**"
+          ls -la release-assets/ | grep -E "\.(zip|tar\.gz)$" | awk '{print "  - " $NF " (" $5 " bytes)"}'
+          echo ""
+          echo "🔗 **Release URL:** https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.TAG_NAME }}"
+          echo ""
+          echo "✅ **What's included in each archive:**"
+          echo "  - utf_strings-tests-release/debug: Test executables"
+          echo "  - utf_strings-bench-release/debug: Benchmark executables"  
+          echo "  - include/: Header files for library usage"
+          echo "  - Static libraries (.a/.lib files)"
+          echo "  - LICENSE and README.md files"
