@@ -1,0 +1,488 @@
+name: "SAST Security Scanning"
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run comprehensive SAST scan daily at 4 AM UTC
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+    inputs:
+      scan_intensity:
+        description: "SAST scanning intensity level"
+        required: false
+        default: "comprehensive"
+        type: choice
+        options:
+          - basic
+          - comprehensive
+          - deep
+
+jobs:
+  # ============================================================================
+  # Trivy Security Scanner
+  # ============================================================================
+
+  trivy-scan:
+    name: "Trivy Security Scan"
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          exit-code: '0'
+          # Scan for vulnerabilities in filesystem, dependencies, and misconfigurations
+          scanners: 'vuln,secret,misconfig'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-security
+
+      - name: Generate Trivy report summary
+        run: |
+          echo "# Trivy Security Scan Results" > trivy-summary.md
+          echo "**Scan Date:** $(date)" >> trivy-summary.md
+          echo "**Repository:** ${{ github.repository }}" >> trivy-summary.md
+          echo "**Commit:** ${{ github.sha }}" >> trivy-summary.md
+          echo "" >> trivy-summary.md
+          
+          # Run Trivy in table format for summary
+          echo "## Summary Report" >> trivy-summary.md
+          echo "\`\`\`" >> trivy-summary.md
+          trivy fs --format table --severity CRITICAL,HIGH,MEDIUM . >> trivy-summary.md || echo "No critical/high/medium issues found" >> trivy-summary.md
+          echo "\`\`\`" >> trivy-summary.md
+
+      - name: Upload Trivy artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trivy-scan-results-${{ github.run_number }}
+          path: |
+            trivy-results.sarif
+            trivy-summary.md
+          retention-days: 30
+
+  # ============================================================================
+  # Checkov Infrastructure Security Scanner  
+  # ============================================================================
+
+  checkov-scan:
+    name: "Checkov Infrastructure Scan"
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python for Checkov
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Checkov
+        run: |
+          pip install checkov
+
+      - name: Run Checkov scan
+        run: |
+          # Run Checkov on infrastructure files (GitHub Actions, Docker, etc.)
+          echo "Running Checkov infrastructure security scan..."
+          
+          checkov \
+            --directory . \
+            --framework github_actions,dockerfile,yaml,json \
+            --output sarif \
+            --output-file-path checkov-results.sarif \
+            --soft-fail \
+            --quiet || echo "Checkov scan completed with findings"
+          
+          # Also generate human-readable output
+          checkov \
+            --directory . \
+            --framework github_actions,dockerfile,yaml,json \
+            --output cli \
+            --quiet > checkov-report.txt || echo "Checkov CLI report completed"
+
+      - name: Generate Checkov summary
+        run: |
+          echo "# Checkov Infrastructure Security Scan" > checkov-summary.md
+          echo "**Scan Date:** $(date)" >> checkov-summary.md
+          echo "**Frameworks:** GitHub Actions, Docker, YAML, JSON" >> checkov-summary.md
+          echo "" >> checkov-summary.md
+          
+          if [ -f "checkov-results.sarif" ]; then
+            # Count findings from SARIF if available
+            FINDINGS_COUNT=$(jq '.runs[0].results | length' checkov-results.sarif 2>/dev/null || echo "0")
+            echo "**Total Findings:** $FINDINGS_COUNT" >> checkov-summary.md
+            
+            if [ "$FINDINGS_COUNT" -eq 0 ]; then
+              echo "✅ **No infrastructure security issues found!**" >> checkov-summary.md
+            else
+              echo "⚠️ **Infrastructure security issues detected**" >> checkov-summary.md
+            fi
+          else
+            echo "ℹ️ **Scan completed - check artifacts for details**" >> checkov-summary.md
+          fi
+          
+          echo "" >> checkov-summary.md
+          echo "## Report Summary" >> checkov-summary.md
+          if [ -f "checkov-report.txt" ]; then
+            echo "\`\`\`" >> checkov-summary.md
+            head -50 checkov-report.txt >> checkov-summary.md || echo "No detailed report available" >> checkov-summary.md
+            echo "\`\`\`" >> checkov-summary.md
+          fi
+
+      - name: Upload Checkov scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('checkov-results.sarif') != ''
+        with:
+          sarif_file: checkov-results.sarif
+          category: checkov-infrastructure
+
+      - name: Upload Checkov artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: checkov-scan-results-${{ github.run_number }}
+          path: |
+            checkov-results.sarif
+            checkov-report.txt
+            checkov-summary.md
+          retention-days: 30
+
+  # ============================================================================
+  # Gitleaks Secret Scanner
+  # ============================================================================
+
+  gitleaks-scan:
+    name: "Gitleaks Secret Scan"
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for comprehensive secret scanning
+
+      - name: Run Gitleaks scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Optional: for Gitleaks Pro features
+        with:
+          config-path: .gitleaks.toml  # Optional: custom config file
+
+      - name: Upload Gitleaks scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('results.sarif') != ''
+        with:
+          sarif_file: results.sarif
+          category: gitleaks-secrets
+
+      - name: Generate Gitleaks summary
+        if: always()
+        run: |
+          echo "# Gitleaks Secret Scanning Results" > gitleaks-summary.md
+          echo "**Scan Date:** $(date)" >> gitleaks-summary.md
+          echo "**Repository:** ${{ github.repository }}" >> gitleaks-summary.md
+          echo "**Scan Type:** Full history secret detection" >> gitleaks-summary.md
+          echo "" >> gitleaks-summary.md
+          
+          if [ -f "results.sarif" ]; then
+            SECRETS_COUNT=$(jq '.runs[0].results | length' results.sarif 2>/dev/null || echo "0")
+            echo "**Secrets Found:** $SECRETS_COUNT" >> gitleaks-summary.md
+            
+            if [ "$SECRETS_COUNT" -eq 0 ]; then
+              echo "✅ **No secrets detected in repository history!**" >> gitleaks-summary.md
+            else
+              echo "🚨 **CRITICAL: Secrets detected in repository history**" >> gitleaks-summary.md
+              echo "" >> gitleaks-summary.md
+              echo "**Immediate Action Required:**" >> gitleaks-summary.md
+              echo "1. Review detected secrets immediately" >> gitleaks-summary.md
+              echo "2. Rotate any exposed credentials" >> gitleaks-summary.md
+              echo "3. Remove secrets from git history if needed" >> gitleaks-summary.md
+            fi
+          else
+            echo "✅ **No secrets found or scan completed successfully**" >> gitleaks-summary.md
+          fi
+
+      - name: Upload Gitleaks artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gitleaks-scan-results-${{ github.run_number }}
+          path: |
+            results.sarif
+            gitleaks-summary.md
+          retention-days: 90  # Keep secret scan results longer for security compliance
+
+  # ============================================================================
+  # Invoke Existing Security Workflows
+  # ============================================================================
+
+  invoke-cppcheck:
+    name: "Invoke Cppcheck Analysis"
+    runs-on: ubuntu-24.04
+    if: github.event_name != 'schedule'  # Avoid double runs on scheduled execution
+    
+    steps:
+      - name: Trigger Cppcheck workflow
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const result = await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'cppcheck-analysis.yml',
+                ref: context.ref,
+                inputs: {
+                  severity_level: '${{ github.event.inputs.scan_intensity == "deep" && "all" || "error" }}'
+                }
+              });
+              console.log('Cppcheck workflow triggered successfully');
+            } catch (error) {
+              console.log('Failed to trigger Cppcheck workflow:', error);
+              // Don't fail the entire SAST scan if one workflow fails to trigger
+            }
+
+  invoke-semgrep:
+    name: "Invoke Semgrep Analysis"
+    runs-on: ubuntu-24.04
+    if: github.event_name != 'schedule'  # Avoid double runs on scheduled execution
+    
+    steps:
+      - name: Trigger Semgrep workflow
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const result = await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'semgrep-security.yml',
+                ref: context.ref,
+                inputs: {
+                  ruleset: '${{ github.event.inputs.scan_intensity == "deep" && "auto" || "r/c.lang.security" }}'
+                }
+              });
+              console.log('Semgrep workflow triggered successfully');
+            } catch (error) {
+              console.log('Failed to trigger Semgrep workflow:', error);
+              // Don't fail the entire SAST scan if one workflow fails to trigger
+            }
+
+  # ============================================================================
+  # SAST Summary and Reporting
+  # ============================================================================
+
+  sast-summary:
+    name: "SAST Summary Report"
+    runs-on: ubuntu-24.04
+    needs: [trivy-scan, checkov-scan, gitleaks-scan]
+    if: always()
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Download all SAST artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-scan-results-${{ github.run_number }}"
+          merge-multiple: true
+
+      - name: Generate comprehensive SAST report
+        run: |
+          echo "# Comprehensive SAST Security Analysis Report" > sast-comprehensive-report.md
+          echo "" >> sast-comprehensive-report.md
+          echo "**Analysis Date:** $(date)" >> sast-comprehensive-report.md
+          echo "**Repository:** ${{ github.repository }}" >> sast-comprehensive-report.md
+          echo "**Commit:** ${{ github.sha }}" >> sast-comprehensive-report.md
+          echo "**Scan Intensity:** ${{ github.event.inputs.scan_intensity || 'comprehensive' }}" >> sast-comprehensive-report.md
+          echo "" >> sast-comprehensive-report.md
+          
+          echo "## Security Tools Summary" >> sast-comprehensive-report.md
+          echo "" >> sast-comprehensive-report.md
+          
+          # Trivy Summary
+          echo "### 🛡️ Trivy (Vulnerability & Misconfiguration)" >> sast-comprehensive-report.md
+          if [ -f "trivy-summary.md" ]; then
+            tail -n +5 trivy-summary.md >> sast-comprehensive-report.md
+          else
+            echo "⚠️ Trivy results not available" >> sast-comprehensive-report.md
+          fi
+          echo "" >> sast-comprehensive-report.md
+          
+          # Checkov Summary  
+          echo "### 🏗️ Checkov (Infrastructure Security)" >> sast-comprehensive-report.md
+          if [ -f "checkov-summary.md" ]; then
+            tail -n +5 checkov-summary.md >> sast-comprehensive-report.md
+          else
+            echo "⚠️ Checkov results not available" >> sast-comprehensive-report.md
+          fi
+          echo "" >> sast-comprehensive-report.md
+          
+          # Gitleaks Summary
+          echo "### 🔐 Gitleaks (Secret Detection)" >> sast-comprehensive-report.md
+          if [ -f "gitleaks-summary.md" ]; then
+            tail -n +5 gitleaks-summary.md >> sast-comprehensive-report.md
+          else
+            echo "⚠️ Gitleaks results not available" >> sast-comprehensive-report.md
+          fi
+          echo "" >> sast-comprehensive-report.md
+          
+          # Additional workflows
+          echo "### 🔧 Additional Security Analysis" >> sast-comprehensive-report.md
+          echo "- **Cppcheck:** Static code analysis workflow triggered" >> sast-comprehensive-report.md
+          echo "- **Semgrep:** Security pattern matching workflow triggered" >> sast-comprehensive-report.md
+          echo "" >> sast-comprehensive-report.md
+          
+          echo "## Next Steps" >> sast-comprehensive-report.md
+          echo "1. Review all findings in the GitHub Security tab" >> sast-comprehensive-report.md
+          echo "2. Prioritize critical and high severity issues" >> sast-comprehensive-report.md
+          echo "3. Check individual workflow runs for Cppcheck and Semgrep results" >> sast-comprehensive-report.md
+          echo "4. Implement fixes and re-run security scans" >> sast-comprehensive-report.md
+          
+          # Display the comprehensive report
+          echo "=== Comprehensive SAST Security Report ==="
+          cat sast-comprehensive-report.md
+
+      - name: Upload comprehensive SAST report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sast-comprehensive-report-${{ github.run_number }}
+          path: sast-comprehensive-report.md
+          retention-days: 90
+
+      - name: Comment on PR with SAST results (if PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const report = fs.readFileSync('sast-comprehensive-report.md', 'utf8');
+              
+              const comment = `## 🛡️ Comprehensive SAST Security Analysis
+              
+              ${report}
+              
+              <details>
+              <summary>🔍 View scan configuration</summary>
+              
+              **Tools Used:**
+              - **Trivy:** Vulnerability and misconfiguration scanning
+              - **Checkov:** Infrastructure security analysis  
+              - **Gitleaks:** Secret detection in git history
+              - **Cppcheck:** Static code analysis (triggered separately)
+              - **Semgrep:** Security pattern matching (triggered separately)
+              
+              **Scan Intensity:** \`${{ github.event.inputs.scan_intensity || 'comprehensive' }}\`
+              
+              **Workflow Run:** [View Details](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              
+              </details>`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              console.log('Could not post PR comment:', error);
+            }
+
+      - name: Create security issue for critical findings (scheduled runs only)
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              // Check for critical findings across all tools
+              let criticalCount = 0;
+              let findings = [];
+              
+              // Check Trivy SARIF
+              try {
+                const trivySarif = JSON.parse(require('fs').readFileSync('trivy-results.sarif', 'utf8'));
+                const trivyCritical = trivySarif.runs?.[0]?.results?.filter(r => 
+                  r.level === 'error' || r.ruleId?.includes('CRITICAL')
+                ) || [];
+                criticalCount += trivyCritical.length;
+                if (trivyCritical.length > 0) findings.push(`Trivy: ${trivyCritical.length} critical`);
+              } catch (e) { console.log('No Trivy SARIF results'); }
+              
+              // Check Gitleaks SARIF  
+              try {
+                const gitleaksSarif = JSON.parse(require('fs').readFileSync('results.sarif', 'utf8'));
+                const secretCount = gitleaksSarif.runs?.[0]?.results?.length || 0;
+                criticalCount += secretCount;
+                if (secretCount > 0) findings.push(`Gitleaks: ${secretCount} secrets`);
+              } catch (e) { console.log('No Gitleaks SARIF results'); }
+              
+              if (criticalCount > 0) {
+                const report = require('fs').readFileSync('sast-comprehensive-report.md', 'utf8');
+                
+                const issueTitle = `🚨 Critical Security Issues Detected - SAST Scan ${new Date().toISOString().split('T')[0]}`;
+                const issueBody = `## Critical SAST Security Findings
+                
+                The daily SAST security scan has detected **${criticalCount}** critical security issue(s).
+                
+                ### Critical Findings:
+                ${findings.map(f => `- ${f}`).join('\n')}
+                
+                ${report}
+                
+                ### 🚨 IMMEDIATE ACTION REQUIRED:
+                1. **Review all critical findings immediately**  
+                2. **Rotate any exposed secrets/credentials**
+                3. **Patch critical vulnerabilities**
+                4. **Fix infrastructure misconfigurations**
+                5. **Re-run security scans after fixes**
+                
+                **Workflow Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                `;
+                
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: issueTitle,
+                  body: issueBody,
+                  labels: ['security', 'critical', 'sast', 'immediate-action-required']
+                });
+              }
+            } catch (error) {
+              console.log('Could not create critical security issue:', error);
+            }

@@ -2,6 +2,7 @@
 # UTF Strings - Cross-Platform C++23 Library
 
 [![CI/CD Pipeline](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml)
+[![SAST Security Scanning](https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml)
 [![CodeQL Security Analysis](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml)
 [![Semgrep Security Analysis](https://github.com/wsollers/utf_strings/actions/workflows/semgrep-security.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/semgrep-security.yml)
 [![Cppcheck Static Analysis](https://github.com/wsollers/utf_strings/actions/workflows/cppcheck-analysis.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/cppcheck-analysis.yml)

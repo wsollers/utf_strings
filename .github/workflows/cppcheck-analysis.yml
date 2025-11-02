@@ -59,10 +59,10 @@ jobs:
       - name: Run Cppcheck Analysis
         run: |
           echo "Running Cppcheck analysis with severity: ${{ steps.severity.outputs.level }}"
-          
+
           # Create output directories
           mkdir -p cppcheck-results
-          
+
           # Set severity flags based on input
           SEVERITY_FLAGS=""
           case "${{ steps.severity.outputs.level }}" in
@@ -131,7 +131,7 @@ jobs:
 
           # Try to convert XML to SARIF format for GitHub Code Scanning
           echo "=== Converting Cppcheck XML to SARIF ==="
-          
+
           if command -v cppcheck2sarif >/dev/null 2>&1; then
             # Use cppcheck-sarif-converter if available
             cppcheck2sarif \
@@ -158,7 +158,7 @@ jobs:
             ]
           }
           EOF
-          
+
             # Parse XML results and add to SARIF (basic implementation)
             if [ -f "cppcheck-results/cppcheck-results.xml" ]; then
               echo "XML results file found, check manually for issues"
@@ -169,27 +169,27 @@ jobs:
       - name: Process Cppcheck Results
         run: |
           cd cppcheck-results
-          
+
           echo "=== Processing Cppcheck Results ==="
-          
+
           # Generate summary report
           cat > cppcheck-summary.md << 'EOF'
           # Cppcheck Static Analysis Report
-          
+
           **Analysis Date:** $(date)
           **Severity Level:** ${{ steps.severity.outputs.level }}
           **Repository:** ${{ github.repository }}
           **Commit:** ${{ github.sha }}
-          
+
           ## Analysis Configuration
           - **Standard:** C++23
           - **Platform:** Unix 64-bit
           - **Directories Analyzed:** src/, include/, tests/, benchmarks/
           - **Suppressions:** missingIncludeSystem, unmatchedSuppression, unusedFunction
-          
+
           ## Results Summary
           EOF
-          
+
           # Count issues by severity if XML file exists
           if [ -f "cppcheck-results.xml" ]; then
             echo "### Issues Found:" >> cppcheck-summary.md
@@ -221,13 +221,13 @@ jobs:
           else
             echo "❌ **Analysis failed - no results file generated**" >> cppcheck-summary.md
           fi
-          
+
           echo "" >> cppcheck-summary.md
           echo "## Files Analyzed" >> cppcheck-summary.md
           echo "\`\`\`" >> cppcheck-summary.md
           find ../src ../include ../tests ../benchmarks -name "*.cpp" -o -name "*.hpp" -o -name "*.h" | head -20 >> cppcheck-summary.md
           echo "\`\`\`" >> cppcheck-summary.md
-          
+
           # Display the summary
           echo "=== Cppcheck Analysis Summary ==="
           cat cppcheck-summary.md
@@ -254,7 +254,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             try {
               const summary = fs.readFileSync('cppcheck-results/cppcheck-summary.md', 'utf8');
               
@@ -291,7 +291,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             try {
               // Check if we have critical findings (errors)
               const xmlContent = fs.readFileSync('cppcheck-results/cppcheck-results.xml', 'utf8');
