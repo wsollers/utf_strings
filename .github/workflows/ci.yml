@@ -548,11 +548,13 @@ jobs:
             compiler_name: "MSVC 2022"
             conan_compiler: msvc
             conan_version: 193
+            runtime_version: ""
             cmake_args: ""
           - compiler: clang-cl
             compiler_name: "Clang-CL"
             conan_compiler: clang
             conan_version: 16
+            runtime_version: "v143"
             cmake_args: "-DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl"
 
     steps:
@@ -579,6 +581,10 @@ jobs:
           (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
           (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
           (Get-Content $profile) -replace 'arch=.*', 'arch=x86_64' | Set-Content $profile
+          # Add runtime_version for Clang builds (required for Windows Clang-CL)
+          if ("${{ matrix.runtime_version }}" -ne "") {
+            Add-Content $profile "compiler.runtime_version=${{ matrix.runtime_version }}"
+          }
           Write-Host "=== ${{ matrix.compiler_name }} Conan Profile ==="
           conan profile show --profile:host=default
         shell: pwsh
@@ -604,9 +610,7 @@ jobs:
       - name: Install dependencies
         timeout-minutes: 20
         run: |
-          # Optimize Conan builds for CI
-          conan config set tools.build:jobs=2
-          conan config set tools.build:verbosity=minimal
+          # Install Conan dependencies for Windows ${{ matrix.compiler_name }}
           conan install . -s os=Windows -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=False
 
       - name: Configure CMake
