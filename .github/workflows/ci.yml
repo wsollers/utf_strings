@@ -611,7 +611,7 @@ jobs:
     - name: Test
       run: |
         # Windows MSVC builds use configuration-specific subdirectories
-        cd build\${{ matrix.build_type }}
+        cd build\build\${{ matrix.build_type }}
         if ("${{ matrix.build_type }}" -eq "Debug") {
           .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_debug.xml
         } else {
@@ -621,7 +621,7 @@ jobs:
     - name: Benchmark (Release only)
       if: matrix.build_type == 'Release'
       run: |
-        cd build\Release
+        cd build\build\Release
         .\utf_strings-bench.exe --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_msvc.json
         
     - name: Check code formatting (Release only)
@@ -636,9 +636,9 @@ jobs:
       with:
         name: test-results-windows-msvc-${{ matrix.build_type }}
         path: |
-          build\Debug\test_results_msvc_debug.xml
-          build\Release\test_results_msvc_release.xml
-          build\Release\benchmark_results_msvc.json
+          build\build\Debug\test_results_msvc_debug.xml
+          build\build\Release\test_results_msvc_release.xml
+          build\build\Release\benchmark_results_msvc.json
 
   # ============================================================================
   # Windows - MSVC with AddressSanitizer
