@@ -24,9 +24,9 @@ TEST(UTF8, ValidMultibyte) {
   auto u32 = s.to_u32();
   ASSERT_TRUE(u32.has_value());
   EXPECT_EQ((*u32)[0], U'H');
-  EXPECT_EQ((*u32)[1], U'é');  // U+00E9
-  EXPECT_EQ((*u32)[4], U'ø');  // U+00F8  
-  EXPECT_EQ((*u32)[6], U'🌍'); // U+1F30D
+  EXPECT_EQ((*u32)[1], U'é');   // U+00E9
+  EXPECT_EQ((*u32)[4], U'ø');   // U+00F8
+  EXPECT_EQ((*u32)[6], U'🌍');  // U+1F30D
 }
 
 TEST(UTF8, RejectOverlong) {
