@@ -841,6 +841,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [linux-gcc, linux-clang, windows-msvc, linux-sanitizers, windows-msvc-sanitizer]
     if: always()
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
     
     steps:
     - name: Download all artifacts
