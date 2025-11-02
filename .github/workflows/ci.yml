@@ -647,7 +647,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
+        conan install . -s os=Windows -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=False
         
     - name: Configure CMake
       run: |
@@ -746,7 +746,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        conan install . -s os=Windows -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
+        conan install . -s os=Windows -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=False
         
     - name: Configure CMake with AddressSanitizer
       run: |
