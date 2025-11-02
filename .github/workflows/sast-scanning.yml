@@ -40,14 +40,14 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-          exit-code: '0'
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH,MEDIUM"
+          exit-code: "0"
           # Scan for vulnerabilities in filesystem, dependencies, and misconfigurations
-          scanners: 'vuln,secret,misconfig'
+          scanners: "vuln,secret,misconfig"
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
@@ -63,7 +63,7 @@ jobs:
           echo "**Repository:** ${{ github.repository }}" >> trivy-summary.md
           echo "**Commit:** ${{ github.sha }}" >> trivy-summary.md
           echo "" >> trivy-summary.md
-          
+
           # Run Trivy in table format for summary
           echo "## Summary Report" >> trivy-summary.md
           echo "\`\`\`" >> trivy-summary.md
@@ -81,7 +81,7 @@ jobs:
           retention-days: 30
 
   # ============================================================================
-  # Checkov Infrastructure Security Scanner  
+  # Checkov Infrastructure Security Scanner
   # ============================================================================
 
   checkov-scan:
@@ -109,7 +109,7 @@ jobs:
         run: |
           # Run Checkov on infrastructure files (GitHub Actions, Docker, etc.)
           echo "Running Checkov infrastructure security scan..."
-          
+
           checkov \
             --directory . \
             --framework github_actions,dockerfile,yaml,json \
@@ -117,7 +117,7 @@ jobs:
             --output-file-path checkov-results.sarif \
             --soft-fail \
             --quiet || echo "Checkov scan completed with findings"
-          
+
           # Also generate human-readable output
           checkov \
             --directory . \
@@ -131,7 +131,7 @@ jobs:
           echo "**Scan Date:** $(date)" >> checkov-summary.md
           echo "**Frameworks:** GitHub Actions, Docker, YAML, JSON" >> checkov-summary.md
           echo "" >> checkov-summary.md
-          
+
           if [ -f "checkov-results.sarif" ]; then
             # Count findings from SARIF if available
             FINDINGS_COUNT=$(jq '.runs[0].results | length' checkov-results.sarif 2>/dev/null || echo "0")
@@ -145,7 +145,7 @@ jobs:
           else
             echo "ℹ️ **Scan completed - check artifacts for details**" >> checkov-summary.md
           fi
-          
+
           echo "" >> checkov-summary.md
           echo "## Report Summary" >> checkov-summary.md
           if [ -f "checkov-report.txt" ]; then
@@ -188,7 +188,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch full history for comprehensive secret scanning
+          fetch-depth: 0 # Fetch full history for comprehensive secret scanning
 
       - name: Run Gitleaks scan
         uses: gitleaks/gitleaks-action@v2
@@ -196,7 +196,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Optional: for Gitleaks Pro features
         with:
-          config-path: .gitleaks.toml  # Optional: custom config file
+          config-path: .gitleaks.toml # Optional: custom config file
 
       - name: Upload Gitleaks scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
@@ -213,7 +213,7 @@ jobs:
           echo "**Repository:** ${{ github.repository }}" >> gitleaks-summary.md
           echo "**Scan Type:** Full history secret detection" >> gitleaks-summary.md
           echo "" >> gitleaks-summary.md
-          
+
           if [ -f "results.sarif" ]; then
             SECRETS_COUNT=$(jq '.runs[0].results | length' results.sarif 2>/dev/null || echo "0")
             echo "**Secrets Found:** $SECRETS_COUNT" >> gitleaks-summary.md
@@ -240,7 +240,7 @@ jobs:
           path: |
             results.sarif
             gitleaks-summary.md
-          retention-days: 90  # Keep secret scan results longer for security compliance
+          retention-days: 90 # Keep secret scan results longer for security compliance
 
   # ============================================================================
   # Invoke Existing Security Workflows
@@ -249,8 +249,8 @@ jobs:
   invoke-cppcheck:
     name: "Invoke Cppcheck Analysis"
     runs-on: ubuntu-24.04
-    if: github.event_name != 'schedule'  # Avoid double runs on scheduled execution
-    
+    if: github.event_name != 'schedule' # Avoid double runs on scheduled execution
+
     steps:
       - name: Trigger Cppcheck workflow
         uses: actions/github-script@v7
@@ -264,7 +264,7 @@ jobs:
                 workflow_id: 'cppcheck-analysis.yml',
                 ref: context.ref,
                 inputs: {
-                  severity_level: '${{ github.event.inputs.scan_intensity == "deep" && "all" || "error" }}'
+                  severity_level: '${{ github.event.inputs.scan_intensity == ''deep'' && ''all'' || ''error'' }}'
                 }
               });
               console.log('Cppcheck workflow triggered successfully');
@@ -276,8 +276,8 @@ jobs:
   invoke-semgrep:
     name: "Invoke Semgrep Analysis"
     runs-on: ubuntu-24.04
-    if: github.event_name != 'schedule'  # Avoid double runs on scheduled execution
-    
+    if: github.event_name != 'schedule' # Avoid double runs on scheduled execution
+
     steps:
       - name: Trigger Semgrep workflow
         uses: actions/github-script@v7
@@ -291,7 +291,7 @@ jobs:
                 workflow_id: 'semgrep-security.yml',
                 ref: context.ref,
                 inputs: {
-                  ruleset: '${{ github.event.inputs.scan_intensity == "deep" && "auto" || "r/c.lang.security" }}'
+                  ruleset: '${{ github.event.inputs.scan_intensity == ''deep'' && ''auto'' || ''r/c.lang.security'' }}'
                 }
               });
               console.log('Semgrep workflow triggered successfully');
@@ -330,10 +330,10 @@ jobs:
           echo "**Commit:** ${{ github.sha }}" >> sast-comprehensive-report.md
           echo "**Scan Intensity:** ${{ github.event.inputs.scan_intensity || 'comprehensive' }}" >> sast-comprehensive-report.md
           echo "" >> sast-comprehensive-report.md
-          
+
           echo "## Security Tools Summary" >> sast-comprehensive-report.md
           echo "" >> sast-comprehensive-report.md
-          
+
           # Trivy Summary
           echo "### 🛡️ Trivy (Vulnerability & Misconfiguration)" >> sast-comprehensive-report.md
           if [ -f "trivy-summary.md" ]; then
@@ -342,7 +342,7 @@ jobs:
             echo "⚠️ Trivy results not available" >> sast-comprehensive-report.md
           fi
           echo "" >> sast-comprehensive-report.md
-          
+
           # Checkov Summary  
           echo "### 🏗️ Checkov (Infrastructure Security)" >> sast-comprehensive-report.md
           if [ -f "checkov-summary.md" ]; then
@@ -351,7 +351,7 @@ jobs:
             echo "⚠️ Checkov results not available" >> sast-comprehensive-report.md
           fi
           echo "" >> sast-comprehensive-report.md
-          
+
           # Gitleaks Summary
           echo "### 🔐 Gitleaks (Secret Detection)" >> sast-comprehensive-report.md
           if [ -f "gitleaks-summary.md" ]; then
@@ -360,19 +360,19 @@ jobs:
             echo "⚠️ Gitleaks results not available" >> sast-comprehensive-report.md
           fi
           echo "" >> sast-comprehensive-report.md
-          
+
           # Additional workflows
           echo "### 🔧 Additional Security Analysis" >> sast-comprehensive-report.md
           echo "- **Cppcheck:** Static code analysis workflow triggered" >> sast-comprehensive-report.md
           echo "- **Semgrep:** Security pattern matching workflow triggered" >> sast-comprehensive-report.md
           echo "" >> sast-comprehensive-report.md
-          
+
           echo "## Next Steps" >> sast-comprehensive-report.md
           echo "1. Review all findings in the GitHub Security tab" >> sast-comprehensive-report.md
           echo "2. Prioritize critical and high severity issues" >> sast-comprehensive-report.md
           echo "3. Check individual workflow runs for Cppcheck and Semgrep results" >> sast-comprehensive-report.md
           echo "4. Implement fixes and re-run security scans" >> sast-comprehensive-report.md
-          
+
           # Display the comprehensive report
           echo "=== Comprehensive SAST Security Report ==="
           cat sast-comprehensive-report.md
@@ -390,7 +390,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            
+
             try {
               const report = fs.readFileSync('sast-comprehensive-report.md', 'utf8');
               
