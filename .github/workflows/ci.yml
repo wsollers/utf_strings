@@ -46,7 +46,11 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        conan profile update settings.compiler.cppstd=23 default
+        # Update C++ standard to C++23 for Conan 2.x
+        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        echo "=== Final Conan Profile ==="
+        conan profile show default
         echo "=== Conan Profile Configuration ==="
         conan profile show default
         
@@ -188,7 +192,12 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        conan profile update settings.compiler.cppstd=23 default
+        # Update C++23 for Conan 2.x
+        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        echo "=== Final Conan Profile ==="
+        conan profile show default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -325,7 +334,12 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        conan profile update settings.compiler.cppstd=23 default
+        # Update C++23 for Conan 2.x
+        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        echo "=== Final Conan Profile ==="
+        conan profile show default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -450,7 +464,12 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        conan profile update settings.compiler.cppstd=23 default
+        # Update C++23 for Conan 2.x
+        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        echo "=== Final Conan Profile ==="
+        conan profile show default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -522,7 +541,12 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        conan profile update settings.compiler.cppstd=23 default
+        # Update C++23 for Conan 2.x
+        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        echo "=== Final Conan Profile ==="
+        conan profile show default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -618,7 +642,12 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        conan profile update settings.compiler.cppstd=23 default
+        # Update C++23 for Conan 2.x
+        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        echo "=== Final Conan Profile ==="
+        conan profile show default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -688,7 +717,12 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        conan profile update settings.compiler.cppstd=23 default
+        # Update C++23 for Conan 2.x
+        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        echo "=== Final Conan Profile ==="
+        conan profile show default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
