@@ -1,0 +1,247 @@
+name: Extended Fuzz Testing
+
+on:
+  schedule:
+    # Run extended fuzz testing daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      duration:
+        description: 'Fuzz testing duration in seconds'
+        required: false
+        default: '3600'  # 1 hour by default
+        type: string
+
+jobs:
+  extended-fuzz-testing:
+    name: "Extended Fuzz Testing (Linux Clang)"
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        # Install Clang 16
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 16
+        sudo apt update
+        sudo apt install -y cmake python3-pip git clang-format-16
+        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+        sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-extended-fuzz-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-extended-fuzz-
+          conan-linux-clang-fuzz-
+          
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Debug --output-folder=build --build=missing
+        
+    - name: Configure CMake with Fuzz Testing
+      run: |
+        export CC=clang
+        export CXX=clang++
+        cmake --preset conan-debug -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON
+        
+    - name: Build Fuzz Targets
+      run: cmake --build --preset conan-debug --parallel
+      
+    - name: Create fuzz corpus directories
+      run: |
+        mkdir -p fuzz_corpus/{utf8,utf16_be,utf16_le,utf32_be,utf32_le}
+        
+    - name: Set fuzz duration
+      run: |
+        if [ -n "${{ github.event.inputs.duration }}" ]; then
+          echo "FUZZ_DURATION=${{ github.event.inputs.duration }}" >> $GITHUB_ENV
+        else
+          echo "FUZZ_DURATION=3600" >> $GITHUB_ENV  # 1 hour default
+        fi
+        
+    - name: Run Extended UTF-8 Fuzz Tests
+      continue-on-error: true
+      run: |
+        cd build/Debug
+        echo "Running extended UTF-8 fuzz tests for ${FUZZ_DURATION} seconds..."
+        timeout ${FUZZ_DURATION}s ./fuzz_utf8 \
+          -max_total_time=${FUZZ_DURATION} \
+          -print_final_stats=1 \
+          -print_corpus_stats=1 \
+          -artifact_prefix=utf8_ \
+          ../../fuzz_corpus/utf8/ \
+          || echo "UTF-8 fuzzing completed or timeout reached"
+        
+    - name: Run Extended UTF-16 BE Fuzz Tests
+      continue-on-error: true
+      run: |
+        cd build/Debug
+        echo "Running extended UTF-16 BE fuzz tests for ${FUZZ_DURATION} seconds..."
+        timeout ${FUZZ_DURATION}s ./fuzz_utf16_be \
+          -max_total_time=${FUZZ_DURATION} \
+          -print_final_stats=1 \
+          -print_corpus_stats=1 \
+          -artifact_prefix=utf16_be_ \
+          ../../fuzz_corpus/utf16_be/ \
+          || echo "UTF-16 BE fuzzing completed or timeout reached"
+        
+    - name: Run Extended UTF-16 LE Fuzz Tests
+      continue-on-error: true
+      run: |
+        cd build/Debug
+        echo "Running extended UTF-16 LE fuzz tests for ${FUZZ_DURATION} seconds..."
+        timeout ${FUZZ_DURATION}s ./fuzz_utf16_le \
+          -max_total_time=${FUZZ_DURATION} \
+          -print_final_stats=1 \
+          -print_corpus_stats=1 \
+          -artifact_prefix=utf16_le_ \
+          ../../fuzz_corpus/utf16_le/ \
+          || echo "UTF-16 LE fuzzing completed or timeout reached"
+        
+    - name: Run Extended UTF-32 BE Fuzz Tests
+      continue-on-error: true
+      run: |
+        cd build/Debug
+        echo "Running extended UTF-32 BE fuzz tests for ${FUZZ_DURATION} seconds..."
+        timeout ${FUZZ_DURATION}s ./fuzz_utf32_be \
+          -max_total_time=${FUZZ_DURATION} \
+          -print_final_stats=1 \
+          -print_corpus_stats=1 \
+          -artifact_prefix=utf32_be_ \
+          ../../fuzz_corpus/utf32_be/ \
+          || echo "UTF-32 BE fuzzing completed or timeout reached"
+        
+    - name: Run Extended UTF-32 LE Fuzz Tests
+      continue-on-error: true
+      run: |
+        cd build/Debug
+        echo "Running extended UTF-32 LE fuzz tests for ${FUZZ_DURATION} seconds..."
+        timeout ${FUZZ_DURATION}s ./fuzz_utf32_le \
+          -max_total_time=${FUZZ_DURATION} \
+          -print_final_stats=1 \
+          -print_corpus_stats=1 \
+          -artifact_prefix=utf32_le_ \
+          ../../fuzz_corpus/utf32_le/ \
+          || echo "UTF-32 LE fuzzing completed or timeout reached"
+        
+    - name: Generate fuzz report
+      run: |
+        cd build/Debug
+        echo "# Extended Fuzz Testing Report" > fuzz_report.md
+        echo "## Test Duration: ${FUZZ_DURATION} seconds" >> fuzz_report.md
+        echo "## Date: $(date)" >> fuzz_report.md
+        echo "" >> fuzz_report.md
+        
+        echo "### Artifacts Found:" >> fuzz_report.md
+        if ls *crash* *leak* *timeout* *slow-unit* 2>/dev/null; then
+          echo "⚠️ **Issues found during fuzzing:**" >> fuzz_report.md
+          for file in *crash* *leak* *timeout* *slow-unit* 2>/dev/null; do
+            if [ -f "$file" ]; then
+              echo "- $file" >> fuzz_report.md
+            fi
+          done
+        else
+          echo "✅ **No crashes, leaks, or timeouts found!**" >> fuzz_report.md
+        fi
+        
+        echo "" >> fuzz_report.md
+        echo "### Corpus Statistics:" >> fuzz_report.md
+        for corpus in ../../fuzz_corpus/*; do
+          if [ -d "$corpus" ]; then
+            corpus_name=$(basename "$corpus")
+            file_count=$(find "$corpus" -type f | wc -l)
+            echo "- $corpus_name: $file_count test cases" >> fuzz_report.md
+          fi
+        done
+        
+    - name: Upload extended fuzz results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: extended-fuzz-results-${{ github.run_number }}
+        path: |
+          build/Debug/fuzz_report.md
+          build/Debug/*crash*
+          build/Debug/*leak*
+          build/Debug/*timeout*
+          build/Debug/*slow-unit*
+          build/Debug/*.log
+          fuzz_corpus/
+          
+    - name: Create issue on fuzz failure
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Check if any crash artifacts exist
+          const crashFiles = [];
+          const buildDir = 'build/Debug';
+          
+          try {
+            const files = fs.readdirSync(buildDir);
+            for (const file of files) {
+              if (file.includes('crash') || file.includes('leak') || file.includes('timeout')) {
+                crashFiles.push(file);
+              }
+            }
+          } catch (error) {
+            console.log('Could not read build directory:', error);
+          }
+          
+          if (crashFiles.length > 0) {
+            const issueTitle = `🐛 Fuzz Testing Found Issues - ${new Date().toISOString().split('T')[0]}`;
+            const issueBody = `
+          ## Fuzz Testing Issues Detected
+          
+          Extended fuzz testing has discovered potential issues in the UTF Strings library.
+          
+          ### Artifacts Found:
+          ${crashFiles.map(file => `- \`${file}\``).join('\n')}
+          
+          ### Run Information:
+          - **Workflow Run**: ${context.runNumber}
+          - **Duration**: ${process.env.FUZZ_DURATION || '3600'} seconds
+          - **Date**: ${new Date().toISOString()}
+          
+          ### Next Steps:
+          1. Download the artifacts from the workflow run
+          2. Reproduce the issues locally using the crash files
+          3. Fix the underlying bugs
+          4. Verify fixes with additional fuzz testing
+          
+          **Workflow Run**: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+          `;
+          
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['bug', 'fuzz-testing', 'security']
+            });
+          }

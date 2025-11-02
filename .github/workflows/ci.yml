@@ -1,41 +1,632 @@
 
-name: ci
+name: CI/CD Pipeline
+
 on:
   push:
+    branches: [ main, develop ]
   pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ published ]
+
+env:
+  CONAN_USER_HOME: "${{ github.workspace }}/conan-cache"
 
 jobs:
-  build-test-bench:
+  # ============================================================================
+  # Linux x64 - GCC 13
+  # ============================================================================
+  
+  linux-gcc:
+    name: "Linux GCC 13 (x64)"
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        os: [ubuntu-24.04, windows-2022]
         build_type: [Debug, Release]
-    runs-on: ${{ matrix.os }}
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: conan-io/conan-action@v1
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential cmake python3-pip git clang-format
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-linux-gcc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-linux-gcc-${{ matrix.build_type }}-
+          conan-linux-gcc-
+          
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+        
+    - name: Configure CMake
+      run: |
+        export CC=gcc
+        export CXX=g++
+        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+          cmake --preset conan-debug
+        else
+          cmake --preset conan-release
+        fi
+        
+    - name: Build
+      run: |
+        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+          cmake --build --preset conan-debug --parallel
+        else
+          cmake --build --preset conan-release --parallel
+        fi
+      
+    - name: Test
+      run: |
+        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+          cd build/Debug
+          ./utf_strings-tests --gtest_output=xml:test_results_gcc_debug.xml
+        else
+          cd build/build
+          ./utf_strings-tests --gtest_output=xml:test_results_gcc_release.xml
+        fi
+        
+    - name: Benchmark (Release only)
+      if: matrix.build_type == 'Release'
+      run: |
+        cd build/build
+        ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_gcc.json
+        
+    - name: Check code formatting (Release only)
+      if: matrix.build_type == 'Release'
+      run: cmake --build --preset conan-release --target format-check
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results-linux-gcc-${{ matrix.build_type }}
+        path: |
+          build/Debug/test_results_gcc_debug.xml
+          build/build/test_results_gcc_release.xml
+          build/build/benchmark_results_gcc.json
 
-      - name: Conan install
-        run: |
-          conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+  # ============================================================================
+  # Linux x64 - Clang 16  
+  # ============================================================================
+  
+  linux-clang:
+    name: "Linux Clang 16 (x64)"
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        # Install Clang 16
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 16
+        sudo apt update
+        sudo apt install -y cmake python3-pip git clang-format-16
+        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+        sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-linux-clang-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-linux-clang-${{ matrix.build_type }}-
+          conan-linux-clang-
+          
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+        
+    - name: Configure CMake
+      run: |
+        export CC=clang
+        export CXX=clang++
+        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+          cmake --preset conan-debug
+        else
+          cmake --preset conan-release
+        fi
+        
+    - name: Build
+      run: |
+        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+          cmake --build --preset conan-debug --parallel
+        else
+          cmake --build --preset conan-release --parallel
+        fi
+      
+    - name: Test
+      run: |
+        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+          cd build/Debug
+          ./utf_strings-tests --gtest_output=xml:test_results_clang_debug.xml
+        else
+          cd build/build
+          ./utf_strings-tests --gtest_output=xml:test_results_clang_release.xml
+        fi
+        
+    - name: Benchmark (Release only)
+      if: matrix.build_type == 'Release'
+      run: |
+        cd build/build
+        ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_clang.json
+        
+    - name: Check code formatting (Release only)
+      if: matrix.build_type == 'Release'
+      run: cmake --build --preset conan-release --target format-check
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results-linux-clang-${{ matrix.build_type }}
+        path: |
+          build/Debug/test_results_clang_debug.xml
+          build/build/test_results_clang_release.xml
+          build/build/benchmark_results_clang.json
 
-      - name: Configure (CMake)
-        run: |
-          cmake -S . -B build/${{ matrix.build_type }}             -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+  # ============================================================================
+  # Linux x64 - Clang with Fuzz Testing
+  # ============================================================================
+  
+  linux-clang-fuzz:
+    name: "Linux Clang Fuzz Testing (x64)"
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        # Install Clang 16
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 16
+        sudo apt update
+        sudo apt install -y cmake python3-pip git clang-format-16
+        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+        sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-linux-clang-fuzz-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-linux-clang-fuzz-
+          conan-linux-clang-
+          
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Debug --output-folder=build --build=missing
+        
+    - name: Configure CMake with Fuzz Testing
+      run: |
+        export CC=clang
+        export CXX=clang++
+        cmake --preset conan-debug -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON
+        
+    - name: Build Fuzz Targets
+      run: cmake --build --preset conan-debug --parallel
+      
+    - name: Run Fuzz Tests (Short Duration for CI)
+      run: |
+        cd build/Debug
+        echo "Running UTF-8 fuzz tests..."
+        timeout 60s ./fuzz_utf8 -max_total_time=30 -print_final_stats=1 || true
+        echo "Running UTF-16 BE fuzz tests..."
+        timeout 60s ./fuzz_utf16_be -max_total_time=30 -print_final_stats=1 || true
+        echo "Running UTF-16 LE fuzz tests..."
+        timeout 60s ./fuzz_utf16_le -max_total_time=30 -print_final_stats=1 || true
+        echo "Running UTF-32 BE fuzz tests..."
+        timeout 60s ./fuzz_utf32_be -max_total_time=30 -print_final_stats=1 || true
+        echo "Running UTF-32 LE fuzz tests..."
+        timeout 60s ./fuzz_utf32_le -max_total_time=30 -print_final_stats=1 || true
+        
+    - name: Upload fuzz artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: fuzz-results-linux-clang
+        path: |
+          build/Debug/*.log
+          build/Debug/crash-*
+          build/Debug/leak-*
+          build/Debug/timeout-*
 
-      - name: Build (CMake)
-        run: cmake --build build/${{ matrix.build_type }} --config ${{ matrix.build_type }} -- -j 2
+  # ============================================================================
+  # Linux x64 - Sanitizer Testing (GCC & Clang)
+  # ============================================================================
+  
+  linux-sanitizers:
+    name: "Linux Sanitizer Testing (x64)"
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        sanitizer: [asan, tsan]
+        compiler: [gcc, clang]
+        
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 16
+          sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+        fi
+        sudo apt update
+        sudo apt install -y build-essential cmake python3-pip git
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-linux-${{ matrix.compiler }}-${{ matrix.sanitizer }}-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-linux-${{ matrix.compiler }}-${{ matrix.sanitizer }}-
+          
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Debug --output-folder=build --build=missing
+        
+    - name: Configure CMake with Sanitizers
+      run: |
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          export CC=clang
+          export CXX=clang++
+        else
+          export CC=gcc
+          export CXX=g++
+        fi
+        
+        if [ "${{ matrix.sanitizer }}" = "asan" ]; then
+          cmake --preset conan-debug -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+        else
+          cmake --preset conan-debug -DUTF_STRINGS_ENABLE_THREAD_SANITIZER=ON
+        fi
+        
+    - name: Build with Sanitizers
+      run: cmake --build --preset conan-debug --parallel
+      
+    - name: Test with Sanitizers
+      run: |
+        cd build/Debug
+        ./utf_strings-tests --gtest_output=xml:test_results_${{ matrix.compiler }}_${{ matrix.sanitizer }}.xml
+        
+    - name: Upload sanitizer results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: sanitizer-results-${{ matrix.compiler }}-${{ matrix.sanitizer }}
+        path: build/Debug/test_results_${{ matrix.compiler }}_${{ matrix.sanitizer }}.xml
 
-      - name: Test (ctest)
-        run: |
-          ctest --test-dir build/${{ matrix.build_type }} -C ${{ matrix.build_type }} --output-on-failure
+  # ============================================================================
+  # Windows x64 - MSVC 2022
+  # ============================================================================
+  
+  windows-msvc:
+    name: "Windows MSVC 2022 (x64)"
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip install conan
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-windows-msvc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-windows-msvc-${{ matrix.build_type }}-
+          conan-windows-msvc-
+          
+    - name: Install LLVM (for clang-format)
+      run: |
+        choco install llvm -y
+        
+    - name: Setup MSVC environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing
+        
+    - name: Configure CMake
+      run: |
+        if ("${{ matrix.build_type }}" -eq "Debug") {
+          cmake --preset conan-debug -DCMAKE_GENERATOR_PLATFORM=x64
+        } else {
+          cmake --preset conan-release -DCMAKE_GENERATOR_PLATFORM=x64
+        }
+        
+    - name: Build
+      run: |
+        if ("${{ matrix.build_type }}" -eq "Debug") {
+          cmake --build --preset conan-debug --parallel
+        } else {
+          cmake --build --preset conan-release --parallel
+        }
+      
+    - name: Test
+      run: |
+        if ("${{ matrix.build_type }}" -eq "Debug") {
+          cd build\Debug
+          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_debug.xml
+        } else {
+          cd build\build
+          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_release.xml
+        }
+        
+    - name: Benchmark (Release only)
+      if: matrix.build_type == 'Release'
+      run: |
+        cd build\build
+        .\utf_strings-bench.exe --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_msvc.json
+        
+    - name: Check code formatting (Release only)
+      if: matrix.build_type == 'Release'
+      run: |
+        $env:PATH = "C:\Program Files\LLVM\bin;$env:PATH"
+        cmake --build --preset conan-release --target format-check
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results-windows-msvc-${{ matrix.build_type }}
+        path: |
+          build\Debug\test_results_msvc_debug.xml
+          build\build\test_results_msvc_release.xml
+          build\build\benchmark_results_msvc.json
 
-      - name: Benchmark (Release only)
-        if: matrix.build_type == 'Release'
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./build/Release/utf_strings-bench.exe --benchmark_min_time=0.05
-          else
-            ./build/Release/utf_strings-bench --benchmark_min_time=0.05
-          fi
-        shell: bash
+  # ============================================================================
+  # Windows - MSVC with AddressSanitizer
+  # ============================================================================
+  
+  windows-msvc-sanitizer:
+    name: "Windows MSVC AddressSanitizer (x64)"
+    runs-on: windows-2022
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip install conan
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-windows-msvc-asan-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-windows-msvc-asan-
+          conan-windows-msvc-
+          
+    - name: Setup MSVC environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Debug --output-folder=build --build=missing
+        
+    - name: Configure CMake with AddressSanitizer
+      run: |
+        cmake --preset conan-debug -DCMAKE_GENERATOR_PLATFORM=x64 -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+        
+    - name: Build with AddressSanitizer
+      run: cmake --build --preset conan-debug --parallel
+      
+    - name: Test with AddressSanitizer
+      run: |
+        cd build\Debug
+        .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_asan.xml
+        
+    - name: Upload sanitizer results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: sanitizer-results-windows-msvc-asan
+        path: build\Debug\test_results_msvc_asan.xml
+
+  # ============================================================================
+  # Performance Baseline Tracking
+  # ============================================================================
+  
+  performance-tracking:
+    name: "Performance Baseline Tracking"
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install system dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential cmake python3-pip git
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-performance-baseline-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-performance-baseline-
+        
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Release --output-folder=build --build=missing
+        
+    - name: Configure and Build (Release)
+      run: |
+        export CC=gcc
+        export CXX=g++
+        cmake --preset conan-release
+        cmake --build --preset conan-release --parallel
+        
+    - name: Run Performance Benchmarks
+      run: |
+        cd build/build
+        ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_format=json --benchmark_out=performance_baseline.json
+        
+    - name: Store Performance Results
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        tool: 'googlecpp'
+        output-file-path: build/build/performance_baseline.json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+        alert-threshold: '150%'
+        comment-on-alert: true
+        fail-on-alert: true
+
+  # ============================================================================
+  # Publish Test Results
+  # ============================================================================
+  
+  publish-test-results:
+    name: "Publish Test Results"
+    runs-on: ubuntu-latest
+    needs: [linux-gcc, linux-clang, windows-msvc, linux-sanitizers, windows-msvc-sanitizer]
+    if: always()
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: "**/*.xml"
+        comment_mode: create new
+        check_name: "Unit Test Results"
+        report_individual_runs: true
+        deduplicate_classes_by_file_name: false

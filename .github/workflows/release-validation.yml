@@ -1,0 +1,400 @@
+name: Release Validation
+
+on:
+  release:
+    types: [published, created]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to validate'
+        required: true
+        type: string
+
+jobs:
+  # ============================================================================
+  # Cross-Platform Release Build Validation
+  # ============================================================================
+  
+  release-validation:
+    name: "Release Build Validation"
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            compiler: gcc
+            name: "Linux GCC 13"
+          - os: ubuntu-22.04
+            compiler: clang
+            name: "Linux Clang 16"
+          - os: windows-2022
+            compiler: msvc
+            name: "Windows MSVC 2022"
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout release
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.release_tag || github.ref }}
+        
+    - name: Install system dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 16
+          sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+          sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+        fi
+        sudo apt update
+        sudo apt install -y build-essential cmake python3-pip git clang-format
+        
+    - name: Install LLVM (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        choco install llvm -y
+        
+    - name: Setup MSVC environment (Windows)
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip install conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH  # Linux/macOS
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-release-${{ matrix.os }}-${{ matrix.compiler }}-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-release-${{ matrix.os }}-${{ matrix.compiler }}-
+          
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Release --output-folder=build --build=missing
+        
+    - name: Configure CMake (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          export CC=clang
+          export CXX=clang++
+        else
+          export CC=gcc
+          export CXX=g++
+        fi
+        cmake --preset conan-release
+        
+    - name: Configure CMake (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        cmake --preset conan-release -DCMAKE_GENERATOR_PLATFORM=x64
+        
+    - name: Build Release
+      run: cmake --build --preset conan-release --parallel
+      
+    - name: Run Tests
+      run: |
+        if [ "$RUNNER_OS" = "Windows" ]; then
+          cd build/build
+          ./utf_strings-tests.exe --gtest_output=xml:release_test_results.xml
+        else
+          cd build/build
+          ./utf_strings-tests --gtest_output=xml:release_test_results.xml
+        fi
+      shell: bash
+        
+    - name: Run Benchmarks
+      run: |
+        if [ "$RUNNER_OS" = "Windows" ]; then
+          cd build/build
+          ./utf_strings-bench.exe --benchmark_min_time=0.5s --benchmark_format=json --benchmark_out=release_benchmarks.json
+        else
+          cd build/build
+          ./utf_strings-bench --benchmark_min_time=0.5s --benchmark_format=json --benchmark_out=release_benchmarks.json
+        fi
+      shell: bash
+      
+    - name: Validate code formatting
+      run: |
+        if [ "$RUNNER_OS" = "Windows" ]; then
+          $env:PATH = "C:\Program Files\LLVM\bin;$env:PATH"
+        fi
+        cmake --build --preset conan-release --target format-check
+      shell: bash
+      
+    - name: Package artifacts
+      run: |
+        mkdir -p release-artifacts/${{ matrix.name }}/
+        if [ "$RUNNER_OS" = "Windows" ]; then
+          cp build/build/*.exe release-artifacts/${{ matrix.name }}/
+          cp build/build/*.lib release-artifacts/${{ matrix.name }}/
+          cp build/build/*.dll release-artifacts/${{ matrix.name }}/
+        else
+          cp build/build/utf_strings-tests release-artifacts/${{ matrix.name }}/
+          cp build/build/utf_strings-bench release-artifacts/${{ matrix.name }}/
+          cp build/build/*.so release-artifacts/${{ matrix.name }}/ || true
+          cp build/build/*.a release-artifacts/${{ matrix.name }}/
+        fi
+        cp -r include/ release-artifacts/${{ matrix.name }}/
+      shell: bash
+      
+    - name: Upload release artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts-${{ matrix.name }}
+        path: |
+          release-artifacts/
+          build/build/release_test_results.xml
+          build/build/release_benchmarks.json
+
+  # ============================================================================
+  # Release Security Validation
+  # ============================================================================
+  
+  release-security-validation:
+    name: "Release Security Validation"
+    runs-on: ubuntu-22.04
+    needs: [release-validation]
+    
+    steps:
+    - name: Checkout release
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.release_tag || github.ref }}
+        
+    - name: Install security tools
+      run: |
+        sudo apt update
+        sudo apt install -y clang-tools cppcheck valgrind binutils
+        # Install Clang 16
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 16
+        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+        sudo ln -sf /usr/bin/clang-tidy-16 /usr/bin/clang-tidy
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+        
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Release --output-folder=build --build=missing
+        
+    - name: Configure and Build
+      run: |
+        export CC=clang
+        export CXX=clang++
+        cmake --preset conan-release
+        cmake --build --preset conan-release --parallel
+        
+    - name: Run Security Analysis (clang-tidy)
+      continue-on-error: true
+      run: |
+        echo "Running clang-tidy security analysis..."
+        find src include -name "*.cpp" -o -name "*.hpp" | \
+        xargs clang-tidy-16 -p build/build \
+          --checks='-*,security-*,cert-*,bugprone-*,clang-analyzer-security*' \
+          -- > clang-tidy-security-results.txt 2>&1 || true
+        
+    - name: Run Static Analysis (cppcheck)
+      continue-on-error: true
+      run: |
+        echo "Running cppcheck security analysis..."
+        cppcheck --enable=all --std=c++23 --inline-suppr \
+          --suppress=missingIncludeSystem --suppress=unmatchedSuppression \
+          --xml --xml-version=2 \
+          src/ include/ tests/ benchmarks/ 2> cppcheck-security-results.xml || true
+        
+    - name: Binary Security Analysis
+      run: |
+        echo "Analyzing binary security features..."
+        cd build/build
+        
+        echo "=== Security Features Analysis ===" > ../../binary-security-analysis.txt
+        echo "Date: $(date)" >> ../../binary-security-analysis.txt
+        echo "" >> ../../binary-security-analysis.txt
+        
+        for binary in utf_strings-tests utf_strings-bench; do
+          if [ -f "$binary" ]; then
+            echo "--- $binary ---" >> ../../binary-security-analysis.txt
+            
+            # Check for stack protection
+            if readelf -s "$binary" | grep -q "__stack_chk_fail"; then
+              echo "✅ Stack protection: ENABLED" >> ../../binary-security-analysis.txt
+            else
+              echo "❌ Stack protection: DISABLED" >> ../../binary-security-analysis.txt
+            fi
+            
+            # Check for FORTIFY_SOURCE
+            if readelf -s "$binary" | grep -q "__.*_chk"; then
+              echo "✅ FORTIFY_SOURCE: ENABLED" >> ../../binary-security-analysis.txt
+            else
+              echo "❌ FORTIFY_SOURCE: DISABLED" >> ../../binary-security-analysis.txt
+            fi
+            
+            # Check for PIE/ASLR
+            if readelf -h "$binary" | grep -q "Type:.*DYN"; then
+              echo "✅ PIE/ASLR: ENABLED" >> ../../binary-security-analysis.txt
+            else
+              echo "❌ PIE/ASLR: DISABLED" >> ../../binary-security-analysis.txt
+            fi
+            
+            # Check for NX bit
+            if readelf -l "$binary" | grep -q "GNU_STACK.*RWE"; then
+              echo "❌ NX bit: DISABLED (executable stack)" >> ../../binary-security-analysis.txt
+            else
+              echo "✅ NX bit: ENABLED (non-executable stack)" >> ../../binary-security-analysis.txt
+            fi
+            
+            echo "" >> ../../binary-security-analysis.txt
+          fi
+        done
+        
+    - name: Upload security analysis results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: release-security-analysis
+        path: |
+          clang-tidy-security-results.txt
+          cppcheck-security-results.xml
+          binary-security-analysis.txt
+
+  # ============================================================================
+  # Create Release Summary
+  # ============================================================================
+  
+  create-release-summary:
+    name: "Create Release Summary"
+    runs-on: ubuntu-latest
+    needs: [release-validation, release-security-validation]
+    if: always()
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      
+    - name: Create release summary
+      run: |
+        echo "# UTF Strings Release Validation Summary" > release-summary.md
+        echo "" >> release-summary.md
+        echo "**Release**: ${{ github.event.inputs.release_tag || github.ref_name }}" >> release-summary.md
+        echo "**Date**: $(date)" >> release-summary.md
+        echo "**Workflow Run**: ${{ github.run_number }}" >> release-summary.md
+        echo "" >> release-summary.md
+        
+        echo "## Build Status" >> release-summary.md
+        echo "" >> release-summary.md
+        
+        # Check for successful builds
+        if [ -d "release-artifacts-Linux GCC 13" ]; then
+          echo "✅ **Linux GCC 13**: Build successful" >> release-summary.md
+        else
+          echo "❌ **Linux GCC 13**: Build failed" >> release-summary.md
+        fi
+        
+        if [ -d "release-artifacts-Linux Clang 16" ]; then
+          echo "✅ **Linux Clang 16**: Build successful" >> release-summary.md
+        else
+          echo "❌ **Linux Clang 16**: Build failed" >> release-summary.md
+        fi
+        
+        if [ -d "release-artifacts-Windows MSVC 2022" ]; then
+          echo "✅ **Windows MSVC 2022**: Build successful" >> release-summary.md
+        else
+          echo "❌ **Windows MSVC 2022**: Build failed" >> release-summary.md
+        fi
+        
+        echo "" >> release-summary.md
+        echo "## Security Analysis" >> release-summary.md
+        echo "" >> release-summary.md
+        
+        if [ -f "release-security-analysis/binary-security-analysis.txt" ]; then
+          echo "### Binary Security Features" >> release-summary.md
+          echo "\`\`\`" >> release-summary.md
+          cat "release-security-analysis/binary-security-analysis.txt" >> release-summary.md
+          echo "\`\`\`" >> release-summary.md
+        fi
+        
+        echo "" >> release-summary.md
+        echo "## Artifacts" >> release-summary.md
+        echo "" >> release-summary.md
+        echo "The following artifacts are available for this release:" >> release-summary.md
+        echo "" >> release-summary.md
+        
+        for dir in release-artifacts-*; do
+          if [ -d "$dir" ]; then
+            platform=$(echo "$dir" | sed 's/release-artifacts-//')
+            echo "- **$platform**: Binaries and libraries" >> release-summary.md
+          fi
+        done
+        
+    - name: Upload release summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-summary
+        path: release-summary.md
+        
+    - name: Comment on release (if it's a release event)
+      if: github.event_name == 'release'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          try {
+            const summary = fs.readFileSync('release-summary.md', 'utf8');
+            
+            // Find the release
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            
+            const currentRelease = releases.data.find(release => 
+              release.tag_name === (context.payload.release?.tag_name || context.ref.replace('refs/tags/', ''))
+            );
+            
+            if (currentRelease) {
+              // Update release body with validation summary
+              const updatedBody = (currentRelease.body || '') + '\n\n---\n\n' + summary;
+              
+              await github.rest.repos.updateRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: currentRelease.id,
+                body: updatedBody
+              });
+            }
+          } catch (error) {
+            console.log('Could not update release:', error);
+          }

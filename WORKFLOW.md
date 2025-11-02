@@ -16,15 +16,43 @@ This document provides complete information for developing, testing, and maintai
 
 ## Quick Start
 
+### Cross-Platform Bootstrap (Recommended)
+
+**Linux/macOS:**
 ```bash
-# Clone and setup
 git clone <repository-url>
 cd utf_strings
 
-# Bootstrap the project (installs dependencies including clang-format)
-./bootstrap_cmake.sh
+# One command for complete setup
+./bootstrap_cmake.sh                 # Auto-detect and configure everything
+./bootstrap_cmake.sh --compiler gcc  # Force GCC on Linux
+./bootstrap_cmake.sh --compiler clang # Force Clang
+```
 
-# Build and test
+**Windows (Visual Studio 2022):**
+```cmd
+git clone <repository-url>
+cd utf_strings
+
+# One command for complete setup
+bootstrap_cmake.bat                  # Auto-detect and configure everything
+```
+
+The bootstrap script automatically:
+- 🔍 Detects your platform (Linux/Windows/macOS) and available compilers
+- 📦 Installs missing tools (CMake 3.25+, Conan 2.0+, clang-format)
+- ⚙️ Configures optimized builds (Debug + Release with security hardening)
+- 🧪 Runs comprehensive tests and performance benchmarks
+- 🎯 Sets up code formatting and development environment
+
+### Manual Setup (Advanced Users)
+
+```bash
+# Install dependencies
+conan install . -s build_type=Debug --output-folder=build --build=missing
+conan install . -s build_type=Release --output-folder=build --build=missing
+
+# Configure and build
 cmake --preset conan-release
 cmake --build --preset conan-release
 ./build/build/utf_strings-tests
@@ -35,18 +63,50 @@ cmake --build --preset conan-release
 
 ## Project Setup
 
+### Cross-Platform Support
+
+The UTF Strings library supports the following platforms and compilers:
+
+| Platform | Supported Compilers | Bootstrap Script | Notes |
+|----------|-------------------|------------------|-------|
+| **Linux** | GCC 13+, Clang 16+ | `./bootstrap_cmake.sh` | Full feature support including libFuzzer |
+| **Windows** | MSVC 2022 (Visual Studio) | `bootstrap_cmake.bat` | Full feature support, fuzz harnesses only |
+| **macOS** | Clang 16+ (Apple/LLVM) | `./bootstrap_cmake.sh` | Full feature support |
+
 ### Prerequisites
 
-**Required:**
+**Required (minimum):**
 - CMake 3.25+
-- C++23 compatible compiler (GCC 13+, Clang 16+)
-- Python 3.8+ (for Conan)
+- C++23 compatible compiler
+- Python 3.8+ (for Conan package manager)
 - Git
 
-**Optional (auto-installed by bootstrap):**
-- Conan 2.0+
-- clang-format
-- perf (for profiling)
+**Platform-Specific Requirements:**
+
+**Linux/Ubuntu:**
+```bash
+sudo apt update
+sudo apt install build-essential cmake python3-pip git
+```
+
+**Windows:**
+- Visual Studio 2022 with C++ tools
+- Python 3.8+ from microsoft store or python.org
+- Git for Windows
+
+**macOS:**
+```bash
+# Install Xcode Command Line Tools
+xcode-select --install
+# Install Homebrew (if not already installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install cmake python git
+```
+
+**Auto-Installed by Bootstrap:**
+- Conan 2.0+ (Python package manager for C++)
+- clang-format (code formatting)
+- Platform-specific development tools
 
 ### Initial Setup
 

@@ -1,0 +1,64 @@
+# CodeQL Configuration for UTF Strings Security Analysis
+# This configuration ensures comprehensive security scanning for the C++23 UTF library
+
+name: "UTF Strings Security Analysis"
+
+# Query suites to run - focusing on security vulnerabilities
+queries:
+  - uses: security-extended  # Extended security queries
+  - uses: security-and-quality  # Security and code quality queries
+
+# Custom paths to analyze
+paths-ignore:
+  - "build/"
+  - "conan-cache/"
+  - ".conan2/"
+  - "**/*.cmake"
+  - "**/CMakeFiles/"
+  - "**/*.md"
+  - "**/*.txt"
+  - "**/*.yml"
+  - "**/*.yaml"
+  - "**/*.json"
+
+# Include specific paths for analysis
+paths:
+  - "src/"
+  - "include/"
+  - "tests/"
+  - "benchmarks/"
+  - "fuzz/"
+
+# Disable built-in extraction as we're using manual build
+disable-default-path-filters: false
+
+# C++ specific configuration
+cpp:
+  # Additional compilation flags for better analysis
+  configure:
+    command: |
+      export CC=clang
+      export CXX=clang++
+      cmake --preset conan-release
+  
+  # Build command for CodeQL to analyze
+  build:
+    command: |
+      cmake --build --preset conan-release --parallel
+      
+  # Include paths for better header analysis
+  after-prepare:
+    - "find include -name '*.hpp' -type f"
+    - "find src -name '*.cpp' -type f"
+
+# Ignore specific findings that are false positives or acceptable risks
+pack-version: latest
+
+# Additional security-focused query packs
+packs:
+  - codeql/cpp-queries:security/CWE/CWE-119  # Buffer overflow
+  - codeql/cpp-queries:security/CWE/CWE-120  # Buffer copy without checking input size
+  - codeql/cpp-queries:security/CWE/CWE-190  # Integer overflow  
+  - codeql/cpp-queries:security/CWE/CWE-416  # Use after free
+  - codeql/cpp-queries:security/CWE/CWE-787  # Out-of-bounds write
+  - codeql/cpp-queries:security/CWE/CWE-788  # Access of memory location after end of buffer

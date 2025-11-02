@@ -1,29 +1,196 @@
 
-name: "CodeQL"
+name: "CodeQL Security Analysis"
+
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  release:
+    types: [published]
   schedule:
-    - cron: '0 3 * * 0'
+    - cron: '0 3 * * 0'  # Weekly on Sunday at 3 AM UTC
+
 jobs:
   analyze:
-    runs-on: ubuntu-latest
+    name: "CodeQL Analysis (Linux x64 Clang Release)"
+    runs-on: ubuntu-22.04
     permissions:
       actions: read
       contents: read
       security-events: write
+
     strategy:
       fail-fast: false
       matrix:
         language: [ 'cpp' ]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-      - uses: github/codeql-action/autobuild@v3
-      - uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{matrix.language}}"
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install system dependencies
+      run: |
+        # Install Clang 16 for release build analysis
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 16
+        sudo apt update
+        sudo apt install -y cmake python3-pip git clang-format-16
+        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+        sudo ln -sf /usr/bin/clang-format-16 /usr/bin/clang-format
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+
+    - name: Cache Conan packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.conan2
+        key: conan-codeql-clang-release-${{ hashFiles('conanfile.py') }}
+        restore-keys: |
+          conan-codeql-clang-release-
+          conan-linux-clang-
+
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Release --output-folder=build --build=missing
+
+    # Initialize CodeQL tools for scanning
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        # Specify CodeQL query suites for security analysis
+        queries: security-extended,security-and-quality
+        config-file: ./.github/codeql/codeql-config.yml
+
+    # Configure and build the project with Clang Release build for CodeQL analysis
+    - name: Configure CMake (Release build with Clang)
+      run: |
+        export CC=clang
+        export CXX=clang++
+        cmake --preset conan-release \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++
+
+    - name: Build for CodeQL (Release)
+      run: |
+        cmake --build --preset conan-release --parallel
+
+    # Perform CodeQL Analysis
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+        upload: true
+
+    # Run additional security checks on the Release build
+    - name: Run Security Tests
+      run: |
+        cd build/build
+        # Run tests to ensure the release build is secure and functional
+        ./utf_strings-tests
+        
+        # Run benchmarks to ensure performance hasn't regressed
+        ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=security_analysis_benchmarks.json
+
+    - name: Upload security analysis artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: codeql-security-analysis-results
+        path: |
+          build/build/security_analysis_benchmarks.json
+          sarif-results/*.sarif
+
+  # Enhanced security analysis for releases
+  release-security-analysis:
+    name: "Enhanced Security Analysis for Release"
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'release'
+    needs: [analyze]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install additional security tools
+      run: |
+        sudo apt update
+        sudo apt install -y clang-tools cppcheck valgrind
+
+    - name: Install system dependencies
+      run: |
+        # Install Clang 16
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 16
+        sudo apt install -y cmake python3-pip git clang-format-16
+        sudo ln -sf /usr/bin/clang-16 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-16 /usr/bin/clang++
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Conan
+      run: |
+        pip3 install --user conan
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Setup Conan profile
+      run: |
+        conan profile detect --force
+
+    - name: Install dependencies
+      run: |
+        conan install . -s build_type=Release --output-folder=build --build=missing
+
+    - name: Configure and Build with Security Hardening
+      run: |
+        export CC=clang
+        export CXX=clang++
+        cmake --preset conan-release
+        cmake --build --preset conan-release --parallel
+
+    - name: Run Static Analysis (clang-tidy)
+      run: |
+        clang-tidy-16 --version
+        find src include -name "*.cpp" -o -name "*.hpp" | xargs clang-tidy-16 -p build/build --
+
+    - name: Run Static Analysis (cppcheck)
+      run: |
+        cppcheck --enable=all --std=c++23 --inline-suppr --error-exitcode=1 \
+          --suppress=missingIncludeSystem --suppress=unmatchedSuppression \
+          src/ include/ tests/ benchmarks/
+
+    - name: Run Memory Analysis (Valgrind)
+      run: |
+        cd build/build
+        valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all \
+          --track-origins=yes --error-exitcode=1 ./utf_strings-tests
+
+    - name: Upload enhanced security results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: enhanced-security-analysis-results
+        path: |
+          clang-tidy-results.txt
+          cppcheck-results.txt
+          valgrind-results.txt

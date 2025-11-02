@@ -22,6 +22,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(SECURITY_FLAGS "")
 set(OPTIMIZATION_FLAGS "")
 
+# ================================================================================
+# Compiler-specific flags: GCC, Clang, and MSVC
+# ================================================================================
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # Security flags (enabled by default for all builds)
     set(SECURITY_FLAGS
@@ -79,10 +83,51 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
             -fno-omit-frame-pointer       # Keep frame pointers for debugging
         )
     endif()
+
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # MSVC Security flags (enabled by default for all builds)
+    set(SECURITY_FLAGS
+        /GS                               # Buffer Security Check
+        /sdl                              # Enable Additional Security Checks  
+        /DYNAMICBASE                      # Address Space Layout Randomization (ASLR)
+        /NXCOMPAT                         # Data Execution Prevention (DEP)
+        /D_CRT_SECURE_NO_WARNINGS         # Disable MSVC security warnings for standard functions
+    )
+    
+    # Additional security flags for release builds
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        list(APPEND SECURITY_FLAGS
+            /LTCG                         # Link Time Code Generation (similar to LTO) 
+            /HIGHENTROPYVA                # High Entropy ASLR (64-bit)
+        )
+    endif()
+    
+    # Optimization flags for release builds
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(OPTIMIZATION_FLAGS
+            /O2                           # Maximize Speed
+            /Oi                           # Generate Intrinsic Functions
+            /Ot                           # Favor Fast Code
+            /Oy                           # Omit Frame Pointers (x86 only)
+            /GL                           # Whole Program Optimization
+            /arch:AVX2                    # Enable AVX2 instructions (adjust as needed)
+            /DNDEBUG                      # Disable debug assertions
+        )
+    endif()
+    
+    # Debug flags for debug builds
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(OPTIMIZATION_FLAGS
+            /Od                           # Disable optimization
+            /Zi                           # Generate complete debugging information
+            /RTC1                         # Runtime error checks
+        )
+    endif()
 endif()
 
 # Warning flags (always enabled)
 set(WARNING_FLAGS "")
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(WARNING_FLAGS
         -Wall                             # Enable most warnings
@@ -121,6 +166,31 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
             -Wuseless-cast                # Warn about useless casts
         )
     endif()
+
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(WARNING_FLAGS
+        /W4                               # Enable highest warning level
+        /permissive-                      # Disable non-conforming code
+        /w14242                           # Warn about potentially uninitialized variables
+        /w14254                           # Warn about operator conversions  
+        /w14263                           # Warn about member function hiding
+        /w14265                           # Warn about classes with virtual functions but non-virtual destructors
+        /w14287                           # Warn about unsigned/negative constant mismatch
+        /w14289                           # Warn about variables declared in for-loop continue to be used after loop
+        /w14296                           # Warn about expression always true/false
+        /w14311                           # Warn about truncation of pointer values
+        /w14545                           # Warn about expression before comma has no effect
+        /w14546                           # Function call before comma missing argument list
+        /w14547                           # Warn about operator before comma has no effect
+        /w14549                           # Warn about operator before comma has no effect
+        /w14555                           # Warn about expression with no effect
+        /w14619                           # Warn about unknown pragma
+        /w14640                           # Warn about construction of local static objects not thread-safe
+        /w14826                           # Conversion is sign-extended
+        /w14905                           # Wide string literal cast to LPSTR
+        /w14906                           # String literal cast to LPWSTR
+        /w14928                           # Illegal copy-initialization
+    )
 endif()
 
 # Helper function to apply security, optimization, and warning flags to a target
@@ -134,13 +204,24 @@ function(apply_build_flags target_name)
         
         # Apply link-time optimization and security flags to linker
         if(CMAKE_BUILD_TYPE STREQUAL "Release")
-            target_link_options(${target_name} PRIVATE
-                -flto                     # Link Time Optimization
-                -pie                      # Position Independent Executable
-                -Wl,-z,relro              # Read-only relocations
-                -Wl,-z,now                # Immediate binding
-                -Wl,-z,noexecstack        # Non-executable stack
-            )
+            if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+                target_link_options(${target_name} PRIVATE
+                    -flto                     # Link Time Optimization
+                    -pie                      # Position Independent Executable
+                    -Wl,-z,relro              # Read-only relocations
+                    -Wl,-z,now                # Immediate binding
+                    -Wl,-z,noexecstack        # Non-executable stack
+                )
+            elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+                target_link_options(${target_name} PRIVATE
+                    /LTCG                     # Link Time Code Generation
+                    /OPT:REF                  # Eliminate unreferenced functions and data
+                    /OPT:ICF                  # Enable COMDAT folding  
+                    /DYNAMICBASE              # Address Space Layout Randomization
+                    /NXCOMPAT                 # Data Execution Prevention
+                    /HIGHENTROPYVA            # High Entropy ASLR (64-bit)
+                )
+            endif()
         endif()
     endif()
 endfunction()
@@ -171,6 +252,13 @@ if(UTF_STRINGS_ENABLE_SANITIZERS)
         )
         set(SANITIZER_LINK_FLAGS ${SANITIZER_FLAGS})
         message(STATUS "Enabled AddressSanitizer, UndefinedBehaviorSanitizer, and related checks")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        set(SANITIZER_FLAGS 
+            /fsanitize=address                   # AddressSanitizer for MSVC (VS 2019 16.9+)
+            /Zi                                  # Debug info for better error reports
+        )
+        set(SANITIZER_LINK_FLAGS ${SANITIZER_FLAGS})
+        message(STATUS "Enabled AddressSanitizer for MSVC")
     else()
         message(WARNING "Sanitizers requested but compiler doesn't support them")
     endif()
@@ -185,6 +273,14 @@ if(UTF_STRINGS_ENABLE_THREAD_SANITIZER)
         )
         set(SANITIZER_LINK_FLAGS ${SANITIZER_FLAGS})
         message(STATUS "Enabled ThreadSanitizer")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        # MSVC doesn't have ThreadSanitizer, but we can enable some thread-related diagnostics
+        set(SANITIZER_FLAGS 
+            /analyze                             # Static analysis
+            /Zi                                  # Debug info
+        )
+        set(SANITIZER_LINK_FLAGS "")
+        message(STATUS "Enabled MSVC static analysis (ThreadSanitizer not available)")
     else()
         message(WARNING "ThreadSanitizer requested but compiler doesn't support it")
     endif()
@@ -297,60 +393,89 @@ if(UTF_STRINGS_BUILD_BENCHMARKS)
 endif()
 
 # --------------------------------------------------------------------
-# Fuzz Tests (libFuzzer/Clang)
+# Fuzz Tests (Cross-Platform)
 # --------------------------------------------------------------------
 if(UTF_STRINGS_BUILD_FUZZ_TESTS)
-  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    message(FATAL_ERROR "Fuzz testing requires Clang compiler")
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # Clang with libFuzzer support
+    message(STATUS "Configuring libFuzzer-based fuzz tests for Clang")
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # MSVC doesn't have libFuzzer, but we can build fuzz harnesses for use with external fuzzers
+    message(STATUS "Configuring fuzz test harnesses for MSVC (use with external fuzzer)")
+  else()
+    message(WARNING "Fuzz testing works best with Clang (libFuzzer) or can be built as harnesses with MSVC")
   endif()
 
   # Common fuzzing flags
-  set(FUZZ_FLAGS 
-    -fsanitize=fuzzer                      # Enable libFuzzer
-    -fsanitize=address                     # AddressSanitizer
-    -fsanitize=undefined                   # UndefinedBehaviorSanitizer  
-    -fsanitize=bounds                      # Array bounds checking
-    -fsanitize=null                        # Null pointer dereference detection
-    -fsanitize=signed-integer-overflow     # Signed integer overflow detection
-    -fno-omit-frame-pointer               # Better stack traces
-    -g                                    # Debug info
-    -O1                                   # Light optimization for better performance
-  )
+  set(FUZZ_FLAGS "")
+  set(FUZZ_LINK_FLAGS "")
+  
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(FUZZ_FLAGS 
+      -fsanitize=fuzzer                      # Enable libFuzzer
+      -fsanitize=address                     # AddressSanitizer
+      -fsanitize=undefined                   # UndefinedBehaviorSanitizer  
+      -fsanitize=bounds                      # Array bounds checking
+      -fsanitize=null                        # Null pointer dereference detection
+      -fsanitize=signed-integer-overflow     # Signed integer overflow detection
+      -fno-omit-frame-pointer               # Better stack traces
+      -g                                    # Debug info
+      -O1                                   # Light optimization for better performance
+    )
+    set(FUZZ_LINK_FLAGS ${FUZZ_FLAGS})
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(FUZZ_FLAGS 
+      /fsanitize=address                     # AddressSanitizer for MSVC
+      /Zi                                    # Debug info
+      /O1                                    # Light optimization
+    )
+    set(FUZZ_LINK_FLAGS ${FUZZ_FLAGS})
+  endif()
 
   # UTF-8 fuzz target
   add_executable(fuzz_utf8 fuzz/fuzz_utf8.cpp)
   target_link_libraries(fuzz_utf8 PRIVATE utf_strings_static)
   target_compile_features(fuzz_utf8 PRIVATE cxx_std_23)
   target_compile_options(fuzz_utf8 PRIVATE ${FUZZ_FLAGS})
-  target_link_options(fuzz_utf8 PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf8 PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
 
   # UTF-16 Big Endian fuzz target
   add_executable(fuzz_utf16_be fuzz/fuzz_utf16_be.cpp)
   target_link_libraries(fuzz_utf16_be PRIVATE utf_strings_static)
   target_compile_features(fuzz_utf16_be PRIVATE cxx_std_23)
   target_compile_options(fuzz_utf16_be PRIVATE ${FUZZ_FLAGS})
-  target_link_options(fuzz_utf16_be PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf16_be PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
 
   # UTF-16 Little Endian fuzz target
   add_executable(fuzz_utf16_le fuzz/fuzz_utf16_le.cpp)
   target_link_libraries(fuzz_utf16_le PRIVATE utf_strings_static)
   target_compile_features(fuzz_utf16_le PRIVATE cxx_std_23)
   target_compile_options(fuzz_utf16_le PRIVATE ${FUZZ_FLAGS})
-  target_link_options(fuzz_utf16_le PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf16_le PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
 
   # UTF-32 Big Endian fuzz target
   add_executable(fuzz_utf32_be fuzz/fuzz_utf32_be.cpp)
   target_link_libraries(fuzz_utf32_be PRIVATE utf_strings_static)
   target_compile_features(fuzz_utf32_be PRIVATE cxx_std_23)
   target_compile_options(fuzz_utf32_be PRIVATE ${FUZZ_FLAGS})
-  target_link_options(fuzz_utf32_be PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf32_be PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
 
   # UTF-32 Little Endian fuzz target
   add_executable(fuzz_utf32_le fuzz/fuzz_utf32_le.cpp)
   target_link_libraries(fuzz_utf32_le PRIVATE utf_strings_static)
   target_compile_features(fuzz_utf32_le PRIVATE cxx_std_23)
   target_compile_options(fuzz_utf32_le PRIVATE ${FUZZ_FLAGS})
-  target_link_options(fuzz_utf32_le PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf32_le PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
 
   # Note: Fuzz targets don't use apply_build_flags() since they have their own specific flags
 
