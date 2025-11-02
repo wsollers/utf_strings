@@ -1,1 +1,1 @@
-Flame graph generation requires privileged container access
+Flame graph generation requires privileged container access. Run locally with: perf record -g ./utf_strings-bench && perf script | stackcollapse-perf.pl | flamegraph.pl > flamegraph.svg
