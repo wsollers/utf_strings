@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762102971011,
+  "lastUpdate": 1762103209100,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1230,6 +1230,34 @@ window.BENCHMARK_DATA = {
             "value": 7023.4222506536025,
             "unit": "ns/iter",
             "extra": "iterations: 198529\ncpu: 7022.569715255706 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "committer": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "id": "4e611427adf32fa028a264906da4898b8a17ebe1",
+          "message": "Fix perf.data file location and processing issues\n\n- Add explicit perf output file paths with -o flag\n- Enhanced debugging to show directory contents and file locations\n- Fix perf script commands to use -i flag for explicit input files\n- Add comprehensive error checking and file validation\n- Clean up perf files in multiple directories to avoid conflicts\n- Add alternative perf recording with different output files",
+          "timestamp": "2025-11-02T17:00:02Z",
+          "url": "https://github.com/wsollers/utf_strings/commit/4e611427adf32fa028a264906da4898b8a17ebe1"
+        },
+        "date": 1762103208689,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7061.487377870907,
+            "unit": "ns/iter",
+            "extra": "iterations: 196718\ncpu: 7060.531461279598 ns\nthreads: 1"
           }
         ]
       }
