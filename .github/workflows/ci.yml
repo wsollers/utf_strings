@@ -595,41 +595,31 @@ jobs:
         
     - name: Configure CMake
       run: |
-        if ("${{ matrix.build_type }}" -eq "Debug") {
-          cmake --preset conan-debug -DCMAKE_GENERATOR_PLATFORM=x64
-        } else {
-          cmake --preset conan-release -DCMAKE_GENERATOR_PLATFORM=x64
-        }
+        # Windows uses conan-default preset with explicit build type configuration
+        cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_CONFIGURATION_TYPES="${{ matrix.build_type }}"
         
     - name: Build
       run: |
-        if ("${{ matrix.build_type }}" -eq "Debug") {
-          cmake --build --preset conan-debug --parallel
-        } else {
-          cmake --build --preset conan-release --parallel
-        }
+        # Windows uses conan-default preset with explicit build configuration
+        cmake --build --preset conan-default --config ${{ matrix.build_type }} --parallel
       
     - name: Test
       run: |
-        if ("${{ matrix.build_type }}" -eq "Debug") {
-          cd build\Debug
-          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_debug.xml
-        } else {
-          cd build\build
-          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_release.xml
-        }
+        # Windows MSVC builds use configuration-specific subdirectories
+        cd build\${{ matrix.build_type }}
+        .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_${{ matrix.build_type | lower }}.xml
         
     - name: Benchmark (Release only)
       if: matrix.build_type == 'Release'
       run: |
-        cd build\build
+        cd build\Release
         .\utf_strings-bench.exe --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_msvc.json
         
     - name: Check code formatting (Release only)
       if: matrix.build_type == 'Release'
       run: |
         $env:PATH = "C:\Program Files\LLVM\bin;$env:PATH"
-        cmake --build --preset conan-release --target format-check
+        cmake --build --preset conan-default --config Release --target format-check
         
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -638,8 +628,8 @@ jobs:
         name: test-results-windows-msvc-${{ matrix.build_type }}
         path: |
           build\Debug\test_results_msvc_debug.xml
-          build\build\test_results_msvc_release.xml
-          build\build\benchmark_results_msvc.json
+          build\Release\test_results_msvc_release.xml
+          build\Release\benchmark_results_msvc.json
 
   # ============================================================================
   # Windows - MSVC with AddressSanitizer
@@ -697,10 +687,10 @@ jobs:
         
     - name: Configure CMake with AddressSanitizer
       run: |
-        cmake --preset conan-debug -DCMAKE_GENERATOR_PLATFORM=x64 -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+        cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_CONFIGURATION_TYPES=Debug -DUTF_STRINGS_ENABLE_SANITIZERS=ON
         
     - name: Build with AddressSanitizer
-      run: cmake --build --preset conan-debug --parallel
+      run: cmake --build --preset conan-default --config Debug --parallel
       
     - name: Test with AddressSanitizer
       run: |
@@ -788,6 +778,10 @@ jobs:
         
     - name: Setup gh-pages branch
       run: |
+        # Configure git identity for GitHub Actions
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        
         # Check if gh-pages branch exists, create if not
         if ! git ls-remote --heads origin gh-pages | grep -q gh-pages; then
           echo "Creating gh-pages branch..."
