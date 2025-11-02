@@ -1,4 +1,4 @@
 --------------------------------------------------------------------------
 Benchmark                Time             CPU   Iterations UserCounters...
 --------------------------------------------------------------------------
-BM_Length_Mixed       7271 ns         7270 ns       192545 bytes_per_second=1.53718Gi/s
+BM_Length_Mixed       7380 ns         7379 ns       192906 bytes_per_second=1.5145Gi/s
