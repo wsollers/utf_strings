@@ -158,6 +158,23 @@ jobs:
         category: "/language:${{matrix.language}}"
         upload: true
 
+    # Upload CodeQL database to GitHub
+    - name: Upload CodeQL Database
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: ${{ runner.temp }}/codeql_databases
+        category: codeql-database
+        
+    - name: Upload CodeQL Database as Artifact
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: codeql-database-cpp
+        path: ${{ runner.temp }}/codeql_databases
+        retention-days: 30
+        compression-level: 6
+
     # Run additional security checks on the Release build
     - name: Run Security Tests
       run: |
