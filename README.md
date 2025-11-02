@@ -80,3 +80,39 @@ build\Debug\utf_strings-tests.exe  # Windows
 # Benchmark  
 build/build/utf_strings-bench --benchmark_min_time=0.1s
 ```
+
+### Advanced Compiler Configuration
+
+The build system supports fine-grained compiler control through external flags:
+
+```bash
+# Standard optimized build
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=GCC \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DENABLE_SHARED_LIBRARY=ON
+
+# Maximum performance build (Clang with libc++)
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DUSE_LIBC_PLUS_PLUS=ON \
+  -DENABLE_SHARED_LIBRARY=ON
+
+# Debug-friendly build (no aggressive optimizations)
+cmake --preset conan-debug \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=OFF \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=OFF
+```
+
+**Available Configuration Flags:**
+- `COMPILER_TYPE`: `GCC|CLANG|MSVC` - Explicit compiler identification
+- `USE_LTO`: `ON|OFF` - Link Time Optimization
+- `USE_NATIVE_ARCH`: `ON|OFF` - Native CPU optimization (`-march=native`)
+- `USE_MSVC_LTO`: `ON|OFF` - MSVC-specific LTO flags (`/LTCG`, `/GL`)
+- `USE_LIBC_PLUS_PLUS`: `ON|OFF` - Use libc++ instead of libstdc++ (Clang only)
+- `ENABLE_SHARED_LIBRARY`: `ON|OFF` - Build shared libraries

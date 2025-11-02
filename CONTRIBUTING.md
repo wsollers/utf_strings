@@ -46,11 +46,14 @@ clang-format -i path/to/file.hpp
 
 ## Building
 
+### Quick Setup
 ```bash
-# Configure
-cmake --preset conan-release  # or conan-debug
+# Bootstrap automatically detects and configures everything
+./bootstrap_cmake.sh                 # Linux/macOS
+bootstrap_cmake.bat                  # Windows
 
-# Build
+# Manual build
+cmake --preset conan-release         # or conan-debug
 cmake --build --preset conan-release --parallel
 
 # Test
@@ -59,6 +62,45 @@ cd build/build && ./utf_strings-tests
 # Benchmark
 cd build/build && ./utf_strings-bench
 ```
+
+### Advanced Compiler Configuration
+
+For specific testing scenarios or performance optimization:
+
+```bash
+# Development build (fast iteration)
+cmake --preset conan-debug \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=OFF \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=OFF
+
+# Performance testing build
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DUSE_LIBC_PLUS_PLUS=ON \
+  -DENABLE_SHARED_LIBRARY=ON
+
+# Cross-platform compatibility testing
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=GCC \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=ON
+```
+
+### Available Configuration Flags
+
+| Flag | Values | Purpose |
+|------|--------|---------|
+| `COMPILER_TYPE` | `GCC`\|`CLANG`\|`MSVC` | Explicit compiler identification for debugging |
+| `USE_LTO` | `ON`\|`OFF` | Enable/disable Link Time Optimization |
+| `USE_NATIVE_ARCH` | `ON`\|`OFF` | Enable/disable native CPU optimization |
+| `USE_MSVC_LTO` | `ON`\|`OFF` | MSVC-specific LTO flags (`/LTCG`, `/GL`) |
+| `USE_LIBC_PLUS_PLUS` | `ON`\|`OFF` | Use libc++ instead of libstdc++ (Clang only) |
+| `ENABLE_SHARED_LIBRARY` | `ON`\|`OFF` | Build shared libraries |
 
 ## Code Style
 
@@ -76,15 +118,34 @@ cd build/build && ./utf_strings-bench
 
 ## CI/CD
 
-The project runs comprehensive CI tests on:
-- **Linux**: GCC 13, Clang 18
-- **Windows**: MSVC 2022 or Clang-CL 16+
-- **Sanitizers**: AddressSanitizer, ThreadSanitizer (Clang)
-- **Fuzzing**: libFuzzer-based testing (Clang)
+The project runs comprehensive CI tests with compiler-specific optimizations:
 
-All builds use C++23 standard and include:
-- Unit tests
-- Benchmarks  
-- Code formatting checks
-- Sanitizer testing
-- Fuzz testing
+### Compiler Matrix
+- **Linux GCC 13**: Production-optimized builds with LTO and native arch optimization
+- **Linux Clang 18**: Development builds with libstdc++ and performance builds with libc++
+- **Windows MSVC 2022**: Full optimization with `/LTCG` and `/GL` flags
+- **Windows Clang-CL 16+**: Clang optimization without MSVC-specific flags
+
+### Testing Framework
+- **Unit Tests**: GoogleTest with comprehensive UTF-8/16/32 coverage
+- **Sanitizer Testing**: AddressSanitizer, UndefinedBehaviorSanitizer, ThreadSanitizer (Clang)
+- **Fuzz Testing**: libFuzzer-based testing for all UTF encodings (Clang)
+- **Performance Testing**: Automated benchmarking with flame graph generation
+- **Security Analysis**: CodeQL static analysis and security hardening validation
+
+### Build Configurations
+Each compiler uses optimized configuration flags:
+- **GCC**: `-O3 -march=native -flto -ftree-vectorize` with security hardening
+- **Clang**: `-O3 -march=native -flto -fvectorize` with optional libc++
+- **MSVC**: `/O2 /GL /LTCG /arch:AVX2` with security flags
+- **Clang-CL**: Clang optimizations without MSVC-specific flags
+
+### Quality Gates
+All builds include:
+- Comprehensive warning flags with `-Werror`/`/WX`
+- Code formatting checks with clang-format
+- Memory safety validation with sanitizers
+- Performance regression detection
+- Cross-platform compatibility verification
+
+Your pull request must pass all CI checks before merging. The CI automatically tests your changes across all supported compiler and platform combinations.

@@ -187,6 +187,66 @@ cmake --build --preset conan-debug
 | `UTF_STRINGS_ENABLE_THREAD_SANITIZER` | `OFF` | Enable ThreadSanitizer |
 | `UTF_STRINGS_WITH_GPERFTOOLS` | `ON` | Enable gperftools integration |
 
+### Advanced Compiler Configuration
+
+The build system provides fine-grained control over compiler behavior through external configuration flags:
+
+| Flag | Values | Description |
+|------|--------|-------------|
+| `COMPILER_TYPE` | `GCC`\|`CLANG`\|`MSVC` | Explicit compiler identification |
+| `USE_LTO` | `ON`\|`OFF` | Link Time Optimization |
+| `USE_NATIVE_ARCH` | `ON`\|`OFF` | Native CPU optimization (`-march=native`) |
+| `USE_MSVC_LTO` | `ON`\|`OFF` | MSVC-specific LTO flags (`/LTCG`, `/GL`) |
+| `USE_LIBC_PLUS_PLUS` | `ON`\|`OFF` | Use libc++ instead of libstdc++ (Clang only) |
+| `ENABLE_SHARED_LIBRARY` | `ON`\|`OFF` | Build shared libraries |
+
+#### Workflow-Specific Configurations
+
+**Development Build (Fast iteration):**
+```bash
+cmake --preset conan-debug \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=OFF \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=OFF
+```
+
+**Performance Testing:**
+```bash
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DUSE_LIBC_PLUS_PLUS=ON \
+  -DENABLE_SHARED_LIBRARY=ON
+```
+
+**Cross-Platform Compatibility:**
+```bash
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=GCC \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=ON
+```
+
+**Windows Production:**
+```cmd
+cmake --preset conan-release ^
+  -DUSE_MSVC_LTO=ON ^
+  -DENABLE_SHARED_LIBRARY=ON
+```
+
+**Sanitizer/Debug Build:**
+```bash
+cmake --preset conan-debug \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=OFF \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=OFF \
+  -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+```
+
 ### Available Targets
 
 | Target | Description |

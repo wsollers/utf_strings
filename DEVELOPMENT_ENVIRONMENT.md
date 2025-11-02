@@ -67,6 +67,88 @@ bootstrap_cmake.bat --compiler msvc     # Force MSVC
 bootstrap_cmake.bat --compiler clang-cl # Force Clang-CL
 ```
 
+## Advanced Compiler Configuration
+
+The build system provides fine-grained control over compiler behavior through external flags. This system allows you to match specific CI configurations or optimize for your use case.
+
+### Configuration Flags
+
+| Flag | Values | Description |
+|------|--------|-------------|
+| `COMPILER_TYPE` | `GCC`\|`CLANG`\|`MSVC` | Explicit compiler identification |
+| `USE_LTO` | `ON`\|`OFF` | Link Time Optimization |
+| `USE_NATIVE_ARCH` | `ON`\|`OFF` | Native CPU optimization (`-march=native`) |
+| `USE_MSVC_LTO` | `ON`\|`OFF` | MSVC-specific LTO flags (`/LTCG`, `/GL`) |
+| `USE_LIBC_PLUS_PLUS` | `ON`\|`OFF` | Use libc++ instead of libstdc++ (Clang only) |
+| `ENABLE_SHARED_LIBRARY` | `ON`\|`OFF` | Build shared libraries |
+
+### Common Configurations
+
+**Maximum Performance (Benchmarking):**
+```bash
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DUSE_LIBC_PLUS_PLUS=ON \
+  -DENABLE_SHARED_LIBRARY=ON
+```
+
+**Debug-Friendly (Sanitizers/Fuzzing):**
+```bash
+cmake --preset conan-debug \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=OFF \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=OFF
+```
+
+**Windows MSVC:**
+```cmd
+cmake --preset conan-release ^
+  -DUSE_MSVC_LTO=ON ^
+  -DENABLE_SHARED_LIBRARY=ON
+```
+
+**Windows Clang-CL:**
+```cmd
+cmake --preset conan-release ^
+  -DCMAKE_CXX_COMPILER=clang-cl ^
+  -DCMAKE_C_COMPILER=clang-cl ^
+  -DUSE_MSVC_LTO=OFF ^
+  -DENABLE_SHARED_LIBRARY=OFF
+```
+
+### CI Configuration Matching
+
+The CI uses different configurations for different purposes:
+
+**Linux GCC (Production):**
+- `COMPILER_TYPE=GCC`
+- `USE_LTO=ON` 
+- `USE_NATIVE_ARCH=ON`
+- `ENABLE_SHARED_LIBRARY=ON`
+
+**Linux Clang (Development):**
+- `COMPILER_TYPE=CLANG`
+- `USE_LTO=ON`
+- `USE_NATIVE_ARCH=ON` 
+- `USE_LIBC_PLUS_PLUS=OFF`
+- `ENABLE_SHARED_LIBRARY=ON`
+
+**Linux Clang (Performance):**
+- `COMPILER_TYPE=CLANG`
+- `USE_LTO=ON`
+- `USE_NATIVE_ARCH=ON`
+- `USE_LIBC_PLUS_PLUS=ON`
+- `ENABLE_SHARED_LIBRARY=ON`
+
+**Sanitizer/Fuzz Testing:**
+- `COMPILER_TYPE=CLANG`
+- `USE_LTO=OFF`
+- `USE_NATIVE_ARCH=OFF`
+- Various sanitizer flags enabled
+
 ## Environment Setup
 
 ### Ubuntu 24.04 Setup (Recommended)

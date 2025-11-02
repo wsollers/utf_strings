@@ -849,10 +849,10 @@ jobs:
       - name: Setup Conan profile
         run: |
           conan profile detect --force
-          # Use Clang 18 with libc++ for high-performance release builds
+          # Use Clang 18 with libstdc++ for performance builds (avoids GoogleTest linking issues)
           sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
           sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
-          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libc++/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
           sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
           sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
           sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
@@ -879,9 +879,9 @@ jobs:
           export CXX=clang++-18
           cmake --preset conan-release \
             -DCOMPILER_TYPE=CLANG \
-            -DUSE_LTO=ON \
+            -DUSE_LTO=OFF \
             -DUSE_NATIVE_ARCH=ON \
-            -DUSE_LIBC_PLUS_PLUS=ON \
+            -DUSE_LIBC_PLUS_PLUS=OFF \
             -DENABLE_SHARED_LIBRARY=ON
           cmake --build --preset conan-release --parallel
 

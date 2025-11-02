@@ -71,22 +71,87 @@ bootstrap_cmake.bat
 
 ## CMake Integration
 
-### Cross-Platform Compiler Support
-The CMakeLists.txt now includes comprehensive compiler support:
+### External Compiler Configuration System
+The build system now uses an advanced **external flag configuration** approach that provides complete control over compiler behavior across all platforms:
 
 ```cmake
-# Automatic compiler detection and flag application
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    # GCC/Clang specific flags
-    set(SECURITY_FLAGS -fstack-protector-strong -D_FORTIFY_SOURCE=2 ...)
-    set(OPTIMIZATION_FLAGS -O3 -march=native -flto ...)
-    
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    # MSVC specific flags  
-    set(SECURITY_FLAGS /GS /sdl /DYNAMICBASE /NXCOMPAT ...)
-    set(OPTIMIZATION_FLAGS /O2 /Oi /GL /arch:AVX2 ...)
-endif()
+# External configuration flags (set by CI or manual builds)
+-DCOMPILER_TYPE=GCC|CLANG|MSVC         # Explicit compiler identification
+-DUSE_LTO=ON|OFF                       # Link Time Optimization control
+-DUSE_NATIVE_ARCH=ON|OFF               # Native CPU optimization control
+-DUSE_MSVC_LTO=ON|OFF                  # MSVC-specific LTO flags (/LTCG, /GL)
+-DUSE_LIBC_PLUS_PLUS=ON|OFF            # Standard library selection (Clang)
+-DENABLE_SHARED_LIBRARY=ON|OFF         # Shared library building control
 ```
+
+### Platform-Specific Configurations
+
+**Linux GCC (Production Optimized):**
+```bash
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=GCC \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DENABLE_SHARED_LIBRARY=ON
+```
+- Security: `-fstack-protector-strong -D_FORTIFY_SOURCE=2 -fcf-protection=full`
+- Optimization: `-O3 -march=native -flto -ftree-vectorize -fgraphite-identity`
+
+**Linux Clang (Development):**
+```bash
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DUSE_LIBC_PLUS_PLUS=OFF \
+  -DENABLE_SHARED_LIBRARY=ON
+```
+- Security: Same as GCC + thread safety analysis
+- Optimization: `-O3 -march=native -flto -fvectorize -fslp-vectorize`
+- Standard Library: `libstdc++` (system compatible)
+
+**Linux Clang (Maximum Performance):**
+```bash
+cmake --preset conan-release \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=ON \
+  -DUSE_NATIVE_ARCH=ON \
+  -DUSE_LIBC_PLUS_PLUS=ON \
+  -DENABLE_SHARED_LIBRARY=ON
+```
+- Standard Library: `libc++` (optimized for performance)
+- Use Case: Benchmarking and performance analysis
+
+**Windows MSVC:**
+```cmd
+cmake --preset conan-release ^
+  -DUSE_MSVC_LTO=ON ^
+  -DENABLE_SHARED_LIBRARY=ON
+```
+- Security: `/GS /sdl /DYNAMICBASE /NXCOMPAT /HIGHENTROPYVA`
+- Optimization: `/O2 /Oi /GL /LTCG /arch:AVX2`
+
+**Windows Clang-CL:**
+```cmd
+cmake --preset conan-release ^
+  -DCMAKE_CXX_COMPILER=clang-cl ^
+  -DCMAKE_C_COMPILER=clang-cl ^
+  -DUSE_MSVC_LTO=OFF ^
+  -DENABLE_SHARED_LIBRARY=OFF
+```
+- Avoids MSVC-specific flags (`/LTCG`, `/GL`) that Clang-CL doesn't support
+- Static libraries only (avoids export definition issues)
+
+**Debug/Sanitizer Builds:**
+```bash
+cmake --preset conan-debug \
+  -DCOMPILER_TYPE=CLANG \
+  -DUSE_LTO=OFF \
+  -DUSE_NATIVE_ARCH=OFF \
+  -DENABLE_SHARED_LIBRARY=OFF
+```
+- Disables aggressive optimizations for better debugging
+- Compatible with sanitizers and fuzz testing
 
 ### Sanitizer Support
 ```cmake
