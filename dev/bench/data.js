@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762077467921,
+  "lastUpdate": 1762078035526,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1020,6 +1020,36 @@ window.BENCHMARK_DATA = {
             "value": 6990.572899633824,
             "unit": "ns/iter",
             "extra": "iterations: 199370\ncpu: 6989.065250539198 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "13c09e96852ee544de9e8456000cd957cd0f4639",
+          "message": "ci: Separate GitHub Pages deployment into dedicated workflow\n\n- Removed Pages deployment from main CI workflow (ci.yml)\n- Created dedicated pages-deploy.yml workflow that triggers on CI completion\n- Improved Jekyll disable approach with comprehensive conflict removal\n- Added artifact download from completed CI workflow run\n- Enhanced static site preparation with permission management\n- Updated documentation to reflect the workflow separation\n\nThis separation isolates Pages deployment from CI, preventing Jekyll\nprocessing issues from affecting the main CI pipeline reliability.",
+          "timestamp": "2025-11-02T05:03:30-05:00",
+          "tree_id": "e723b0206595ecf9957def44932e9b44962dced8",
+          "url": "https://github.com/wsollers/utf_strings/commit/13c09e96852ee544de9e8456000cd957cd0f4639"
+        },
+        "date": 1762078034935,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7028.842807135333,
+            "unit": "ns/iter",
+            "extra": "iterations: 196542\ncpu: 7028.255492464714 ns\nthreads: 1"
           }
         ]
       }
