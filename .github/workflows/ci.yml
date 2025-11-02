@@ -797,7 +797,7 @@ jobs:
         cd build/build
         ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_format=json --benchmark_out=performance_baseline.json
         
-    - name: Setup gh-pages branch
+    - name: Setup docs directory
       run: |
         # Configure git identity for GitHub Actions
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -806,19 +806,13 @@ jobs:
         # Set up authentication for git push
         git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         
-        # Check if gh-pages branch exists, create if not
-        if ! git ls-remote --heads origin gh-pages | grep -q gh-pages; then
-          echo "Creating gh-pages branch..."
-          git checkout --orphan gh-pages
-          git rm -rf .
-          echo "# UTF Strings Performance Benchmarks" > README.md
-          echo "This branch contains automated performance benchmark results." >> README.md
-          git add README.md
-          git commit -m "Initialize gh-pages branch for benchmark tracking"
-          git push origin gh-pages
-          git checkout main
-        else
-          echo "gh-pages branch already exists"
+        # Ensure docs directory exists
+        mkdir -p docs/dev/bench
+        
+        # Create a basic README for docs if it doesn't exist
+        if [ ! -f docs/README.md ]; then
+          echo "# UTF Strings Documentation" > docs/README.md
+          echo "This directory contains automated performance benchmark results and documentation." >> docs/README.md
         fi
         
     - name: Store Performance Results
@@ -831,6 +825,9 @@ jobs:
         alert-threshold: '150%'
         comment-on-alert: true
         fail-on-alert: false
+        # Store in docs folder for GitHub Pages serving from /docs
+        gh-pages-branch: 'main'
+        benchmark-data-dir-path: 'docs/dev/bench'
 
   # ============================================================================
   # Publish Test Results
