@@ -1025,7 +1025,7 @@ jobs:
             cat > docs/_config.yml << 'EOF'
           title: UTF Strings Documentation
           description: High-performance UTF string processing library for C++
-          remote_theme: pages-themes/primer@v0.6.0
+          remote_theme: pages-themes/primer
           plugins:
             - jekyll-remote-theme
           
