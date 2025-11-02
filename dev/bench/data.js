@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762110187385,
+  "lastUpdate": 1762110467517,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1404,6 +1404,34 @@ window.BENCHMARK_DATA = {
             "value": 7044.577643288325,
             "unit": "ns/iter",
             "extra": "iterations: 198446\ncpu: 7043.363489311955 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "committer": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "id": "1f9f74503b8f2f63be68be2f6b6ddeb3a18a5750",
+          "message": "Fix GitHub Pages performance documentation deployment\n\n- Fix artifact naming conflict between CI and Performance workflows\n- Improve Pages Deploy workflow to properly merge documentation artifacts\n- Update Jekyll configuration to better handle performance files\n- Add performance documentation structure and README\n- Ensure performance data files are properly served through Jekyll\n\nFixes 404 errors on https://wsollers.github.io/utf_strings/performance/",
+          "timestamp": "2025-11-02T19:00:07Z",
+          "url": "https://github.com/wsollers/utf_strings/commit/1f9f74503b8f2f63be68be2f6b6ddeb3a18a5750"
+        },
+        "date": 1762110467170,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7024.960964629868,
+            "unit": "ns/iter",
+            "extra": "iterations: 197257\ncpu: 7024.2698611456135 ns\nthreads: 1"
           }
         ]
       }
