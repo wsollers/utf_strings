@@ -716,10 +716,17 @@ jobs:
     name: "Performance Baseline Tracking"
     runs-on: ubuntu-24.04
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
       
     - name: Install system dependencies
       run: |
@@ -785,6 +792,9 @@ jobs:
         # Configure git identity for GitHub Actions
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
+        
+        # Set up authentication for git push
+        git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         
         # Check if gh-pages branch exists, create if not
         if ! git ls-remote --heads origin gh-pages | grep -q gh-pages; then
