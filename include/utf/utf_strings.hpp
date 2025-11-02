@@ -59,9 +59,7 @@ constexpr std::uint32_t swap32(std::uint32_t v) noexcept {
 #elif defined(_MSC_VER)
   return _byteswap_ulong(v);
 #else
-  return ((v & 0xFF000000u) >> 24) |
-         ((v & 0x00FF0000u) >> 8)  |
-         ((v & 0x0000FF00u) << 8)  |
+  return ((v & 0xFF000000u) >> 24) | ((v & 0x00FF0000u) >> 8) | ((v & 0x0000FF00u) << 8) |
          ((v & 0x000000FFu) << 24);
 #endif
 }
