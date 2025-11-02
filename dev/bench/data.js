@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762103209100,
+  "lastUpdate": 1762103804883,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1258,6 +1258,36 @@ window.BENCHMARK_DATA = {
             "value": 7061.487377870907,
             "unit": "ns/iter",
             "extra": "iterations: 196718\ncpu: 7060.531461279598 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "2200defa93c33196727bcec9ded8e23e37796af1",
+          "message": "Fix GitHub Pages deployment to include Performance Baseline artifacts\n\n- Add Performance Baseline Tracking workflow as trigger for Pages deployment\n- Update artifact download logic to merge CI and Performance artifacts\n- Handle both CI→Performance and Performance→CI workflow sequences\n- Extract and merge documentation from both sources\n- Ensure flame graphs and performance analysis files reach GitHub Pages\n\nThis resolves the issue where flame graphs were generated correctly\nbut missing from the deployed site due to artifact isolation between workflows.",
+          "timestamp": "2025-11-02T12:13:56-05:00",
+          "tree_id": "74724036fc7721431095527ed10040ff6f00ce78",
+          "url": "https://github.com/wsollers/utf_strings/commit/2200defa93c33196727bcec9ded8e23e37796af1"
+        },
+        "date": 1762103804226,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7056.4247631591315,
+            "unit": "ns/iter",
+            "extra": "iterations: 197390\ncpu: 7055.935913673438 ns\nthreads: 1"
           }
         ]
       }
