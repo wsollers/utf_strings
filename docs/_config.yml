@@ -1,0 +1,38 @@
+title: UTF Strings Library
+description: High-performance UTF-8/16/32 string processing library for C++23
+url: "https://wsollers.github.io/utf_strings"
+baseurl: ""
+
+# Theme
+remote_theme: pages-themes/primer@v1.0.0
+plugins:
+  - jekyll-remote-theme
+
+# Markdown settings
+markdown: kramdown
+highlighter: rouge
+
+# Collections and includes
+include:
+  - performance/
+  - dev/
+  - "*.html"
+  - "*.json"
+  - "*.csv"
+  - "*.svg"
+  - "*.txt"
+
+# Exclude from processing
+exclude:
+  - README.md
+  - vendor/
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+
+# Sass
+sass:
+  style: compressed
+
+# Enable GitHub metadata
+repository: wsollers/utf_strings

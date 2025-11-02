@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,12 +14,14 @@
             line-height: 1.6;
             color: #333;
         }
+
         .header {
             text-align: center;
             margin-bottom: 3rem;
             padding-bottom: 2rem;
             border-bottom: 2px solid #eee;
         }
+
         .card {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -26,6 +29,7 @@
             padding: 1.5rem;
             margin: 1rem 0;
         }
+
         .btn {
             display: inline-block;
             padding: 0.5rem 1rem;
@@ -35,9 +39,11 @@
             border-radius: 4px;
             margin: 0.5rem 0.5rem 0.5rem 0;
         }
+
         .btn:hover {
             background: #0056b3;
         }
+
         .info {
             background: #e7f3ff;
             border-left: 4px solid #007bff;
@@ -46,6 +52,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>Historical Benchmark Charts</h1>
@@ -58,7 +65,8 @@
             <strong>Historical benchmarks are managed by GitHub Actions</strong><br>
             Performance data is automatically collected and stored in the gh-pages branch for trend analysis.
         </div>
-        <p>Historical benchmark charts will be available here once multiple benchmark runs have been collected. The system tracks:</p>
+        <p>Historical benchmark charts will be available here once multiple benchmark runs have been collected. The
+            system tracks:</p>
         <ul>
             <li>UTF-8/16/32 conversion performance</li>
             <li>Validation algorithm speed</li>
@@ -69,7 +77,8 @@
 
     <div class="card">
         <h2>📈 GitHub Actions Integration</h2>
-        <p>Benchmark data is collected via the <code>benchmark-action/github-action-benchmark</code> action and stored automatically.</p>
+        <p>Benchmark data is collected via the <code>benchmark-action/github-action-benchmark</code> action and stored
+            automatically.</p>
         <p>Charts will appear here as benchmark data accumulates over multiple CI runs.</p>
     </div>
 
@@ -80,4 +89,5 @@
         <a href="README.md" class="btn">README</a>
     </div>
 </body>
+
 </html>
