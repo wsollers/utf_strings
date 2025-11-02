@@ -1,5 +1,16 @@
 name: "SAST Security Scanning"
 
+# Comprehensive Static Application Security Testing (SAST) workflow
+# Includes: Trivy, Checkov, Gitleaks, Cppcheck, and Semgrep
+# All tools run directly in this workflow - no external dependencies required
+#
+# SARIF Results uploaded to Security/Code Scanning tab:
+# - trivy-security: Vulnerability & misconfiguration scanning
+# - checkov-infrastructure: Infrastructure as Code security
+# - gitleaks-secrets: Secret detection in git history
+# - cppcheck-static-analysis: C/C++ static code analysis
+# - semgrep-security: Security pattern matching & code analysis
+
 on:
   push:
     branches: [main, develop]
@@ -51,7 +62,7 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: always() && hashFiles('trivy-results.sarif') != ''
         with:
           sarif_file: trivy-results.sarif
           category: trivy-security
@@ -243,68 +254,224 @@ jobs:
           retention-days: 90 # Keep secret scan results longer for security compliance
 
   # ============================================================================
-  # Invoke Existing Security Workflows
+  # Cppcheck Static Analysis
   # ============================================================================
 
-  invoke-cppcheck:
-    name: "Invoke Cppcheck Analysis"
+  cppcheck-scan:
+    name: "Cppcheck Static Analysis"
     runs-on: ubuntu-24.04
-    if: github.event_name != 'schedule' # Avoid double runs on scheduled execution
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
 
     steps:
-      - name: Trigger Cppcheck workflow
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            try {
-              const scanIntensity = '${{ github.event.inputs.scan_intensity }}';
-              const severityLevel = scanIntensity === 'deep' ? 'all' : 'error';
-              
-              const result = await github.rest.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'cppcheck-analysis.yml',
-                ref: context.ref,
-                inputs: {
-                  severity_level: severityLevel
-                }
-              });
-              console.log('Cppcheck workflow triggered successfully');
-            } catch (error) {
-              console.log('Failed to trigger Cppcheck workflow:', error);
-              // Don't fail the entire SAST scan if one workflow fails to trigger
-            }
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  invoke-semgrep:
-    name: "Invoke Semgrep Analysis"
+      - name: Install Cppcheck and SARIF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck
+
+          # Install cppcheck-sarif converter
+          pip install cppcheck-sarif
+
+      - name: Set severity level based on scan intensity
+        id: set-severity
+        run: |
+          SCAN_INTENSITY="${{ github.event.inputs.scan_intensity || 'comprehensive' }}"
+          if [ "$SCAN_INTENSITY" = "deep" ]; then
+            echo "severity=all" >> $GITHUB_OUTPUT
+            echo "enable_checks=all" >> $GITHUB_OUTPUT
+          elif [ "$SCAN_INTENSITY" = "comprehensive" ]; then
+            echo "severity=warning,error" >> $GITHUB_OUTPUT
+            echo "enable_checks=warning,performance,portability,information,missingInclude" >> $GITHUB_OUTPUT
+          else
+            echo "severity=error" >> $GITHUB_OUTPUT
+            echo "enable_checks=error" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Cppcheck analysis
+        run: |
+          echo "Running Cppcheck with severity: ${{ steps.set-severity.outputs.severity }}"
+          echo "Enabled checks: ${{ steps.set-severity.outputs.enable_checks }}"
+
+          # Run Cppcheck and generate XML output
+          cppcheck \
+            --enable=${{ steps.set-severity.outputs.enable_checks }} \
+            --inconclusive \
+            --std=c++17 \
+            --platform=unix64 \
+            --suppress=missingIncludeSystem \
+            --suppress=unusedFunction \
+            --suppress=unmatchedSuppression \
+            --inline-suppr \
+            --error-exitcode=0 \
+            --xml \
+            --xml-version=2 \
+            --output-file=cppcheck-results.xml \
+            src/ include/ 2>&1 || echo "Cppcheck analysis completed"
+
+          # Convert XML to SARIF format
+          if [ -f "cppcheck-results.xml" ]; then
+            echo "Converting Cppcheck XML results to SARIF format..."
+            cppcheck-sarif \
+              --input cppcheck-results.xml \
+              --output cppcheck-results.sarif \
+              --strip-path-prefix "$(pwd)/" || echo "SARIF conversion completed"
+            
+            echo "Cppcheck analysis completed. Results saved to XML and SARIF formats."
+          else
+            echo "No Cppcheck results file generated"
+          fi
+
+      - name: Generate Cppcheck summary
+        run: |
+          echo "# Cppcheck Static Analysis Results" > cppcheck-summary.md
+          echo "**Analysis Date:** $(date)" >> cppcheck-summary.md
+          echo "**Severity Level:** ${{ steps.set-severity.outputs.severity }}" >> cppcheck-summary.md
+          echo "**Enabled Checks:** ${{ steps.set-severity.outputs.enable_checks }}" >> cppcheck-summary.md
+          echo "" >> cppcheck-summary.md
+
+          if [ -f "cppcheck-results.xml" ]; then
+            # Count issues from XML
+            ERROR_COUNT=$(grep -c "severity=\"error\"" cppcheck-results.xml 2>/dev/null || echo "0")
+            WARNING_COUNT=$(grep -c "severity=\"warning\"" cppcheck-results.xml 2>/dev/null || echo "0")
+            STYLE_COUNT=$(grep -c "severity=\"style\"" cppcheck-results.xml 2>/dev/null || echo "0")
+            
+            echo "**Issues Found:**" >> cppcheck-summary.md
+            echo "- Errors: $ERROR_COUNT" >> cppcheck-summary.md
+            echo "- Warnings: $WARNING_COUNT" >> cppcheck-summary.md
+            echo "- Style Issues: $STYLE_COUNT" >> cppcheck-summary.md
+            echo "" >> cppcheck-summary.md
+
+            TOTAL_ISSUES=$((ERROR_COUNT + WARNING_COUNT + STYLE_COUNT))
+            if [ "$TOTAL_ISSUES" -eq 0 ]; then
+              echo "✅ **No static analysis issues found!**" >> cppcheck-summary.md
+            else
+              echo "⚠️ **$TOTAL_ISSUES static analysis issue(s) detected**" >> cppcheck-summary.md
+            fi
+
+            # Add sample of issues if any
+            if [ "$TOTAL_ISSUES" -gt 0 ]; then
+              echo "" >> cppcheck-summary.md
+              echo "## Sample Issues" >> cppcheck-summary.md
+              echo "\`\`\`xml" >> cppcheck-summary.md
+              head -20 cppcheck-results.xml >> cppcheck-summary.md || echo "No detailed results available" >> cppcheck-summary.md
+              echo "\`\`\`" >> cppcheck-summary.md
+            fi
+          else
+            echo "ℹ️ **No Cppcheck results file generated**" >> cppcheck-summary.md
+          fi
+
+      - name: Upload Cppcheck SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('cppcheck-results.sarif') != ''
+        with:
+          sarif_file: cppcheck-results.sarif
+          category: cppcheck-static-analysis
+
+      - name: Upload Cppcheck artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cppcheck-analysis-results-${{ github.run_number }}
+          path: |
+            cppcheck-results.xml
+            cppcheck-results.sarif
+            cppcheck-summary.md
+          retention-days: 30
+
+  # ============================================================================
+  # Semgrep Security Analysis
+  # ============================================================================
+
+  semgrep-scan:
+    name: "Semgrep Security Analysis"
     runs-on: ubuntu-24.04
-    if: github.event_name != 'schedule' # Avoid double runs on scheduled execution
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
 
     steps:
-      - name: Trigger Semgrep workflow
-        uses: actions/github-script@v7
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set Semgrep ruleset based on scan intensity
+        id: set-ruleset
+        run: |
+          SCAN_INTENSITY="${{ github.event.inputs.scan_intensity || 'comprehensive' }}"
+          if [ "$SCAN_INTENSITY" = "deep" ]; then
+            echo "ruleset=auto" >> $GITHUB_OUTPUT
+            echo "config=auto" >> $GITHUB_OUTPUT
+          elif [ "$SCAN_INTENSITY" = "comprehensive" ]; then
+            echo "ruleset=r/c.lang.security,r/cpp" >> $GITHUB_OUTPUT
+            echo "config=r/c.lang.security r/cpp" >> $GITHUB_OUTPUT
+          else
+            echo "ruleset=r/c.lang.security" >> $GITHUB_OUTPUT
+            echo "config=r/c.lang.security" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Semgrep security analysis
+        uses: semgrep/semgrep-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            try {
-              const scanIntensity = '${{ github.event.inputs.scan_intensity }}';
-              const ruleset = scanIntensity === 'deep' ? 'auto' : 'r/c.lang.security';
+          config: ${{ steps.set-ruleset.outputs.config }}
+          generateSarif: "1"
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+      - name: Upload Semgrep SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('semgrep.sarif') != ''
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep-security
+
+      - name: Generate Semgrep summary
+        if: always()
+        run: |
+          echo "# Semgrep Security Analysis Results" > semgrep-summary.md
+          echo "**Analysis Date:** $(date)" >> semgrep-summary.md
+          echo "**Ruleset:** ${{ steps.set-ruleset.outputs.ruleset }}" >> semgrep-summary.md
+          echo "**Scan Intensity:** ${{ github.event.inputs.scan_intensity || 'comprehensive' }}" >> semgrep-summary.md
+          echo "" >> semgrep-summary.md
+
+          if [ -f "semgrep.sarif" ]; then
+            # Count findings from SARIF
+            FINDINGS_COUNT=$(jq '.runs[0].results | length' semgrep.sarif 2>/dev/null || echo "0")
+            echo "**Security Findings:** $FINDINGS_COUNT" >> semgrep-summary.md
+            
+            if [ "$FINDINGS_COUNT" -eq 0 ]; then
+              echo "✅ **No security issues detected!**" >> semgrep-summary.md
+            else
+              echo "⚠️ **$FINDINGS_COUNT security issue(s) detected**" >> semgrep-summary.md
               
-              const result = await github.rest.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: 'semgrep-security.yml',
-                ref: context.ref,
-                inputs: {
-                  ruleset: ruleset
-                }
-              });
-              console.log('Semgrep workflow triggered successfully');
-            } catch (error) {
-              console.log('Failed to trigger Semgrep workflow:', error);
-              // Don't fail the entire SAST scan if one workflow fails to trigger
-            }
+              # Try to categorize findings by severity
+              HIGH_COUNT=$(jq '[.runs[0].results[] | select(.level == "error")] | length' semgrep.sarif 2>/dev/null || echo "0")
+              MEDIUM_COUNT=$(jq '[.runs[0].results[] | select(.level == "warning")] | length' semgrep.sarif 2>/dev/null || echo "0")
+              LOW_COUNT=$(jq '[.runs[0].results[] | select(.level == "note" or .level == "info")] | length' semgrep.sarif 2>/dev/null || echo "0")
+              
+              echo "" >> semgrep-summary.md
+              echo "**Severity Breakdown:**" >> semgrep-summary.md
+              echo "- High: $HIGH_COUNT" >> semgrep-summary.md
+              echo "- Medium: $MEDIUM_COUNT" >> semgrep-summary.md  
+              echo "- Low/Info: $LOW_COUNT" >> semgrep-summary.md
+            fi
+          else
+            echo "ℹ️ **Semgrep analysis completed - check artifacts for details**" >> semgrep-summary.md
+          fi
+
+      - name: Upload Semgrep artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semgrep-analysis-results-${{ github.run_number }}
+          path: |
+            semgrep.sarif
+            semgrep-summary.md
+          retention-days: 30
 
   # ============================================================================
   # SAST Summary and Reporting
@@ -313,7 +480,8 @@ jobs:
   sast-summary:
     name: "SAST Summary Report"
     runs-on: ubuntu-24.04
-    needs: [trivy-scan, checkov-scan, gitleaks-scan]
+    needs:
+      [trivy-scan, checkov-scan, gitleaks-scan, cppcheck-scan, semgrep-scan]
     if: always()
     permissions:
       contents: read
@@ -324,7 +492,7 @@ jobs:
       - name: Download all SAST artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: "*-scan-results-${{ github.run_number }}"
+          pattern: "*-results-${{ github.run_number }}"
           merge-multiple: true
 
       - name: Generate comprehensive SAST report
@@ -367,17 +535,30 @@ jobs:
           fi
           echo "" >> sast-comprehensive-report.md
 
-          # Additional workflows
-          echo "### 🔧 Additional Security Analysis" >> sast-comprehensive-report.md
-          echo "- **Cppcheck:** Static code analysis workflow triggered" >> sast-comprehensive-report.md
-          echo "- **Semgrep:** Security pattern matching workflow triggered" >> sast-comprehensive-report.md
+          # Cppcheck Summary
+          echo "### 🔧 Cppcheck (Static Code Analysis)" >> sast-comprehensive-report.md
+          if [ -f "cppcheck-summary.md" ]; then
+            tail -n +5 cppcheck-summary.md >> sast-comprehensive-report.md
+          else
+            echo "⚠️ Cppcheck results not available" >> sast-comprehensive-report.md
+          fi
+          echo "" >> sast-comprehensive-report.md
+
+          # Semgrep Summary
+          echo "### 🔍 Semgrep (Security Pattern Analysis)" >> sast-comprehensive-report.md
+          if [ -f "semgrep-summary.md" ]; then
+            tail -n +5 semgrep-summary.md >> sast-comprehensive-report.md
+          else
+            echo "⚠️ Semgrep results not available" >> sast-comprehensive-report.md
+          fi
           echo "" >> sast-comprehensive-report.md
 
           echo "## Next Steps" >> sast-comprehensive-report.md
           echo "1. Review all findings in the GitHub Security tab" >> sast-comprehensive-report.md
           echo "2. Prioritize critical and high severity issues" >> sast-comprehensive-report.md
-          echo "3. Check individual workflow runs for Cppcheck and Semgrep results" >> sast-comprehensive-report.md
+          echo "3. Download detailed reports from workflow artifacts" >> sast-comprehensive-report.md
           echo "4. Implement fixes and re-run security scans" >> sast-comprehensive-report.md
+          echo "5. Consider adjusting scan intensity for different scenarios" >> sast-comprehensive-report.md
 
           # Display the comprehensive report
           echo "=== Comprehensive SAST Security Report ==="
@@ -411,8 +592,10 @@ jobs:
               - **Trivy:** Vulnerability and misconfiguration scanning
               - **Checkov:** Infrastructure security analysis  
               - **Gitleaks:** Secret detection in git history
-              - **Cppcheck:** Static code analysis (triggered separately)
-              - **Semgrep:** Security pattern matching (triggered separately)
+              - **Cppcheck:** Static code analysis for C/C++
+              - **Semgrep:** Security pattern matching and code analysis
+              
+              **SARIF Results:** All findings are automatically uploaded to the [Security/Code Scanning tab](https://github.com/${{ github.repository }}/security/code-scanning) for detailed analysis and tracking.
               
               **Scan Intensity:** \`${{ github.event.inputs.scan_intensity || 'comprehensive' }}\`
               

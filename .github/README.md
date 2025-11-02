@@ -2,6 +2,8 @@
 
 This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 library, ensuring cross-platform compatibility, security, and performance.
 
+> **📝 Note:** As of November 2025, the standalone `cppcheck-analysis.yml` and `semgrep-security.yml` workflows have been consolidated into the comprehensive `sast-scanning.yml` workflow for better reliability and unified security reporting.
+
 ## Workflow Overview
 
 ### 🔄 [ci.yml](.github/workflows/ci.yml) - Main CI/CD Pipeline
@@ -26,10 +28,43 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 - ✅ Code formatting validation (clang-format)
 - ✅ Artifact collection and reporting
 
-### 🔒 [codeql.yml](.github/workflows/codeql.yml) - Security Analysis
+### �️ [sast-scanning.yml](.github/workflows/sast-scanning.yml) - Comprehensive SAST Security Scanning
+
+**Triggers:** Push, Pull Request, Daily Schedule (4 AM UTC), Manual Dispatch
+**Purpose:** Comprehensive Static Application Security Testing (SAST) with multiple security tools
+
+**Jobs:**
+- **Trivy Scan**: Vulnerability and misconfiguration detection
+- **Checkov Scan**: Infrastructure as Code security analysis
+- **Gitleaks Scan**: Secret detection in git history
+- **Cppcheck Analysis**: C/C++ static code analysis
+- **Semgrep Analysis**: Security pattern matching and vulnerability detection
+- **SAST Summary**: Comprehensive reporting and artifact management
+
+**Features:**
+- ✅ **Integrated security tools** - All tools run directly in one workflow
+- ✅ **Configurable scan intensity** - Basic, Comprehensive, Deep scanning levels
+- ✅ **SARIF integration** - All results uploaded to GitHub Security/Code Scanning tab
+- ✅ **No external dependencies** - No PAT tokens or workflow dispatch permissions needed
+- ✅ **Comprehensive reporting** - Unified summary with detailed artifact management
+- ✅ **PR integration** - Automatic security scan results in pull request comments
+
+**Security Tools Coverage:**
+- **Trivy** (`trivy-security`): Container vulnerabilities, OS packages, misconfigurations
+- **Checkov** (`checkov-infrastructure`): GitHub Actions, Dockerfile, YAML/JSON security
+- **Gitleaks** (`gitleaks-secrets`): Full git history secret detection
+- **Cppcheck** (`cppcheck-static-analysis`): C++ static analysis with configurable severity
+- **Semgrep** (`semgrep-security`): Security patterns and vulnerability detection
+
+**Scan Intensity Levels:**
+- **Basic**: Error-level issues only (fast)
+- **Comprehensive** (default): Warning + error issues (balanced)
+- **Deep**: All issue types including style and performance (thorough)
+
+### �🔒 [codeql.yml](.github/workflows/codeql.yml) - Advanced Security Analysis
 
 **Triggers:** Push, Pull Request, Release, Weekly Schedule
-**Purpose:** Advanced security analysis using GitHub CodeQL
+**Purpose:** Advanced semantic security analysis using GitHub CodeQL
 
 **Jobs:**
 - **CodeQL Analysis**: Linux x64 Clang Release build analysis
@@ -37,7 +72,7 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 
 **Features:**
 - ✅ **CodeQL scanning** with security-extended queries
-- ✅ **Release security validation** (clang-tidy, cppcheck, valgrind)
+- ✅ **Release security validation** (clang-tidy, valgrind)
 - ✅ **Custom query configuration** for C++ security patterns
 - ✅ **Binary security analysis** (stack protection, ASLR, PIE, NX bit)
 - ✅ **SARIF results** uploaded to GitHub Security tab
@@ -94,21 +129,26 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 
 ## Workflow Matrix Coverage
 
-| Platform | Compiler | Debug | Release | Tests | Benchmarks | Fuzz | Sanitizers | Security |
-|----------|----------|-------|---------|-------|------------|------|------------|----------|
-| **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **Linux x64** | Clang 16 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Windows x64** | MSVC 2022 & Clang-CL | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ |
+| Platform | Compiler | Debug | Release | Tests | Benchmarks | Fuzz | Sanitizers | SAST Security | CodeQL |
+|----------|----------|-------|---------|-------|------------|------|------------|---------------|--------|
+| **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
+| **Linux x64** | Clang 16 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Windows x64** | MSVC 2022 & Clang-CL | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ | ✅ |
 
 *Windows fuzz testing uses harnesses (no libFuzzer)  
-**Windows sanitizers: AddressSanitizer only
+**Windows sanitizers: AddressSanitizer only  
+***SAST Security includes: Trivy, Checkov, Gitleaks, Cppcheck, Semgrep
 
 ## Security Analysis Features
 
-### Static Analysis
+### Comprehensive SAST Scanning
+- **Trivy**: Vulnerability scanning for containers, OS packages, and misconfigurations
+- **Checkov**: Infrastructure as Code security analysis (GitHub Actions, Docker, YAML/JSON)
+- **Gitleaks**: Secret detection across full git history
+- **Cppcheck**: C/C++ static analysis with configurable severity levels
+- **Semgrep**: Security pattern matching and vulnerability detection
 - **CodeQL**: Advanced semantic analysis with security queries
 - **clang-tidy**: Security-focused checks (security-*, cert-*, bugprone-*)
-- **cppcheck**: Comprehensive static analysis with C++23 support
 
 ### Dynamic Analysis  
 - **AddressSanitizer**: Memory error detection (Linux GCC/Clang, Windows MSVC/Clang-CL)

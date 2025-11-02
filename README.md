@@ -4,8 +4,6 @@
 [![CI/CD Pipeline](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml)
 [![SAST Security Scanning](https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml)
 [![CodeQL Security Analysis](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml)
-[![Semgrep Security Analysis](https://github.com/wsollers/utf_strings/actions/workflows/semgrep-security.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/semgrep-security.yml)
-[![Cppcheck Static Analysis](https://github.com/wsollers/utf_strings/actions/workflows/cppcheck-analysis.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/cppcheck-analysis.yml)
 [![Extended Fuzz Testing](https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml)
 [![Release Validation](https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml)
 
@@ -35,6 +33,12 @@ Modern C++23 UTF utilities (UTF-8/16/32) with explicit endianness policy and com
 - ⚡ **Performance Optimized** - LTO, native CPU optimization, vectorization
 - 🧪 **Comprehensive Testing** - Unit tests, fuzz testing, sanitizers, benchmarks
 - 🎯 **Code Quality** - clang-format integration, extensive warnings, static analysis
+
+**Integrated Security Scanning:**
+- 🛡️ **SAST Scanning** - Trivy, Checkov, Gitleaks, Cppcheck, Semgrep (all-in-one workflow)
+- 🔍 **CodeQL Analysis** - Advanced semantic security analysis
+- 🚨 **Automated Security Reports** - All findings uploaded to GitHub Security tab
+- 📊 **Configurable Intensity** - Basic/Comprehensive/Deep security scanning levels
 
 ## Quick Start
 
