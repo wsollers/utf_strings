@@ -20,6 +20,7 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 - **Windows Sanitizers**: AddressSanitizer (MSVC & Clang-CL)
 - **Performance Tracking**: Baseline performance monitoring
 - **Test Results Publishing**: Unified test result reporting
+- **Documentation Artifacts**: Generates combined docs for GitHub Pages
 
 **Features:**
 - ✅ Cross-platform builds (Linux GCC/Clang, Windows MSVC/Clang-CL)
@@ -83,6 +84,21 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 - Use-after-free detection (CWE-416)
 - Out-of-bounds access (CWE-787, CWE-788)
 
+### 📄 [pages-deploy.yml](.github/workflows/pages-deploy.yml) - GitHub Pages Deployment
+
+**Triggers:** CI Workflow Completion, Manual Dispatch
+**Purpose:** Dedicated GitHub Pages deployment with explicit Jekyll disable
+
+**Jobs:**
+- **Deploy Documentation**: Deploys combined documentation to GitHub Pages
+
+**Features:**
+- ✅ **Isolated deployment** - Separate from main CI for reliability
+- ✅ **Jekyll disabled** - Explicit .nojekyll file creation and Jekyll file cleanup
+- ✅ **Artifact management** - Downloads docs from CI workflow completion
+- ✅ **Static site optimization** - Removes Jekyll conflicts and sets proper permissions
+- ✅ **Deployment verification** - Comprehensive validation and reporting
+
 ### 🧪 [extended-fuzz.yml](.github/workflows/extended-fuzz.yml) - Extended Fuzz Testing
 
 **Triggers:** Daily Schedule (2 AM UTC), Manual Dispatch
@@ -129,11 +145,11 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 
 ## Workflow Matrix Coverage
 
-| Platform | Compiler | Debug | Release | Tests | Benchmarks | Fuzz | Sanitizers | SAST Security | CodeQL |
-|----------|----------|-------|---------|-------|------------|------|------------|---------------|--------|
-| **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
-| **Linux x64** | Clang 16 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Windows x64** | MSVC 2022 & Clang-CL | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ | ✅ |
+| Platform | Compiler | Debug | Release | Tests | Benchmarks | Fuzz | Sanitizers | SAST Security | CodeQL | Pages Deploy |
+|----------|----------|-------|---------|-------|------------|------|------------|---------------|--------|-------------|
+| **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| **Linux x64** | Clang 16 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Windows x64** | MSVC 2022 & Clang-CL | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ | ✅ | ✅ |
 
 *Windows fuzz testing uses harnesses (no libFuzzer)  
 **Windows sanitizers: AddressSanitizer only  
