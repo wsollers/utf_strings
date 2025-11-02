@@ -51,16 +51,10 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Use static profiles based on matrix compiler
-        if [ "${{ matrix.compiler }}" = "gcc" ]; then
-          sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
-          sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
-          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        else
-          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
-          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
-          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        fi
+        # Use static profile for GCC 13 with C++23
+        sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
+        sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
+        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
         sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
         sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
@@ -494,38 +488,20 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Determine compiler and version
-        if command -v gcc-13 >/dev/null 2>&1; then
-          GCC_VERSION=$(gcc-13 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using GCC-13 version: $GCC_VERSION"
-          if [ -n "$GCC_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect GCC version, using Conan default"
-          fi
-        elif command -v clang-18 >/dev/null 2>&1; then
-          CLANG_VERSION=$(clang-18 --version | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using Clang-18 version: $CLANG_VERSION"
-          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
-          if [ -n "$CLANG_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect Clang version, using Conan default"
-          fi
-          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+        # Use static profiles based on matrix compiler (sanitizers)
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
         else
-          COMPILER_VERSION=$(gcc --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1)
-          echo "Using default compiler version: $COMPILER_VERSION"
-          if [ -n "$COMPILER_VERSION" ]; then
-            sed -i "s/compiler.version=.*/compiler.version=$COMPILER_VERSION/" ~/.conan2/profiles/default
-          else
-            echo "Warning: Could not detect compiler version, using Conan default"
-          fi
+          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
         fi
+        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
-        echo "=== Final Conan Profile ==="
+        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+        echo "=== Conan Profile ==="
         conan profile show --profile:host=default
         
     - name: Cache Conan packages
