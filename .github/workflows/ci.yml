@@ -623,7 +623,8 @@ jobs:
             # Clang-CL uses build-type specific presets
             $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
           }
-          cmake --preset $preset -DCMAKE_GENERATOR_PLATFORM=x64 ${{ matrix.cmake_args }}
+          # Override generator for Windows builds to ensure Visual Studio generator is used
+          cmake --preset $preset -G "Visual Studio 17 2022" -A x64 ${{ matrix.cmake_args }}
 
       - name: Build
         run: |
@@ -727,7 +728,8 @@ jobs:
           # Note: Windows AddressSanitizer disabled due to Conan dependency linking issues
           # (annotate_string/annotate_vector mismatch between ASAN and non-ASAN builds)
           # AddressSanitizer testing is comprehensively covered by Linux CI jobs
-          cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64
+          # Override generator for Windows builds to ensure Visual Studio generator is used
+          cmake --preset conan-default -G "Visual Studio 17 2022" -A x64
 
       - name: Build Debug
         run: cmake --build --preset conan-debug --config Debug --parallel
