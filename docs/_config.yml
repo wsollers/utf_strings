@@ -3,8 +3,8 @@ description: High-performance UTF-8/16/32 string processing library for C++23
 url: "https://wsollers.github.io/utf_strings"
 baseurl: ""
 
-# Theme
-remote_theme: pages-themes/primer@v1.0.0
+# Theme - using latest stable version without tag
+remote_theme: pages-themes/primer
 plugins:
   - jekyll-remote-theme
 
