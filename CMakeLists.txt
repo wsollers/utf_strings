@@ -24,18 +24,44 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # External compiler-specific configuration
-# USE_MSVC_LTO: Enable MSVC-specific Link Time Optimization flags (/LTCG, /GL)
-if(NOT DEFINED USE_MSVC_LTO)
-    set(USE_MSVC_LTO ON)  # Default to enabled for compatibility
+# These flags can be set by the build system (CI) to control compiler behavior
+
+# Compiler type identification (helps with multi-compiler support)
+if(NOT DEFINED COMPILER_TYPE)
+    set(COMPILER_TYPE "AUTO")  # AUTO, GCC, CLANG, MSVC
+endif()
+
+# Feature flags
+if(NOT DEFINED USE_LTO)
+    set(USE_LTO ON)  # Enable Link Time Optimization
+endif()
+
+if(NOT DEFINED USE_MSVC_LTO) 
+    set(USE_MSVC_LTO ON)  # Enable MSVC-specific LTO flags (/LTCG, /GL)
+endif()
+
+if(NOT DEFINED USE_NATIVE_ARCH)
+    set(USE_NATIVE_ARCH ON)  # Enable native CPU optimization (-march=native)
+endif()
+
+if(NOT DEFINED USE_LIBC_PLUS_PLUS)
+    set(USE_LIBC_PLUS_PLUS OFF)  # Use libc++ instead of libstdc++ (Clang only)
 endif()
 
 if(NOT DEFINED ENABLE_SHARED_LIBRARY)
-    set(ENABLE_SHARED_LIBRARY ON)  # Default to enabled
+    set(ENABLE_SHARED_LIBRARY ON)  # Build shared libraries
 endif()
 
+# Debug output
+message(STATUS "=== Compiler Configuration ===")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID} (${CMAKE_CXX_COMPILER})")
-message(STATUS "MSVC LTO enabled: ${USE_MSVC_LTO}")
+message(STATUS "Compiler Type: ${COMPILER_TYPE}")
+message(STATUS "LTO enabled: ${USE_LTO}")
+message(STATUS "MSVC LTO enabled: ${USE_MSVC_LTO}")  
+message(STATUS "Native arch optimization: ${USE_NATIVE_ARCH}")
+message(STATUS "Use libc++: ${USE_LIBC_PLUS_PLUS}")
 message(STATUS "Shared library enabled: ${ENABLE_SHARED_LIBRARY}")
+message(STATUS "===============================")
 
 # Security and optimization flags
 set(SECURITY_FLAGS "")
@@ -67,31 +93,49 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
         set(OPTIMIZATION_FLAGS
             -O3                           # Aggressive optimization
-            -march=native                 # Optimize for local CPU
-            -mtune=native                 # Tune for local CPU
-            -flto                         # Link Time Optimization
             -DNDEBUG                      # Disable debug assertions
             -fomit-frame-pointer          # Omit frame pointers for better performance
             -funroll-loops                # Unroll loops
             -ffast-math                   # Fast math (be careful with this)
         )
         
-        # Additional Clang-specific optimizations
-        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # Native architecture optimization (controlled by USE_NATIVE_ARCH flag)
+        if(USE_NATIVE_ARCH)
             list(APPEND OPTIMIZATION_FLAGS
-                -fvectorize                # Enable vectorization
-                -fslp-vectorize           # Enable SLP vectorization
+                -march=native             # Optimize for local CPU
+                -mtune=native             # Tune for local CPU
             )
         endif()
         
-        # Additional GCC-specific optimizations
-        if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        # Link Time Optimization (controlled by USE_LTO flag)
+        if(USE_LTO)
             list(APPEND OPTIMIZATION_FLAGS
-                -ftree-vectorize          # Enable vectorization
-                -fgraphite-identity       # Enable Graphite optimizations
-                -floop-nest-optimize      # Loop nest optimizations
+                -flto                     # Link Time Optimization
             )
         endif()
+        
+        # Compiler-specific optimizations
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR COMPILER_TYPE STREQUAL "CLANG")
+            list(APPEND OPTIMIZATION_FLAGS
+                -fvectorize               # Enable vectorization
+                -fslp-vectorize          # Enable SLP vectorization
+            )
+        elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR COMPILER_TYPE STREQUAL "GCC")
+            list(APPEND OPTIMIZATION_FLAGS
+                -ftree-vectorize         # Enable vectorization
+                -fgraphite-identity      # Enable Graphite optimizations (if available)
+                -floop-nest-optimize     # Loop nest optimizations (if available)
+            )
+        endif()
+    endif()
+    
+    # Standard library configuration (Clang only)
+    if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR COMPILER_TYPE STREQUAL "CLANG") AND USE_LIBC_PLUS_PLUS)
+        # Use libc++ instead of libstdc++
+        list(APPEND SECURITY_FLAGS 
+            -stdlib=libc++                # Use libc++ standard library
+        )
+        message(STATUS "Using libc++ standard library for Clang")
     endif()
     
     # Debug flags for debug builds
@@ -231,13 +275,24 @@ function(apply_build_flags target_name)
         # Apply link-time optimization and security flags to linker
         if(CMAKE_BUILD_TYPE STREQUAL "Release")
             if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-                target_link_options(${target_name} PRIVATE
-                    -flto                     # Link Time Optimization
+                set(GCC_CLANG_LINK_FLAGS
                     -pie                      # Position Independent Executable
                     -Wl,-z,relro              # Read-only relocations
                     -Wl,-z,now                # Immediate binding
                     -Wl,-z,noexecstack        # Non-executable stack
                 )
+                
+                # Add LTO linker flag if enabled
+                if(USE_LTO)
+                    list(APPEND GCC_CLANG_LINK_FLAGS -flto)  # Link Time Optimization
+                endif()
+                
+                # Add libc++ linker flag if enabled (Clang only)
+                if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR COMPILER_TYPE STREQUAL "CLANG") AND USE_LIBC_PLUS_PLUS)
+                    list(APPEND GCC_CLANG_LINK_FLAGS -stdlib=libc++)  # Link with libc++
+                endif()
+                
+                target_link_options(${target_name} PRIVATE ${GCC_CLANG_LINK_FLAGS})
             elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
                 set(MSVC_LINK_FLAGS
                     /OPT:REF                  # Eliminate unreferenced functions and data

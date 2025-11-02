@@ -80,9 +80,17 @@ jobs:
           export CC=gcc
           export CXX=g++
           if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-            cmake --preset conan-debug
+            cmake --preset conan-debug \
+              -DCOMPILER_TYPE=GCC \
+              -DUSE_LTO=ON \
+              -DUSE_NATIVE_ARCH=ON \
+              -DENABLE_SHARED_LIBRARY=ON
           else
-            cmake --preset conan-release
+            cmake --preset conan-release \
+              -DCOMPILER_TYPE=GCC \
+              -DUSE_LTO=ON \
+              -DUSE_NATIVE_ARCH=ON \
+              -DENABLE_SHARED_LIBRARY=ON
           fi
 
       - name: Build
@@ -230,9 +238,19 @@ jobs:
           export CC=clang
           export CXX=clang++
           if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-            cmake --preset conan-debug
+            cmake --preset conan-debug \
+              -DCOMPILER_TYPE=CLANG \
+              -DUSE_LTO=ON \
+              -DUSE_NATIVE_ARCH=ON \
+              -DUSE_LIBC_PLUS_PLUS=OFF \
+              -DENABLE_SHARED_LIBRARY=ON
           else
-            cmake --preset conan-release
+            cmake --preset conan-release \
+              -DCOMPILER_TYPE=CLANG \
+              -DUSE_LTO=ON \
+              -DUSE_NATIVE_ARCH=ON \
+              -DUSE_LIBC_PLUS_PLUS=OFF \
+              -DENABLE_SHARED_LIBRARY=ON
           fi
 
       - name: Build
@@ -380,6 +398,10 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_COMPILER=clang++ \
+            -DCOMPILER_TYPE=CLANG \
+            -DUSE_LTO=OFF \
+            -DUSE_NATIVE_ARCH=OFF \
+            -DENABLE_SHARED_LIBRARY=OFF \
             -DUTF_STRINGS_BUILD_TESTS=OFF \
             -DUTF_STRINGS_BUILD_BENCHMARKS=OFF \
             -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON \
@@ -510,9 +532,19 @@ jobs:
           export CXX=clang++
 
           if [ "${{ matrix.sanitizer }}" = "asan" ]; then
-            cmake --preset conan-debug -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+            cmake --preset conan-debug \
+              -DCOMPILER_TYPE=CLANG \
+              -DUSE_LTO=OFF \
+              -DUSE_NATIVE_ARCH=OFF \
+              -DENABLE_SHARED_LIBRARY=ON \
+              -DUTF_STRINGS_ENABLE_SANITIZERS=ON
           else
-            cmake --preset conan-debug -DUTF_STRINGS_ENABLE_THREAD_SANITIZER=ON
+            cmake --preset conan-debug \
+              -DCOMPILER_TYPE=CLANG \
+              -DUSE_LTO=OFF \
+              -DUSE_NATIVE_ARCH=OFF \
+              -DENABLE_SHARED_LIBRARY=ON \
+              -DUTF_STRINGS_ENABLE_THREAD_SANITIZER=ON
           fi
 
       - name: Build with Sanitizers
@@ -845,7 +877,12 @@ jobs:
         run: |
           export CC=clang-18
           export CXX=clang++-18
-          cmake --preset conan-release
+          cmake --preset conan-release \
+            -DCOMPILER_TYPE=CLANG \
+            -DUSE_LTO=ON \
+            -DUSE_NATIVE_ARCH=ON \
+            -DUSE_LIBC_PLUS_PLUS=ON \
+            -DENABLE_SHARED_LIBRARY=ON
           cmake --build --preset conan-release --parallel
 
       - name: Run Performance Benchmarks and Generate Flame Graphs
