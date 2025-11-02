@@ -13,7 +13,7 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 
 **Jobs:**
 - **Linux GCC 13** (x64): Debug + Release builds, tests, benchmarks
-- **Linux Clang 16** (x64): Debug + Release builds, tests, benchmarks  
+- **Linux Clang 18** (x64): Debug + Release builds, tests, benchmarks  
 - **Windows MSVC 2022 & Clang-CL** (x64): Debug + Release builds, tests, benchmarks
 - **Linux Fuzz Testing**: libFuzzer with all UTF encodings (UTF-8/16/32 BE/LE)
 - **Linux Sanitizers**: AddressSanitizer + ThreadSanitizer (GCC & Clang)
@@ -201,7 +201,7 @@ gh workflow run create-release.yml -f version=0.1.0 -f create_tag=true
 | Platform | Compiler | Debug | Release | Tests | Benchmarks | Fuzz | Sanitizers | SAST Security | CodeQL | Pages Deploy | Create Release |
 |----------|----------|-------|---------|-------|------------|------|------------|---------------|--------|-------------|---------------|
 | **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Linux x64** | Clang 16/18 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Linux x64** | Clang 18 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Windows x64** | MSVC 2022 & Clang | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ | ✅ | ✅ | ✅ |
 
 *Windows fuzz testing uses harnesses (no libFuzzer)  

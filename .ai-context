@@ -6,7 +6,7 @@ This is a high-performance UTF-8/16/32 string processing library written in mode
 ## Key Information for AI Assistants
 
 ### Project Structure
-- **Language**: C++23 (requires GCC 13+, Clang 16+, MSVC 2022+)
+- **Language**: C++23 (requires GCC 13+, Clang 18+, MSVC 2022+)
 - **Build System**: CMake 3.25+ with Conan package manager
 - **Testing**: Google Test framework with extensive unit tests
 - **Benchmarking**: Google Benchmark for performance measurement
@@ -67,7 +67,7 @@ cd build/build && ./utf_strings-bench
 - **Optional**: gperftools for profiling
 
 ### Platform Support
-- **Linux**: GCC 13+, Clang 16+ (primary development)
+- **Linux**: GCC 13+, Clang 18+ (primary development)
 - **Windows**: MSVC 2022, Clang-CL (CI tested)
 - **Architectures**: x64 (primary), others untested
 
