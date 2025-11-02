@@ -1,0 +1,300 @@
+name: "Semgrep Security Analysis"
+
+on:
+  schedule:
+    # Run daily at 1 AM UTC
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+    inputs:
+      ruleset:
+        description: "Semgrep ruleset to use"
+        required: false
+        default: "auto"
+        type: choice
+        options:
+          - auto
+          - p/security-audit
+          - p/cpp
+          - p/cwe-top-25
+          - p/owasp-top-10
+          - p/security-code-scan
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  semgrep-analysis:
+    name: "Semgrep C++ Security Analysis"
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python for Semgrep
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+
+      - name: Verify Semgrep installation
+        run: |
+          semgrep --version
+          semgrep --help
+
+      - name: Set Semgrep ruleset
+        id: ruleset
+        run: |
+          if [ -n "${{ github.event.inputs.ruleset }}" ]; then
+            echo "ruleset=${{ github.event.inputs.ruleset }}" >> $GITHUB_OUTPUT
+          else
+            # Default ruleset for scheduled and push/PR events
+            echo "ruleset=auto" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Semgrep Security Analysis
+        run: |
+          echo "Running Semgrep analysis with ruleset: ${{ steps.ruleset.outputs.ruleset }}"
+
+          # Create output directory
+          mkdir -p semgrep-results
+
+          # Set common Semgrep options
+          SEMGREP_OPTS=(
+            --config=${{ steps.ruleset.outputs.ruleset }}
+            --json
+            --output=semgrep-results/semgrep-results.json
+            --verbose
+            --timeout=300
+            --max-memory=2048
+          )
+
+          # Add SARIF output for GitHub Security tab integration
+          SEMGREP_SARIF_OPTS=(
+            --config=${{ steps.ruleset.outputs.ruleset }}
+            --sarif
+            --output=semgrep-results/semgrep-results.sarif
+            --timeout=300
+            --max-memory=2048
+          )
+
+          echo "=== Running Semgrep JSON Analysis ==="
+          if semgrep "${SEMGREP_OPTS[@]}" . || [ $? -eq 1 ]; then
+            echo "Semgrep analysis completed (exit code $?)"
+          else
+            echo "Semgrep analysis failed with exit code $?"
+            exit 1
+          fi
+
+          echo "=== Running Semgrep SARIF Analysis ==="
+          if semgrep "${SEMGREP_SARIF_OPTS[@]}" . || [ $? -eq 1 ]; then
+            echo "Semgrep SARIF analysis completed (exit code $?)"
+          else
+            echo "Semgrep SARIF analysis failed with exit code $?"
+            exit 1
+          fi
+
+      - name: Process Semgrep results
+        run: |
+          cd semgrep-results
+
+          # Generate human-readable summary
+          echo "# Semgrep Security Analysis Report" > semgrep-summary.md
+          echo "" >> semgrep-summary.md
+          echo "**Analysis Date:** $(date)" >> semgrep-summary.md
+          echo "**Ruleset:** ${{ steps.ruleset.outputs.ruleset }}" >> semgrep-summary.md
+          echo "**Repository:** ${{ github.repository }}" >> semgrep-summary.md
+          echo "**Commit:** ${{ github.sha }}" >> semgrep-summary.md
+          echo "" >> semgrep-summary.md
+
+          # Check if we have findings
+          if [ -f "semgrep-results.json" ]; then
+            FINDING_COUNT=$(jq '.results | length' semgrep-results.json 2>/dev/null || echo "0")
+            echo "**Total Findings:** $FINDING_COUNT" >> semgrep-summary.md
+            echo "" >> semgrep-summary.md
+            
+            if [ "$FINDING_COUNT" -gt 0 ]; then
+              echo "## Security Findings" >> semgrep-summary.md
+              echo "" >> semgrep-summary.md
+              
+              # Extract and format findings
+              jq -r '.results[] | "### \(.check_id)\n**Severity:** \(.extra.severity // "info")\n**File:** `\(.path)`\n**Line:** \(.start.line)\n**Message:** \(.extra.message // .message)\n"' semgrep-results.json >> semgrep-summary.md 2>/dev/null || echo "Error processing findings" >> semgrep-summary.md
+            else
+              echo "✅ **No security issues found!**" >> semgrep-summary.md
+            fi
+          else
+            echo "❌ **Analysis failed - no results file generated**" >> semgrep-summary.md
+          fi
+
+          # Display summary
+          echo "=== Semgrep Analysis Summary ==="
+          cat semgrep-summary.md
+
+      - name: Upload SARIF results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('semgrep-results/semgrep-results.sarif') != ''
+        with:
+          sarif_file: semgrep-results/semgrep-results.sarif
+          category: semgrep-security
+
+      - name: Upload Semgrep analysis artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semgrep-security-analysis-${{ github.run_number }}
+          path: |
+            semgrep-results/
+          retention-days: 30
+
+      - name: Comment on PR with results (if PR)
+        if: github.event_name == 'pull_request' && hashFiles('semgrep-results/semgrep-results.json') != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            try {
+              const results = JSON.parse(fs.readFileSync('semgrep-results/semgrep-results.json', 'utf8'));
+              const summary = fs.readFileSync('semgrep-results/semgrep-summary.md', 'utf8');
+              
+              const comment = `## 🔍 Semgrep Security Analysis Results
+              
+              ${summary}
+              
+              <details>
+              <summary>📋 View detailed analysis</summary>
+              
+              **Analysis Configuration:**
+              - Ruleset: \`${{ steps.ruleset.outputs.ruleset }}\`
+              - Files analyzed: ${results.paths?.scanned?.length || 'N/A'}
+              - Total findings: ${results.results?.length || 0}
+              
+              **Workflow Run:** [View Details](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              
+              </details>`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              console.log('Could not post PR comment:', error);
+            }
+
+      - name: Create issue for high-severity findings (scheduled runs only)
+        if: github.event_name == 'schedule' && hashFiles('semgrep-results/semgrep-results.json') != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            try {
+              const results = JSON.parse(fs.readFileSync('semgrep-results/semgrep-results.json', 'utf8'));
+              
+              // Filter for high severity issues
+              const highSeverityFindings = results.results?.filter(finding => 
+                finding.extra?.severity === 'ERROR' || finding.extra?.severity === 'WARNING'
+              ) || [];
+              
+              if (highSeverityFindings.length > 0) {
+                const summary = fs.readFileSync('semgrep-results/semgrep-summary.md', 'utf8');
+                
+                const issueTitle = `🚨 High-Severity Security Issues Detected - ${new Date().toISOString().split('T')[0]}`;
+                const issueBody = `## Semgrep Security Analysis - High Severity Findings
+                
+                Semgrep has detected **${highSeverityFindings.length}** high-severity security issue(s) during the daily security scan.
+                
+                ${summary}
+                
+                ### Immediate Action Required:
+                1. Review the security findings in the [workflow artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                2. Address high-severity issues promptly
+                3. Consider running additional security analysis
+                
+                **Scan Details:**
+                - Date: ${new Date().toISOString()}
+                - Ruleset: ${{ steps.ruleset.outputs.ruleset }}
+                - Total findings: ${results.results?.length || 0}
+                - High-severity: ${highSeverityFindings.length}
+                
+                **Workflow Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                `;
+                
+                github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: issueTitle,
+                  body: issueBody,
+                  labels: ['security', 'high-priority', 'semgrep']
+                });
+              }
+            } catch (error) {
+              console.log('Could not create security issue:', error);
+            }
+
+  # Additional job for C++ specific analysis with multiple rulesets
+  semgrep-cpp-comprehensive:
+    name: "Comprehensive C++ Analysis"
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    strategy:
+      matrix:
+        ruleset:
+          - "p/cpp"
+          - "p/security-audit"
+          - "p/cwe-top-25"
+          - "p/owasp-top-10"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python for Semgrep
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+
+      - name: Run Semgrep Analysis - ${{ matrix.ruleset }}
+        run: |
+          echo "Running Semgrep with ruleset: ${{ matrix.ruleset }}"
+
+          mkdir -p semgrep-results-${{ matrix.ruleset }}
+
+          semgrep \
+            --config=${{ matrix.ruleset }} \
+            --json \
+            --output=semgrep-results-${{ matrix.ruleset }}/results.json \
+            --timeout=300 \
+            --max-memory=2048 \
+            . || [ $? -eq 1 ]
+
+      - name: Upload analysis results - ${{ matrix.ruleset }}
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semgrep-cpp-${{ matrix.ruleset }}-${{ github.run_number }}
+          path: semgrep-results-${{ matrix.ruleset }}/
+          retention-days: 14

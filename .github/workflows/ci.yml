@@ -977,7 +977,7 @@ jobs:
           # Ensure docs directories exist
           mkdir -p docs/dev/bench
           mkdir -p docs/performance
-          
+
           # Ensure .nojekyll exists to disable Jekyll processing
           touch docs/.nojekyll
 
