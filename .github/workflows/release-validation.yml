@@ -76,12 +76,24 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Update C++23 for Conan 2.x
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        # Configure compiler-specific settings for C++23
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          CLANG_VERSION=$(clang-18 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version | head -n1 | grep -o '[0-9]\+' | head -n1)
+          echo "Detected Clang version: $CLANG_VERSION"
+          sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
+          sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+        elif [ "${{ matrix.compiler }}" = "gcc" ]; then
+          GCC_VERSION=$(gcc-13 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || gcc --version | head -n1 | grep -o '[0-9]\+' | head -n1)
+          echo "Detected GCC version: $GCC_VERSION"
+          sed -i "s/compiler.version=.*/compiler.version=$GCC_VERSION/" ~/.conan2/profiles/default
+        fi
+        # Set C++23 and OS for all compilers
         sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
+        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
         echo "=== Final Conan Profile ==="
-        conan profile show default
+        conan profile show --profile:host=default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
@@ -215,7 +227,7 @@ jobs:
         sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
         echo "=== Final Conan Profile ==="
-        conan profile show default
+        conan profile show --profile:host=default
         
     - name: Install dependencies
       run: |

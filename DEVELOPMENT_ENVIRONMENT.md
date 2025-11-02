@@ -138,7 +138,7 @@ After setup, verify alignment with CI:
 - If issues arise, consider using Ubuntu 22.04 in Docker for exact CI matching
 
 ### Conan Issues
-- Ensure Conan profile matches CI: `conan profile show default`
+- Ensure Conan profile matches CI: `conan profile show --profile:host=default`
 - Update Conan frequently: `pip3 install --user --upgrade conan`
 
 ## CI/CD Alignment Status

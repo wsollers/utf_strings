@@ -83,12 +83,16 @@ jobs:
     - name: Setup Conan profile
       run: |
         conan profile detect --force
-        # Update C++23 for Conan 2.x
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+        # Update to use the correct Clang version and C++23
+        CLANG_VERSION=$(clang-18 --version 2>/dev/null | head -n1 | grep -o '[0-9]\+' | head -n1 || clang --version | head -n1 | grep -o '[0-9]\+' | head -n1)
+        echo "Detected Clang version: $CLANG_VERSION"
+        sed -i 's/compiler=gcc/compiler=clang/' ~/.conan2/profiles/default
+        sed -i "s/compiler.version=.*/compiler.version=$CLANG_VERSION/" ~/.conan2/profiles/default
+        sed -i 's/compiler.libcxx=libstdc++11/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
         sed -i 's/compiler.cppstd=gnu17/compiler.cppstd=23/' ~/.conan2/profiles/default
         sed -i 's/compiler.cppstd=17/compiler.cppstd=23/' ~/.conan2/profiles/default
         echo "=== Final Conan Profile ==="
-        conan profile show default
+        conan profile show --profile:host=default
         
     - name: Cache Conan packages
       uses: actions/cache@v4
