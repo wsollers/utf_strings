@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762072741647,
+  "lastUpdate": 1762073674056,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -630,6 +630,36 @@ window.BENCHMARK_DATA = {
             "value": 7068.725592221692,
             "unit": "ns/iter",
             "extra": "iterations: 198912\ncpu: 7067.812640765767 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "0e0214b751c5b08a3f87d1f0b1a37577e946a200",
+          "message": "Fix GitHub Pages deployment with proper Actions workflow\n\n- Add explicit Pages deployment using actions/deploy-pages@v4\n- Ensure .nojekyll file exists to disable Jekyll processing\n- Add proper permissions for Pages deployment (pages: write, id-token: write)\n- Upload docs/ directory as static Pages artifact instead of relying on Jekyll\n\nThis should resolve the Jekyll 'No such file or directory' error by using\nGitHub Actions for Pages deployment instead of Jekyll processing.",
+          "timestamp": "2025-11-02T03:52:12-05:00",
+          "tree_id": "b125c1690732f2263276e3abf5a84664fada26a9",
+          "url": "https://github.com/wsollers/utf_strings/commit/0e0214b751c5b08a3f87d1f0b1a37577e946a200"
+        },
+        "date": 1762073673797,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7034.730546889551,
+            "unit": "ns/iter",
+            "extra": "iterations: 198413\ncpu: 7033.743086390508 ns\nthreads: 1"
           }
         ]
       }
