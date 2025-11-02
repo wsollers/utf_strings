@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762117987091,
+  "lastUpdate": 1762118037182,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1664,6 +1664,34 @@ window.BENCHMARK_DATA = {
             "value": 7026.049119513069,
             "unit": "ns/iter",
             "extra": "iterations: 198129\ncpu: 7025.212260698838 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "committer": {
+            "name": "BoondockTaints",
+            "username": "wsollers",
+            "email": "wsollers@gmail.com"
+          },
+          "id": "56d796d819246942b20d4ee1f1d555cff8e0744a",
+          "message": "Fix Performance Baseline workflow step ordering\n\nCRITICAL FIX: Move artifact upload AFTER performance index.html creation\n- Previously uploaded before enhanced HTML was generated\n- Now creates enhanced performance page first, then uploads it\n- Add verification to confirm flamegraph links are present\n- This should fix the static text issue on performance page",
+          "timestamp": "2025-11-02T21:10:24Z",
+          "url": "https://github.com/wsollers/utf_strings/commit/56d796d819246942b20d4ee1f1d555cff8e0744a"
+        },
+        "date": 1762118036778,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 6873.906272337359,
+            "unit": "ns/iter",
+            "extra": "iterations: 194457\ncpu: 6872.986027759349 ns\nthreads: 1"
           }
         ]
       }
