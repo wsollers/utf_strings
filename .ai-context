@@ -161,13 +161,31 @@ When suggesting code:
 - **Consider fuzz testing** for input parsing functions
 
 ### Pre-Push Validation Checklist
-Before any code can be pushed to remote:
-1. ✅ All unit tests pass (`./utf_strings-tests`)
-2. ✅ Code formatting is correct (`clang-format`)
-3. ✅ No compiler warnings or errors
-4. ✅ Performance tests show no significant regression
-5. ✅ Static analysis passes (will be validated in CI)
-6. ✅ Fuzz tests pass for any input parsing code
+**MANDATORY: Before any code can be pushed to remote, ALL of the following MUST pass:**
+
+#### Build Validation (REQUIRED)
+1. ✅ **Full clean build succeeds** (`./bootstrap_cmake.sh --compiler clang --config Debug`)
+2. ✅ **No compiler warnings or errors** in Debug configuration
+3. ✅ **Release build also succeeds** (if making performance-critical changes)
+4. ✅ **All CMake configuration completes successfully**
+
+#### Testing Validation (REQUIRED)  
+5. ✅ **All unit tests pass** (`./utf_strings-tests` - 100% pass rate required)
+6. ✅ **All benchmarks run successfully** (`./utf_strings-bench`)
+7. ✅ **Performance tests show no significant regression** (>10% slowdown requires justification)
+8. ✅ **Fuzz tests pass** for any input parsing code (if applicable)
+
+#### Code Quality Validation (REQUIRED)
+9. ✅ **Code formatting is correct** (`cmake --build --preset=conan-debug --target format-check`)
+10. ✅ **Static analysis passes** (will be validated in CI but check locally if possible)
+11. ✅ **No memory leaks** in tests (use sanitizers: `--enable-sanitizers`)
+
+#### Final Checks (REQUIRED)
+12. ✅ **Git status is clean** (no untracked files, staged changes committed)
+13. ✅ **Commit message follows conventional format** (feat:, fix:, docs:, etc.)
+14. ✅ **All new C++ files have proper license headers** (BSD 2-Clause with William Sollers copyright)
+
+**❌ DO NOT PUSH if ANY of these checks fail. Fix all issues before pushing to remote.**
 
 ## Current Version
 - Version: 0.0.1 (initial release)

@@ -1,76 +1,75 @@
----
----
+--- --- // Custom styles for UTF Strings documentation
 
-// Custom styles for UTF Strings documentation
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-  line-height: 1.6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .performance-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
 }
 
 .performance-card {
-  border: 1px solid #d1d9e0;
-  border-radius: 8px;
-  padding: 16px;
-  background: #f6f8fa;
+    border: 1px solid #d1d9e0;
+    border-radius: 8px;
+    padding: 16px;
+    background: #f6f8fa;
 }
 
-pre, code {
-  background: #f6f8fa;
-  border-radius: 6px;
-  padding: 16px;
-  overflow-x: auto;
+pre,
+code {
+    background: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
 }
 
 .highlight {
-  background: #f6f8fa;
-  border-radius: 6px;
+    background: #f6f8fa;
+    border-radius: 6px;
 }
 
 .btn {
-  display: inline-block;
-  padding: 8px 16px;
-  background: #0969da;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  border: 1px solid #0969da;
+    display: inline-block;
+    padding: 8px 16px;
+    background: #0969da;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1px solid #0969da;
 }
 
 .btn:hover {
-  background: #0860ca;
-  color: white;
+    background: #0860ca;
+    color: white;
 }
 
 .alert {
-  padding: 16px;
-  border-radius: 6px;
-  margin: 16px 0;
+    padding: 16px;
+    border-radius: 6px;
+    margin: 16px 0;
 }
 
 .alert-info {
-  background: #dbeafe;
-  border-left: 4px solid #0969da;
+    background: #dbeafe;
+    border-left: 4px solid #0969da;
 }
 
 .alert-warning {
-  background: #fff8dc;
-  border-left: 4px solid #fb8500;
+    background: #fff8dc;
+    border-left: 4px solid #fb8500;
 }
 
 .alert-error {
-  background: #ffeaea;
-  border-left: 4px solid #d1242f;
+    background: #ffeaea;
+    border-left: 4px solid #d1242f;
 }
