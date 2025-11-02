@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762111010841,
+  "lastUpdate": 1762117075722,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1490,6 +1490,36 @@ window.BENCHMARK_DATA = {
             "value": 7236.347330983942,
             "unit": "ns/iter",
             "extra": "iterations: 186698\ncpu: 7235.621217152835 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "0fe64d2a61e9b032f40b5f0293db02be8eb9afb2",
+          "message": "Fix Performance Baseline docs structure for Pages deployment\n\n- Add debugging to show what files are being uploaded\n- Ensure complete Jekyll site structure is included in artifact\n- Verify presence of _config.yml and index.html for proper Pages deployment",
+          "timestamp": "2025-11-02T15:56:05-05:00",
+          "tree_id": "4772ec0dedb2974f6b4999ef0e16d18906a77ff2",
+          "url": "https://github.com/wsollers/utf_strings/commit/0fe64d2a61e9b032f40b5f0293db02be8eb9afb2"
+        },
+        "date": 1762117075013,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7024.834979035004,
+            "unit": "ns/iter",
+            "extra": "iterations: 198902\ncpu: 7023.899196589274 ns\nthreads: 1"
           }
         ]
       }
