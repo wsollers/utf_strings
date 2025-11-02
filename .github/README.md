@@ -99,6 +99,59 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 - ✅ **Static site optimization** - Removes Jekyll conflicts and sets proper permissions
 - ✅ **Deployment verification** - Comprehensive validation and reporting
 
+### 🏷️ [create-release.yml](.github/workflows/create-release.yml) - Automated Release Creation
+
+**Triggers:** Version Tags (`v*.*.*`), Manual Dispatch with Version Input
+**Purpose:** Automated GitHub release creation with cross-platform binary distribution
+
+**Jobs:**
+- **Build Release Binaries**: Multi-platform builds for Linux and Windows
+- **Create GitHub Release**: Automated release with downloadable assets
+
+**Platform Matrix:**
+- **Linux GCC 13** (x64): Release + Debug binaries (.tar.gz)
+- **Linux Clang 18** (x64): Release + Debug binaries (.tar.gz)
+- **Windows MSVC 2022** (x64): Release + Debug binaries (.zip)
+- **Windows Clang** (x64): Release + Debug binaries (.zip)
+
+**Features:**
+- ✅ **Semantic versioning** - Supports v0.0.1, v1.2.3 format tags
+- ✅ **Dual build types** - Both optimized Release and Debug binaries
+- ✅ **Complete packaging** - Binaries, headers, static libraries, documentation
+- ✅ **Platform-specific archives** - .tar.gz for Linux, .zip for Windows
+- ✅ **Binary validation** - Tests run before packaging to ensure functionality
+- ✅ **Professional release notes** - Auto-generated changelog with asset descriptions
+- ✅ **Manual trigger support** - Can create releases via workflow dispatch
+
+**Release Assets Structure:**
+```
+utf_strings-v{version}-{Platform}/
+├── VERSION.txt                    # Release metadata
+├── utf_strings-tests-release      # Optimized test executable
+├── utf_strings-tests-debug        # Debug test executable
+├── utf_strings-bench-release      # Optimized benchmark executable  
+├── utf_strings-bench-debug        # Debug benchmark executable
+├── include/utf/                   # Complete header files
+│   ├── utf_strings.hpp
+│   └── version.hpp
+├── *.a/*.lib                      # Static libraries
+├── LICENSE                        # License file
+└── README.md                      # Documentation
+```
+
+**Usage Examples:**
+```bash
+# Automatic trigger via tag
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
+
+# Manual trigger via GitHub CLI
+gh workflow run create-release.yml -f version=0.1.0 -f create_tag=true
+
+# Manual trigger via GitHub UI
+# Actions tab → Create Release → Run workflow → Enter version
+```
+
 ### 🧪 [extended-fuzz.yml](.github/workflows/extended-fuzz.yml) - Extended Fuzz Testing
 
 **Triggers:** Daily Schedule (2 AM UTC), Manual Dispatch
@@ -145,11 +198,11 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 
 ## Workflow Matrix Coverage
 
-| Platform | Compiler | Debug | Release | Tests | Benchmarks | Fuzz | Sanitizers | SAST Security | CodeQL | Pages Deploy |
-|----------|----------|-------|---------|-------|------------|------|------------|---------------|--------|-------------|
-| **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| **Linux x64** | Clang 16 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Windows x64** | MSVC 2022 & Clang-CL | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ | ✅ | ✅ |
+| Platform | Compiler | Debug | Release | Tests | Benchmarks | Fuzz | Sanitizers | SAST Security | CodeQL | Pages Deploy | Create Release |
+|----------|----------|-------|---------|-------|------------|------|------------|---------------|--------|-------------|---------------|
+| **Linux x64** | GCC 13 | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Linux x64** | Clang 16/18 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Windows x64** | MSVC 2022 & Clang | ✅ | ✅ | ✅ | ✅ | ⚠️* | ✅** | ✅ | ✅ | ✅ | ✅ |
 
 *Windows fuzz testing uses harnesses (no libFuzzer)  
 **Windows sanitizers: AddressSanitizer only  
@@ -236,6 +289,13 @@ This directory contains comprehensive CI/CD workflows for the UTF Strings C++23 
 ### Running Workflows
 
 ```bash
+# Create a new release (recommended approach)
+git tag -a v0.1.0 -m "Release v0.1.0 - New features and improvements"
+git push origin v0.1.0
+
+# Create release manually via GitHub CLI
+gh workflow run create-release.yml -f version=0.1.0 -f create_tag=true
+
 # Trigger extended fuzz testing manually (2 hours)
 gh workflow run extended-fuzz.yml -f duration=7200
 
@@ -244,6 +304,9 @@ gh workflow run release-validation.yml -f release_tag=v1.0.0
 
 # Check workflow status
 gh run list --workflow=ci.yml
+
+# Monitor release creation
+gh run list --workflow=create-release.yml
 ```
 
 ### Local Testing
