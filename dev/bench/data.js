@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762118257273,
+  "lastUpdate": 1762118478180,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1748,6 +1748,36 @@ window.BENCHMARK_DATA = {
             "value": 7057.019655857384,
             "unit": "ns/iter",
             "extra": "iterations: 196837\ncpu: 7056.170013767737 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "5fa37a61d194cea916ed11c2d0f352f468638792",
+          "message": "🚀 Bump version to 0.1.0 - Performance Monitoring Release\n\nMajor new features in this release:\n- ✅ Complete performance monitoring pipeline with CI integration\n- 🔥 Interactive SVG flamegraph generation with perf profiling\n- 📊 Real-time performance dashboard with Jekyll integration\n- 📈 Historical benchmark tracking with regression detection\n- 🌐 GitHub Pages deployment with automated data updates\n- 🎯 Multiple benchmark output formats (JSON, CSV, console)\n- 💻 System information and build context reporting\n- 🛠️ Robust error handling and fallback mechanisms\n\nReady for release creation! 🎉",
+          "timestamp": "2025-11-02T16:16:37-05:00",
+          "tree_id": "1fcad53b74e8db31b5d85f257b94c98177306239",
+          "url": "https://github.com/wsollers/utf_strings/commit/5fa37a61d194cea916ed11c2d0f352f468638792"
+        },
+        "date": 1762118477947,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7030.992836567646,
+            "unit": "ns/iter",
+            "extra": "iterations: 197531\ncpu: 7030.273916499183 ns\nthreads: 1"
           }
         ]
       }
