@@ -24,7 +24,10 @@ This will:
 If you prefer manual control:
 
 ```bash
-# Format all files
+# Format ALL files in repository (recommended after cloning)
+./format-all.sh
+
+# Format all files via CMake
 cmake --build build --target format
 
 # Check formatting without changes
