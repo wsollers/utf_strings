@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762071954734,
+  "lastUpdate": 1762072203726,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -570,6 +570,36 @@ window.BENCHMARK_DATA = {
             "value": 7314.752576997171,
             "unit": "ns/iter",
             "extra": "iterations: 191890\ncpu: 7313.753384751681 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "b10bcf0379c0e10a15e8ebc0a8148829742ece09",
+          "message": "Implement clean external flag approach for compiler-specific configuration\n\n- Replace complex detection logic with simple USE_MSVC_LTO boolean flag\n- MSVC builds: USE_MSVC_LTO=ON enables /LTCG and /GL flags\n- Clang-CL builds: USE_MSVC_LTO=OFF disables MSVC-specific flags\n- ENABLE_SHARED_LIBRARY flag controls shared library building per compiler\n- Cleaner separation of concerns between CI and CMake\n- Eliminates compiler detection ambiguity and cache conflicts\n- More maintainable and explicit configuration approach",
+          "timestamp": "2025-11-02T03:28:16-05:00",
+          "tree_id": "eca74af6087bf3e227425a67ae3aa0b70eb8385b",
+          "url": "https://github.com/wsollers/utf_strings/commit/b10bcf0379c0e10a15e8ebc0a8148829742ece09"
+        },
+        "date": 1762072203354,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7260.439798196922,
+            "unit": "ns/iter",
+            "extra": "iterations: 191672\ncpu: 7258.401680996702 ns\nthreads: 1"
           }
         ]
       }
