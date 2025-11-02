@@ -88,7 +88,14 @@ jobs:
 
             // Try to download docs from current workflow run
             const currentRunId = ${{ github.event.workflow_run.id }};
-            let foundDocs = await downloadArtifact(currentRunId, "docs-for-pages", "docs.zip");
+            let foundDocs = false;
+            
+            // Check what type of workflow triggered this deployment
+            if ('${{ github.event.workflow_run.name }}' === 'CI/CD Pipeline') {
+              foundDocs = await downloadArtifact(currentRunId, "docs-for-pages", "docs.zip");
+            } else if ('${{ github.event.workflow_run.name }}' === 'Performance Baseline Tracking') {
+              foundDocs = await downloadArtifact(currentRunId, "performance-docs-for-pages", "perf-docs.zip");
+            }
 
             // If this is a CI run, also look for recent Performance Baseline artifacts
             if ('${{ github.event.workflow_run.name }}' === 'CI/CD Pipeline') {
@@ -139,7 +146,8 @@ jobs:
             }
 
             if (!foundDocs) {
-              throw new Error('No docs-for-pages artifact found in workflow run');
+              console.log('⚠️  No primary documentation artifact found in current run');
+              console.log('Will try to use repository documentation as fallback');
             }
 
       - name: Extract and merge documentation artifacts
