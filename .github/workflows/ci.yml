@@ -841,7 +841,7 @@ jobs:
       if: always()
       with:
         files: "**/*.xml"
-        comment_mode: create new
+        comment_mode: always
         check_name: "Unit Test Results"
         report_individual_runs: true
         deduplicate_classes_by_file_name: false
