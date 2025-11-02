@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762068301724,
+  "lastUpdate": 1762068930835,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -300,6 +300,36 @@ window.BENCHMARK_DATA = {
             "value": 7271.629983353692,
             "unit": "ns/iter",
             "extra": "iterations: 189832\ncpu: 7270.7823865312475 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "f9db18583196b8d52bfd68ac7317e53c27817245",
+          "message": "Fix Windows CMake presets - configure always uses conan-default\n\n- Windows configure step always uses 'conan-default' preset regardless of build type\n- Windows build step uses build-type specific presets (conan-debug/conan-release)\n- Matches the working pattern from Windows AddressSanitizer job\n- Fixes 'No such preset conan-release' error in Windows matrix builds\n- Different from Linux which uses build-type specific configure presets",
+          "timestamp": "2025-11-02T02:32:59-05:00",
+          "tree_id": "e1722a1bd40bf276475048fea73c513e423b9fa1",
+          "url": "https://github.com/wsollers/utf_strings/commit/f9db18583196b8d52bfd68ac7317e53c27817245"
+        },
+        "date": 1762068930427,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7538.340416212653,
+            "unit": "ns/iter",
+            "extra": "iterations: 182647\ncpu: 7537.073803566441 ns\nthreads: 1"
           }
         ]
       }
