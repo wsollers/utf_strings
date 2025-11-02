@@ -135,12 +135,12 @@
 
     <script>
         document.getElementById('timestamp').textContent = new Date().toLocaleString();
-        
+
         // Handle flame graph availability gracefully
         function checkFlameGraph() {
             const flameGraphLinks = document.querySelectorAll('a[href="flamegraph.svg"]');
             const iframe = document.querySelector('iframe[src="flamegraph.svg"]');
-            
+
             // Check if flamegraph_unavailable.txt exists
             fetch('flamegraph_unavailable.txt')
                 .then(response => {
@@ -151,7 +151,7 @@
                             link.style.pointerEvents = 'none';
                             link.title = 'Flame graph unavailable in CI environment';
                         });
-                        
+
                         if (iframe) {
                             iframe.style.display = 'none';
                             const message = document.createElement('div');
@@ -165,7 +165,7 @@
                     // File doesn't exist, flame graph should be available
                 });
         }
-        
+
         // Check flame graph availability after page load
         setTimeout(checkFlameGraph, 100);
     </script>
