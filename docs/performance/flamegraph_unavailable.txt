@@ -1,1 +1,0 @@
-Perf file format incompatible with current perf version. This can happen in containerized environments. Debug info saved to perf_debug.txt
