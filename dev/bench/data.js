@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762076812087,
+  "lastUpdate": 1762077348176,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -960,6 +960,36 @@ window.BENCHMARK_DATA = {
             "value": 7078.83752748472,
             "unit": "ns/iter",
             "extra": "iterations: 198292\ncpu: 7078.466983035119 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "6dfd0d490212c5e0f65bd36f6a895863a29601e9",
+          "message": "fix: Resolve SAST scanning issues and improve reliability\n\n- Fix invalid .gitleaks.toml configuration syntax\n- Add comprehensive error handling for Gitleaks with fallback scanning\n- Replace non-existent cppcheck-sarif package with custom XML-to-SARIF converter\n- Enhance GitHub Pages deployment with better Jekyll disable handling\n- Remove dependency issues that caused workflow failures\n\nChanges:\n- .gitleaks.toml: Fixed TOML syntax and simplified allowlist configuration\n- sast-scanning.yml: Added robust error recovery and custom SARIF conversion\n- ci.yml: Improved Pages deployment with better .nojekyll handling\n\nAll SARIF results now properly upload to GitHub Security/Code Scanning tab",
+          "timestamp": "2025-11-02T04:53:56-05:00",
+          "tree_id": "6dd2ce440cb64069583fd84c9b63bc997821b402",
+          "url": "https://github.com/wsollers/utf_strings/commit/6dfd0d490212c5e0f65bd36f6a895863a29601e9"
+        },
+        "date": 1762077347948,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7032.524792577562,
+            "unit": "ns/iter",
+            "extra": "iterations: 198749\ncpu: 7031.871863506231 ns\nthreads: 1"
           }
         ]
       }
