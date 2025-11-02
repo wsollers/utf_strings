@@ -1,108 +1,11 @@
 # Gitleaks Configuration for UTF Strings Project
-# https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+# https://github.com/gitleaks/gitleaks
 
 title = "Gitleaks configuration for UTF Strings"
 
 [extend]
 # Use the default Gitleaks rules as a base
 useDefault = true
-
-[[rules]]
-description = "CMake Cache Files"
-id = "cmake-cache"
-regex = '''CMakeCache\.txt'''
-path = '''CMakeCache\.txt'''
-# Don't scan CMake cache files - they contain build paths but not secrets
-allowlist = { paths = ['''.*CMakeCache\.txt$'''] }
-
-[[rules]]
-description = "Build Directory"
-id = "build-dir"
-# Don't scan generated build files
-allowlist = { 
-  paths = [
-    '''.*\/build\/.*''',
-    '''.*\.cmake$''',
-    '''.*Makefile$''',
-    '''.*\.ninja$'''
-  ]
-}
-
-[[rules]]
-description = "Conan Generated Files"
-id = "conan-generated"
-# Don't scan Conan-generated files
-allowlist = { 
-  paths = [
-    '''.*conanfile\.txt$''',
-    '''.*conandata\.yml$''',
-    '''.*conan\.lock$''',
-    '''.*conanbuild.*''',
-    '''.*conanrun.*''',
-    '''.*conan_toolchain\.cmake$''',
-    '''.*conandeps.*\.cmake$'''
-  ]
-}
-
-[[rules]]
-description = "Test Data"
-id = "test-data"
-# Allow test data that might look like secrets but isn't
-allowlist = { 
-  paths = [
-    '''.*tests/.*''',
-    '''.*test_.*''',
-    '''.*fuzz/.*'''
-  ]
-}
-
-[[rules]]
-description = "Documentation"
-id = "documentation"
-# Don't scan documentation files for secrets
-allowlist = { 
-  paths = [
-    '''.*\.md$''',
-    '''.*\.rst$''',
-    '''.*\.txt$''',
-    '''.*LICENSE.*''',
-    '''.*CHANGELOG.*''',
-    '''.*README.*'''
-  ]
-}
-
-[[rules]]
-description = "GitHub Actions example tokens"
-id = "github-actions-examples"
-regex = '''(github_token|GITHUB_TOKEN):\s*\$\{\{\s*secrets\.GITHUB_TOKEN\s*\}\}'''
-# Allow GitHub Actions template variables
-allowlist = { regexes = ['''.*\$\{\{\s*secrets\..*\}\}.*'''] }
-
-[[rules]]
-description = "Performance benchmark data"
-id = "perf-data" 
-# Don't scan performance data files
-allowlist = { 
-  paths = [
-    '''.*\.script$''',
-    '''.*bench.*\.cpp$''',
-    '''.*perf\..*'''
-  ]
-}
-
-# Custom rules for this project
-[[rules]]
-description = "UTF test vectors"
-id = "utf-test-vectors"
-regex = '''[0-9a-fA-F]{8,}'''
-# UTF test data often contains long hex sequences that aren't secrets
-allowlist = { 
-  paths = [
-    '''.*utf.*test.*\.cpp$''',
-    '''.*test.*utf.*\.cpp$'''
-  ],
-  regexes = ['''.*test.*utf.*''']
-}
 
 # Global allowlist for common false positives
 [allowlist]
@@ -118,6 +21,40 @@ paths = [
   '''\.idea/.*''',
   '''.*\.swp$''',
   '''.*\.swo$''',
+  
+  # Build directories and generated files
+  '''.*\/build\/.*''',
+  '''.*\.cmake$''',
+  '''.*Makefile$''',
+  '''.*\.ninja$''',
+  '''.*CMakeCache\.txt$''',
+  
+  # Conan generated files
+  '''.*conanfile\.txt$''',
+  '''.*conandata\.yml$''',
+  '''.*conan\.lock$''',
+  '''.*conanbuild.*''',
+  '''.*conanrun.*''',
+  '''.*conan_toolchain\.cmake$''',
+  '''.*conandeps.*\.cmake$''',
+  
+  # Test files
+  '''.*tests/.*''',
+  '''.*test_.*''',
+  '''.*fuzz/.*''',
+  
+  # Documentation
+  '''.*\.md$''',
+  '''.*\.rst$''',
+  '''.*\.txt$''',
+  '''.*LICENSE.*''',
+  '''.*CHANGELOG.*''',
+  '''.*README.*''',
+  
+  # Performance data
+  '''.*\.script$''',
+  '''.*bench.*\.cpp$''',
+  '''.*perf\..*''',
   
   # Package manager files  
   '''package-lock\.json$''',

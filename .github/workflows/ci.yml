@@ -1186,6 +1186,42 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Ensure .nojekyll exists and verify docs structure
+        run: |
+          # Make sure .nojekyll exists in the root of the docs directory
+          touch docs/.nojekyll
+
+          # Remove any Jekyll-related files that might conflict
+          rm -f docs/_config.yml docs/Gemfile docs/Gemfile.lock
+          rm -rf docs/_site docs/.jekyll-cache
+
+          # Verify directory structure and permissions
+          echo "=== Docs directory contents ==="
+          ls -la docs/
+          echo ""
+
+          echo "=== .nojekyll file verification ==="
+          if [ -f "docs/.nojekyll" ]; then
+            echo "✅ .nojekyll file exists"
+            ls -la docs/.nojekyll
+          else
+            echo "❌ .nojekyll file missing!"
+            touch docs/.nojekyll
+          fi
+          echo ""
+
+          echo "=== Check for Jekyll conflicts ==="
+          find docs/ -name "_config.yml" -o -name "Gemfile*" -o -name "_*" | grep -v ".nojekyll" || echo "No Jekyll files found (good!)"
+
+          echo "=== Directory structure ==="
+          find docs/ -type f -name "*.html" -o -name "*.md" | head -10
+
+          # Ensure proper permissions
+          chmod -R 755 docs/
+
+          # Ensure .nojekyll has proper permissions
+          chmod 644 docs/.nojekyll
+
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
