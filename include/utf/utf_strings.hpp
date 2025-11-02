@@ -19,7 +19,7 @@
 #pragma warning(disable : 4251)
 #endif
 
-#include "../src/export.hpp"
+#include "export.hpp"
 
 namespace utf {
 

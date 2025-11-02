@@ -83,6 +83,14 @@ cd build/build && ./utf_strings-bench
 - Fuzz testing for all encoding variants
 - Static analysis with multiple tools (Cppcheck, Clang-tidy, etc.)
 
+### Code Quality Requirements
+- **Modern C++23 Idioms**: All code must use idiomatic modern C++23 patterns
+- **No Legacy C++**: Avoid C++98/03/11 patterns; prefer C++23 alternatives
+- **Comprehensive Testing**: Every new function/class requires unit tests
+- **Test-First Development**: Write tests alongside or before implementation
+- **100% Test Pass Rate**: All tests must pass before pushing to remote
+- **CI Validation**: Code must pass all CI checks (tests, formatting, security scans)
+
 ### Git Workflow
 - **Main branch**: `main` (protected)
 - **Releases**: Tagged as `v*.*.* ` (semantic versioning)
@@ -92,13 +100,44 @@ cd build/build && ./utf_strings-bench
 ## Helpful Context for Code Generation
 
 When suggesting code:
-1. **Always use C++23 features** when beneficial
-2. **Include proper error handling** and input validation
-3. **Consider endianness** for multi-byte encodings (UTF-16/32)
-4. **Add unit tests** for any new functionality
-5. **Consider performance implications** - this is a performance-focused library
-6. **Follow existing patterns** in the codebase
-7. **Include appropriate documentation** comments
+1. **Always use C++23 features** when beneficial - prefer modern idioms over legacy patterns
+2. **Write idiomatic modern C++23** - use concepts, ranges, constexpr, auto, structured bindings
+3. **Include comprehensive unit tests** - every new function/class must have corresponding tests
+4. **Ensure all tests pass** - validate that suggested tests actually work and cover edge cases
+5. **Include proper error handling** and input validation with modern exception safety
+6. **Consider endianness** for multi-byte encodings (UTF-16/32) using the project's endian policy
+7. **Consider performance implications** - this is a performance-focused library with benchmarking
+8. **Follow existing patterns** in the codebase for consistency
+9. **Include appropriate documentation** comments using Doxygen style
+10. **Validate before suggesting** - ensure code compiles and tests pass before recommending
+
+## Critical Requirements for AI Assistants
+
+### C++23 Modern Idioms Required
+- Use `auto` for type deduction where appropriate
+- Prefer `constexpr` and `consteval` for compile-time computation
+- Use concepts for template constraints instead of SFINAE
+- Leverage ranges and views for algorithms
+- Use structured bindings for multiple return values
+- Prefer `std::optional` and `std::expected` for error handling
+- Use `std::string_view` and `std::span` for non-owning references
+
+### Testing Requirements (NON-NEGOTIABLE)
+- **Every new function requires unit tests** - no exceptions
+- **Tests must cover**: normal cases, edge cases, error conditions, invalid inputs
+- **Tests must pass** before any code is considered complete
+- **Use Google Test framework** following existing patterns
+- **Include performance tests** for critical path functions
+- **Consider fuzz testing** for input parsing functions
+
+### Pre-Push Validation Checklist
+Before any code can be pushed to remote:
+1. ✅ All unit tests pass (`./utf_strings-tests`)
+2. ✅ Code formatting is correct (`clang-format`)
+3. ✅ No compiler warnings or errors
+4. ✅ Performance tests show no significant regression
+5. ✅ Static analysis passes (will be validated in CI)
+6. ✅ Fuzz tests pass for any input parsing code
 
 ## Current Version
 - Version: 0.0.1 (initial release)

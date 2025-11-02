@@ -3,16 +3,16 @@ name: Create Release
 on:
   push:
     tags:
-      - 'v*.*.*'  # Trigger on version tags like v0.0.1, v1.2.3, etc.
-  
+      - "v*.*.*" # Trigger on version tags like v0.0.1, v1.2.3, etc.
+
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (e.g., 0.0.1)'
+        description: "Version number (e.g., 0.0.1)"
         required: true
         type: string
       create_tag:
-        description: 'Create git tag if it does not exist'
+        description: "Create git tag if it does not exist"
         required: true
         type: boolean
         default: true
@@ -26,7 +26,7 @@ jobs:
   # ============================================================================
   # Build Release Binaries for Multiple Platforms
   # ============================================================================
-  
+
   build-release-binaries:
     name: "Build Release Binaries"
     strategy:
@@ -74,7 +74,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install Conan
         run: |
@@ -86,7 +86,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential pkg-config
-          
+
           if [ "${{ matrix.compiler }}" = "clang" ]; then
             wget https://apt.llvm.org/llvm.sh
             chmod +x llvm.sh
@@ -124,7 +124,7 @@ jobs:
           else
             ./build-release/build/utf_strings-tests
           fi
-          
+
           # Test Debug build
           if [ "${{ runner.os }}" = "Windows" ]; then
             ./build/build/utf_strings-tests.exe
@@ -136,13 +136,13 @@ jobs:
       - name: Package Release binaries
         run: |
           mkdir -p release-package/${{ matrix.name }}
-          
+
           # Create release info
           echo "UTF Strings v${{ steps.version.outputs.VERSION }}" > release-package/${{ matrix.name }}/VERSION.txt
           echo "Platform: ${{ matrix.name }}" >> release-package/${{ matrix.name }}/VERSION.txt
           echo "Built: $(date -u)" >> release-package/${{ matrix.name }}/VERSION.txt
           echo "Commit: ${{ github.sha }}" >> release-package/${{ matrix.name }}/VERSION.txt
-          
+
           # Copy binaries
           if [ "${{ runner.os }}" = "Windows" ]; then
             # Release binaries
@@ -169,10 +169,10 @@ jobs:
             find build-release/build/ -name "*.so" -exec cp {} release-package/${{ matrix.name }}/ \; || true
             find build/build/ -name "*.so" -exec cp {} release-package/${{ matrix.name }}/ \; || true
           fi
-          
+
           # Copy headers
           cp -r include/ release-package/${{ matrix.name }}/
-          
+
           # Copy static libraries if present
           if [ "${{ runner.os }}" = "Windows" ]; then
             find build-release/build/ -name "*.lib" -exec cp {} release-package/${{ matrix.name }}/ \; || true
@@ -181,11 +181,11 @@ jobs:
             find build-release/build/ -name "*.a" -exec cp {} release-package/${{ matrix.name }}/ \; || true
             find build/build/ -name "*.a" -exec cp {} release-package/${{ matrix.name }}/ \; || true
           fi
-          
+
           # Copy license and docs
           cp LICENSE release-package/${{ matrix.name }}/ || true
           cp README.md release-package/${{ matrix.name }}/ || true
-          
+
           echo "=== Package contents ==="
           find release-package/${{ matrix.name }}/ -type f | sort
         shell: bash
@@ -193,7 +193,7 @@ jobs:
       - name: Create archive
         run: |
           cd release-package
-          
+
           if [ "${{ matrix.archive_format }}" = "zip" ]; then
             zip -r utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.zip ${{ matrix.name }}/
             echo "ARCHIVE_NAME=utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.zip" >> $GITHUB_ENV
@@ -201,7 +201,7 @@ jobs:
             tar -czf utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.tar.gz ${{ matrix.name }}/
             echo "ARCHIVE_NAME=utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.tar.gz" >> $GITHUB_ENV
           fi
-          
+
           ls -la utf_strings-v${{ steps.version.outputs.VERSION }}-${{ matrix.name }}.*
         shell: bash
 
@@ -225,7 +225,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Get full history for changelog
+          fetch-depth: 0 # Get full history for changelog
 
       - name: Get version from tag or input
         id: version
@@ -246,7 +246,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
+
           if ! git tag -l "${{ steps.version.outputs.TAG_NAME }}" | grep -q "${{ steps.version.outputs.TAG_NAME }}"; then
             git tag -a "${{ steps.version.outputs.TAG_NAME }}" -m "Release ${{ steps.version.outputs.TAG_NAME }}"
             git push origin "${{ steps.version.outputs.TAG_NAME }}"
@@ -265,7 +265,7 @@ jobs:
           find release-artifacts/ -name "*.zip" -o -name "*.tar.gz" | while read file; do
             cp "$file" release-assets/
           done
-          
+
           echo "=== Release assets ==="
           ls -la release-assets/
 
