@@ -32,33 +32,12 @@ paths:
 # Disable built-in extraction as we're using manual build
 disable-default-path-filters: false
 
-# C++ specific configuration
-cpp:
-  # Additional compilation flags for better analysis
-  configure:
-    command: |
-      export CC=clang
-      export CXX=clang++
-      cmake --preset conan-release
-  
-  # Build command for CodeQL to analyze
-  build:
-    command: |
-      cmake --build --preset conan-release --parallel
-      
-  # Include paths for better header analysis
-  after-prepare:
-    - "find include -name '*.hpp' -type f"
-    - "find src -name '*.cpp' -type f"
+# C++ analysis will use the build commands from the workflow
+# No custom build configuration needed as we handle compilation in workflow steps
 
-# Ignore specific findings that are false positives or acceptable risks
+# Use standard query suites - they provide comprehensive security coverage
+# including CWE-119, CWE-120, CWE-190, CWE-416, CWE-787, CWE-788 and more
 pack-version: latest
 
-# Additional security-focused query packs
-packs:
-  - codeql/cpp-queries:security/CWE/CWE-119  # Buffer overflow
-  - codeql/cpp-queries:security/CWE/CWE-120  # Buffer copy without checking input size
-  - codeql/cpp-queries:security/CWE/CWE-190  # Integer overflow  
-  - codeql/cpp-queries:security/CWE/CWE-416  # Use after free
-  - codeql/cpp-queries:security/CWE/CWE-787  # Out-of-bounds write
-  - codeql/cpp-queries:security/CWE/CWE-788  # Access of memory location after end of buffer
+# Note: The security-extended and security-and-quality suites specified in the
+# workflow already include comprehensive CWE coverage without needing individual packs

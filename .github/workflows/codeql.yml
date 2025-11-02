@@ -70,12 +70,19 @@ jobs:
 
     # Initialize CodeQL tools for scanning
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
-        # Specify CodeQL query suites for security analysis
+        # Use standard security query suites for comprehensive coverage
         queries: security-extended,security-and-quality
-        config-file: ./.github/codeql/codeql-config.yml
+        # Simple path configuration inline to avoid config file issues
+        config: |
+          paths-ignore:
+            - "build/"
+            - "conan-cache/"
+            - ".conan2/"
+            - "**/*.cmake"
+            - "**/CMakeFiles/"
 
     # Configure and build the project with Clang Release build for CodeQL analysis
     - name: Configure CMake (Release build with Clang)
@@ -93,7 +100,7 @@ jobs:
 
     # Perform CodeQL Analysis
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v2
       with:
         category: "/language:${{matrix.language}}"
         upload: true
