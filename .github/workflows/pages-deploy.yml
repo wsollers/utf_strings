@@ -26,13 +26,13 @@ jobs:
   deploy:
     name: "Deploy to GitHub Pages"
     runs-on: ubuntu-latest
-    
+
     # Only deploy if the CI workflow succeeded and we're on main/master
     if: >
       github.event.workflow_run.conclusion == 'success' &&
       (github.event.workflow_run.head_branch == 'main' || 
        github.event.workflow_run.head_branch == 'master')
-    
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -51,22 +51,22 @@ jobs:
               repo: context.repo.repo,
               run_id: ${{ github.event.workflow_run.id }},
             });
-            
+
             const docsArtifact = artifacts.data.artifacts.find((artifact) => {
               return artifact.name === "docs-for-pages";
             });
-            
+
             if (!docsArtifact) {
               throw new Error('No docs-for-pages artifact found');
             }
-            
+
             const download = await github.rest.actions.downloadArtifact({
               owner: context.repo.owner,
               repo: context.repo.repo,
               artifact_id: docsArtifact.id,
               archive_format: 'zip',
             });
-            
+
             const fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/docs.zip`, Buffer.from(download.data));
 
@@ -79,19 +79,19 @@ jobs:
         run: |
           # Create .nojekyll file to explicitly disable Jekyll processing
           touch docs/.nojekyll
-          
+
           # Remove any Jekyll-related files that might cause conflicts
           rm -f docs/_config.yml docs/Gemfile docs/Gemfile.lock
           rm -rf docs/_site docs/.jekyll-cache docs/.sass-cache
-          
+
           # Remove any underscore-prefixed files/directories that Jekyll might interpret
           find docs/ -name "_*" -type d -exec rm -rf {} + 2>/dev/null || true
           find docs/ -name "_*" -type f ! -name ".nojekyll" -delete 2>/dev/null || true
-          
+
           # Set proper permissions
           chmod -R 755 docs/
           chmod 644 docs/.nojekyll
-          
+
           echo "=== Final verification ==="
           echo "✅ Contents of docs directory:"
           find docs/ -type f | sort
