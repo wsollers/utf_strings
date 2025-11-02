@@ -64,10 +64,17 @@ jobs:
       run: |
         export CC=clang
         export CXX=clang++
-        cmake --preset conan-debug -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON
+        cmake -S . -B build/Fuzz \
+          -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DUTF_STRINGS_BUILD_TESTS=OFF \
+          -DUTF_STRINGS_BUILD_BENCHMARKS=OFF \
+          -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON \
+          -DUTF_STRINGS_WITH_GPERFTOOLS=OFF
         
     - name: Build Fuzz Targets
-      run: cmake --build --preset conan-debug --parallel
+      run: cmake --build build/Fuzz --parallel
       
     - name: Create fuzz corpus directories
       run: |
@@ -84,7 +91,7 @@ jobs:
     - name: Run Extended UTF-8 Fuzz Tests
       continue-on-error: true
       run: |
-        cd build/Debug
+        cd build/Fuzz
         echo "Running extended UTF-8 fuzz tests for ${FUZZ_DURATION} seconds..."
         timeout ${FUZZ_DURATION}s ./fuzz_utf8 \
           -max_total_time=${FUZZ_DURATION} \
@@ -97,7 +104,7 @@ jobs:
     - name: Run Extended UTF-16 BE Fuzz Tests
       continue-on-error: true
       run: |
-        cd build/Debug
+        cd build/Fuzz
         echo "Running extended UTF-16 BE fuzz tests for ${FUZZ_DURATION} seconds..."
         timeout ${FUZZ_DURATION}s ./fuzz_utf16_be \
           -max_total_time=${FUZZ_DURATION} \
@@ -110,7 +117,7 @@ jobs:
     - name: Run Extended UTF-16 LE Fuzz Tests
       continue-on-error: true
       run: |
-        cd build/Debug
+        cd build/Fuzz
         echo "Running extended UTF-16 LE fuzz tests for ${FUZZ_DURATION} seconds..."
         timeout ${FUZZ_DURATION}s ./fuzz_utf16_le \
           -max_total_time=${FUZZ_DURATION} \
@@ -123,7 +130,7 @@ jobs:
     - name: Run Extended UTF-32 BE Fuzz Tests
       continue-on-error: true
       run: |
-        cd build/Debug
+        cd build/Fuzz
         echo "Running extended UTF-32 BE fuzz tests for ${FUZZ_DURATION} seconds..."
         timeout ${FUZZ_DURATION}s ./fuzz_utf32_be \
           -max_total_time=${FUZZ_DURATION} \
@@ -136,7 +143,7 @@ jobs:
     - name: Run Extended UTF-32 LE Fuzz Tests
       continue-on-error: true
       run: |
-        cd build/Debug
+        cd build/Fuzz
         echo "Running extended UTF-32 LE fuzz tests for ${FUZZ_DURATION} seconds..."
         timeout ${FUZZ_DURATION}s ./fuzz_utf32_le \
           -max_total_time=${FUZZ_DURATION} \
@@ -148,7 +155,7 @@ jobs:
         
     - name: Generate fuzz report
       run: |
-        cd build/Debug
+        cd build/Fuzz
         echo "# Extended Fuzz Testing Report" > fuzz_report.md
         echo "## Test Duration: ${FUZZ_DURATION} seconds" >> fuzz_report.md
         echo "## Date: $(date)" >> fuzz_report.md
@@ -182,12 +189,12 @@ jobs:
       with:
         name: extended-fuzz-results-${{ github.run_number }}
         path: |
-          build/Debug/fuzz_report.md
-          build/Debug/*crash*
-          build/Debug/*leak*
-          build/Debug/*timeout*
-          build/Debug/*slow-unit*
-          build/Debug/*.log
+          build/Fuzz/fuzz_report.md
+          build/Fuzz/*crash*
+          build/Fuzz/*leak*
+          build/Fuzz/*timeout*
+          build/Fuzz/*slow-unit*
+          build/Fuzz/*.log
           fuzz_corpus/
           
     - name: Create issue on fuzz failure
@@ -200,7 +207,7 @@ jobs:
           
           // Check if any crash artifacts exist
           const crashFiles = [];
-          const buildDir = 'build/Debug';
+          const buildDir = 'build/Fuzz';
           
           try {
             const files = fs.readdirSync(buildDir);
