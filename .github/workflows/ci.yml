@@ -1183,10 +1183,7 @@ jobs:
           name: docs-for-pages
           path: docs/
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Ensure .nojekyll exists and verify docs structure
+      - name: Prepare static site for Pages deployment
         run: |
           # Make sure .nojekyll exists in the root of the docs directory
           touch docs/.nojekyll
@@ -1221,6 +1218,16 @@ jobs:
 
           # Ensure .nojekyll has proper permissions
           chmod 644 docs/.nojekyll
+          
+          # Add explicit indication that this is a static site
+          echo "<!-- Static site - Jekyll disabled via .nojekyll -->" >> docs/index.html
+          
+          # Verify the contents are correct
+          echo "=== Final docs directory structure ==="
+          find docs/ -type f | sort
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
