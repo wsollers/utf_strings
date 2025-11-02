@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762110467517,
+  "lastUpdate": 1762110709450,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1432,6 +1432,36 @@ window.BENCHMARK_DATA = {
             "value": 7024.960964629868,
             "unit": "ns/iter",
             "extra": "iterations: 197257\ncpu: 7024.2698611456135 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "fc7f7dc62dac1cec2f77376d01e68fda1e913a9e",
+          "message": "Fix Pages Deploy artifact handling\n\n- Handle different artifact names from CI vs Performance workflows\n- Improve error handling when artifacts are not found\n- Use repository docs as fallback when no artifacts available",
+          "timestamp": "2025-11-02T14:09:49-05:00",
+          "tree_id": "e6868fa71ccc6ee2f77ba655b1e8c6cb92b4c707",
+          "url": "https://github.com/wsollers/utf_strings/commit/fc7f7dc62dac1cec2f77376d01e68fda1e913a9e"
+        },
+        "date": 1762110709008,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7040.464007393126,
+            "unit": "ns/iter",
+            "extra": "iterations: 185038\ncpu: 7039.966947329736 ns\nthreads: 1"
           }
         ]
       }
