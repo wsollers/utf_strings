@@ -501,10 +501,20 @@ jobs:
           echo "" >> cppcheck-summary.md
 
           if [ -f "cppcheck-results.xml" ]; then
-            # Count issues from XML
+            # Count issues from XML with proper validation
             ERROR_COUNT=$(grep -c "severity=\"error\"" cppcheck-results.xml 2>/dev/null || echo "0")
             WARNING_COUNT=$(grep -c "severity=\"warning\"" cppcheck-results.xml 2>/dev/null || echo "0")
             STYLE_COUNT=$(grep -c "severity=\"style\"" cppcheck-results.xml 2>/dev/null || echo "0")
+            
+            # Validate that all counts are numeric (fallback to 0 if empty or invalid)
+            ERROR_COUNT=${ERROR_COUNT:-0}
+            WARNING_COUNT=${WARNING_COUNT:-0}
+            STYLE_COUNT=${STYLE_COUNT:-0}
+            
+            # Ensure they are integers
+            if ! [[ "$ERROR_COUNT" =~ ^[0-9]+$ ]]; then ERROR_COUNT=0; fi
+            if ! [[ "$WARNING_COUNT" =~ ^[0-9]+$ ]]; then WARNING_COUNT=0; fi
+            if ! [[ "$STYLE_COUNT" =~ ^[0-9]+$ ]]; then STYLE_COUNT=0; fi
             
             echo "**Issues Found:**" >> cppcheck-summary.md
             echo "- Errors: $ERROR_COUNT" >> cppcheck-summary.md
