@@ -69,9 +69,6 @@
 #define UTF_CODEPOINT_VERSION_PATCH 0
 
 // Require C++23 (accept both partial and full implementations)
-#if __cplusplus < 202100L
-#error "UTF CodePoint library requires C++23 or later"
-#endif
 
 #include <array>
 #include <bit>
