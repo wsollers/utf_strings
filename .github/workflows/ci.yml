@@ -774,6 +774,12 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
           sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
 
+      - name: Set perf permissions
+        run: |
+          # Allow perf to run without root for non-paranoid mode
+          sudo sysctl -w kernel.perf_event_paranoid=-1
+          sudo sysctl -w kernel.kptr_restrict=0
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
