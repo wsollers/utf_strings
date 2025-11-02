@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762062167563,
+  "lastUpdate": 1762062592260,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -60,6 +60,36 @@ window.BENCHMARK_DATA = {
             "value": 7915.870212404341,
             "unit": "ns/iter",
             "extra": "iterations: 176550\ncpu: 7914.976930048147 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "ba56de960722fd934ba834e0b1f641633d619d89",
+          "message": "Windows workflows still going in circles",
+          "timestamp": "2025-11-02T01:46:55-04:00",
+          "tree_id": "76a4a8526a2613a34fc3f652c06ee2bd5deb6a19",
+          "url": "https://github.com/wsollers/utf_strings/commit/ba56de960722fd934ba834e0b1f641633d619d89"
+        },
+        "date": 1762062591913,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 10462.52818013846,
+            "unit": "ns/iter",
+            "extra": "iterations: 134208\ncpu: 10461.982385550786 ns\nthreads: 1"
           }
         ]
       }
