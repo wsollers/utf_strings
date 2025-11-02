@@ -1,13 +1,12 @@
-
 name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   release:
-    types: [ published ]
+    types: [published]
 
 env:
   CONAN_USER_HOME: "${{ github.workspace }}/conan-cache"
@@ -16,408 +15,408 @@ jobs:
   # ============================================================================
   # Linux x64 - GCC 13
   # ============================================================================
-  
+
   linux-gcc:
     name: "Linux GCC 13 (x64)"
     runs-on: ubuntu-24.04
     strategy:
       matrix:
         build_type: [Debug, Release]
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Install system dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y cmake python3-pip git clang-format
-        # Install exact GCC version 13.3.0 to match local development environment
-        sudo apt install -y gcc-13 g++-13
-        # Set up alternatives to ensure we use GCC 13
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
-        
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Conan
-      run: |
-        pip3 install --user conan
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Use static profile for GCC 13 with C++23
-        sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
-        sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
-        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
-        echo "=== Conan Profile ==="
-        conan profile show --profile:host=default
-        
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-linux-gcc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-linux-gcc-${{ matrix.build_type }}-
-          conan-linux-gcc-
-          
-    - name: Install dependencies
-      run: |
-        export CC=gcc
-        export CXX=g++
-        conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
-        
-    - name: Configure CMake
-      run: |
-        export CC=gcc
-        export CXX=g++
-        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          cmake --preset conan-debug
-        else
-          cmake --preset conan-release
-        fi
-        
-    - name: Build
-      run: |
-        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          cmake --build --preset conan-debug --parallel
-        else
-          cmake --build --preset conan-release --parallel
-        fi
-      
-    - name: Test
-      run: |
-        # Both Debug and Release builds use build/build directory with Conan presets
-        cd build/build
-        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          ./utf_strings-tests --gtest_output=xml:test_results_gcc_debug.xml
-        else
-          ./utf_strings-tests --gtest_output=xml:test_results_gcc_release.xml
-        fi
-        
-    - name: Benchmark (Release only)
-      if: matrix.build_type == 'Release'
-      run: |
-        cd build/build
-        ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_gcc.json
-        
-    - name: Check code formatting (Release only)
-      if: matrix.build_type == 'Release'
-      run: cmake --build --preset conan-release --target format-check
-      
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results-linux-gcc-${{ matrix.build_type }}
-        path: |
-          build/build/test_results_gcc_debug.xml
-          build/build/test_results_gcc_release.xml
-          build/build/benchmark_results_gcc.json
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cmake python3-pip git clang-format
+          # Install exact GCC version 13.3.0 to match local development environment
+          sudo apt install -y gcc-13 g++-13
+          # Set up alternatives to ensure we use GCC 13
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use static profile for GCC 13 with C++23
+          sed -i 's/compiler=.*/compiler=gcc/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=13/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+          sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+          echo "=== Conan Profile ==="
+          conan profile show --profile:host=default
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-linux-gcc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-linux-gcc-${{ matrix.build_type }}-
+            conan-linux-gcc-
+
+      - name: Install dependencies
+        run: |
+          export CC=gcc
+          export CXX=g++
+          conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
+
+      - name: Configure CMake
+        run: |
+          export CC=gcc
+          export CXX=g++
+          if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+            cmake --preset conan-debug
+          else
+            cmake --preset conan-release
+          fi
+
+      - name: Build
+        run: |
+          if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+            cmake --build --preset conan-debug --parallel
+          else
+            cmake --build --preset conan-release --parallel
+          fi
+
+      - name: Test
+        run: |
+          # Both Debug and Release builds use build/build directory with Conan presets
+          cd build/build
+          if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+            ./utf_strings-tests --gtest_output=xml:test_results_gcc_debug.xml
+          else
+            ./utf_strings-tests --gtest_output=xml:test_results_gcc_release.xml
+          fi
+
+      - name: Benchmark (Release only)
+        if: matrix.build_type == 'Release'
+        run: |
+          cd build/build
+          ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_gcc.json
+
+      - name: Check code formatting (Release only)
+        if: matrix.build_type == 'Release'
+        run: cmake --build --preset conan-release --target format-check
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-linux-gcc-${{ matrix.build_type }}
+          path: |
+            build/build/test_results_gcc_debug.xml
+            build/build/test_results_gcc_release.xml
+            build/build/benchmark_results_gcc.json
 
   # ============================================================================
-  # Linux x64 - Clang 18  
+  # Linux x64 - Clang 18
   # ============================================================================
-  
+
   linux-clang:
     name: "Linux Clang 18 (x64)"
     runs-on: ubuntu-24.04
     strategy:
       matrix:
         build_type: [Debug, Release]
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Install system dependencies
-      timeout-minutes: 15
-      run: |
-        set -e  # Exit on any error
-        
-        # Update package list first
-        sudo apt update
-        
-        # Install basic dependencies first (these are fast and reliable)
-        sudo apt install -y cmake python3-pip git wget curl
-        
-        # Install Clang 18 with timeout and retry logic
-        echo "Installing Clang 18..."
-        for i in {1..3}; do
-          if timeout 10m bash -c "
-            wget -q https://apt.llvm.org/llvm.sh &&
-            chmod +x llvm.sh &&
-            sudo ./llvm.sh 18
-          "; then
-            echo "LLVM installation successful on attempt $i"
-            break
-          else
-            echo "LLVM installation attempt $i failed, retrying..."
-            rm -f llvm.sh
-            if [ $i -eq 3 ]; then
-              echo "All LLVM installation attempts failed"
-              exit 1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        timeout-minutes: 15
+        run: |
+          set -e  # Exit on any error
+
+          # Update package list first
+          sudo apt update
+
+          # Install basic dependencies first (these are fast and reliable)
+          sudo apt install -y cmake python3-pip git wget curl
+
+          # Install Clang 18 with timeout and retry logic
+          echo "Installing Clang 18..."
+          for i in {1..3}; do
+            if timeout 10m bash -c "
+              wget -q https://apt.llvm.org/llvm.sh &&
+              chmod +x llvm.sh &&
+              sudo ./llvm.sh 18
+            "; then
+              echo "LLVM installation successful on attempt $i"
+              break
+            else
+              echo "LLVM installation attempt $i failed, retrying..."
+              rm -f llvm.sh
+              if [ $i -eq 3 ]; then
+                echo "All LLVM installation attempts failed"
+                exit 1
+              fi
+              sleep 30
             fi
-            sleep 30
+          done
+
+          # Install additional tools
+          sudo apt install -y clang-format-18 || {
+            echo "clang-format-18 not available, trying alternatives..."
+            sudo apt install -y clang-format || echo "clang-format installation failed"
+          }
+
+          # Set up symlinks
+          sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+          if command -v clang-format-18 >/dev/null 2>&1; then
+            sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
           fi
-        done
-        
-        # Install additional tools
-        sudo apt install -y clang-format-18 || {
-          echo "clang-format-18 not available, trying alternatives..."
-          sudo apt install -y clang-format || echo "clang-format installation failed"
-        }
-        
-        # Set up symlinks
-        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
-        if command -v clang-format-18 >/dev/null 2>&1; then
-          sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
-        fi
-        
-        # Verify installation
-        clang --version
-        clang++ --version
-        
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Conan
-      run: |
-        pip3 install --user conan
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Use static profile for Clang 18 with C++23
-        sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
-        sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
-        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
-        echo "=== Conan Profile ==="
-        conan profile show --profile:host=default
-        
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-linux-clang-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-linux-clang-${{ matrix.build_type }}-
-          conan-linux-clang-
-          
-    - name: Install dependencies
-      run: |
-        export CC=clang
-        export CXX=clang++
-        conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
-        
-    - name: Configure CMake
-      run: |
-        export CC=clang
-        export CXX=clang++
-        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          cmake --preset conan-debug
-        else
-          cmake --preset conan-release
-        fi
-        
-    - name: Build
-      run: |
-        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          cmake --build --preset conan-debug --parallel
-        else
-          cmake --build --preset conan-release --parallel
-        fi
-      
-    - name: Test
-      run: |
-        # Both Debug and Release builds use build/build directory with Conan presets
-        cd build/build
-        if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
-          ./utf_strings-tests --gtest_output=xml:test_results_clang_debug.xml
-        else
-          ./utf_strings-tests --gtest_output=xml:test_results_clang_release.xml
-        fi
-        
-    - name: Benchmark (Release only)
-      if: matrix.build_type == 'Release'
-      run: |
-        cd build/build
-        ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_clang.json
-        
-    - name: Check code formatting (Release only)
-      if: matrix.build_type == 'Release'
-      run: cmake --build --preset conan-release --target format-check
-      
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results-linux-clang-${{ matrix.build_type }}
-        path: |
-          build/build/test_results_clang_debug.xml
-          build/build/test_results_clang_release.xml
-          build/build/benchmark_results_clang.json
+
+          # Verify installation
+          clang --version
+          clang++ --version
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use static profile for Clang 18 with C++23
+          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+          sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+          echo "=== Conan Profile ==="
+          conan profile show --profile:host=default
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-linux-clang-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-linux-clang-${{ matrix.build_type }}-
+            conan-linux-clang-
+
+      - name: Install dependencies
+        run: |
+          export CC=clang
+          export CXX=clang++
+          conan install . -s os=Linux -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=True
+
+      - name: Configure CMake
+        run: |
+          export CC=clang
+          export CXX=clang++
+          if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+            cmake --preset conan-debug
+          else
+            cmake --preset conan-release
+          fi
+
+      - name: Build
+        run: |
+          if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+            cmake --build --preset conan-debug --parallel
+          else
+            cmake --build --preset conan-release --parallel
+          fi
+
+      - name: Test
+        run: |
+          # Both Debug and Release builds use build/build directory with Conan presets
+          cd build/build
+          if [[ "${{ matrix.build_type }}" == "Debug" ]]; then
+            ./utf_strings-tests --gtest_output=xml:test_results_clang_debug.xml
+          else
+            ./utf_strings-tests --gtest_output=xml:test_results_clang_release.xml
+          fi
+
+      - name: Benchmark (Release only)
+        if: matrix.build_type == 'Release'
+        run: |
+          cd build/build
+          ./utf_strings-bench --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_clang.json
+
+      - name: Check code formatting (Release only)
+        if: matrix.build_type == 'Release'
+        run: cmake --build --preset conan-release --target format-check
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-linux-clang-${{ matrix.build_type }}
+          path: |
+            build/build/test_results_clang_debug.xml
+            build/build/test_results_clang_release.xml
+            build/build/benchmark_results_clang.json
 
   # ============================================================================
   # Linux x64 - Clang with Fuzz Testing
   # ============================================================================
-  
+
   linux-clang-fuzz:
     name: "Linux Clang Fuzz Testing (x64)"
     runs-on: ubuntu-24.04
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Install system dependencies
-      timeout-minutes: 15
-      run: |
-        set -e  # Exit on any error
-        
-        # Update package list first
-        sudo apt update
-        
-        # Install basic dependencies first (these are fast and reliable)
-        sudo apt install -y cmake python3-pip git wget curl
-        
-        # Install Clang 18 with timeout and retry logic
-        echo "Installing Clang 18..."
-        for i in {1..3}; do
-          if timeout 10m bash -c "
-            wget -q https://apt.llvm.org/llvm.sh &&
-            chmod +x llvm.sh &&
-            sudo ./llvm.sh 18
-          "; then
-            echo "LLVM installation successful on attempt $i"
-            break
-          else
-            echo "LLVM installation attempt $i failed, retrying..."
-            rm -f llvm.sh
-            if [ $i -eq 3 ]; then
-              echo "All LLVM installation attempts failed"
-              exit 1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        timeout-minutes: 15
+        run: |
+          set -e  # Exit on any error
+
+          # Update package list first
+          sudo apt update
+
+          # Install basic dependencies first (these are fast and reliable)
+          sudo apt install -y cmake python3-pip git wget curl
+
+          # Install Clang 18 with timeout and retry logic
+          echo "Installing Clang 18..."
+          for i in {1..3}; do
+            if timeout 10m bash -c "
+              wget -q https://apt.llvm.org/llvm.sh &&
+              chmod +x llvm.sh &&
+              sudo ./llvm.sh 18
+            "; then
+              echo "LLVM installation successful on attempt $i"
+              break
+            else
+              echo "LLVM installation attempt $i failed, retrying..."
+              rm -f llvm.sh
+              if [ $i -eq 3 ]; then
+                echo "All LLVM installation attempts failed"
+                exit 1
+              fi
+              sleep 30
             fi
-            sleep 30
+          done
+
+          # Install additional tools
+          sudo apt install -y clang-format-18 || {
+            echo "clang-format-18 not available, trying alternatives..."
+            sudo apt install -y clang-format || echo "clang-format installation failed"
+          }
+
+          # Set up symlinks
+          sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+          if command -v clang-format-18 >/dev/null 2>&1; then
+            sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
           fi
-        done
-        
-        # Install additional tools
-        sudo apt install -y clang-format-18 || {
-          echo "clang-format-18 not available, trying alternatives..."
-          sudo apt install -y clang-format || echo "clang-format installation failed"
-        }
-        
-        # Set up symlinks
-        sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
-        if command -v clang-format-18 >/dev/null 2>&1; then
-          sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
-        fi
-        
-        # Verify installation
-        clang --version
-        clang++ --version
-        
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Conan
-      run: |
-        pip3 install --user conan
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Use static profile for Clang 18 with C++23 (fuzz testing)
-        sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
-        sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
-        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
-        echo "=== Conan Profile ==="
-        conan profile show --profile:host=default
-        
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-linux-clang-fuzz-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-linux-clang-fuzz-
-          conan-linux-clang-
-          
-    - name: Install dependencies
-      run: |
-        export CC=clang
-        export CXX=clang++
-        conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
-        
-    - name: Configure CMake with Fuzz Testing
-      run: |
-        export CC=clang
-        export CXX=clang++
-        cmake -S . -B build/Fuzz \
-          -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_CXX_COMPILER=clang++ \
-          -DUTF_STRINGS_BUILD_TESTS=OFF \
-          -DUTF_STRINGS_BUILD_BENCHMARKS=OFF \
-          -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON \
-          -DUTF_STRINGS_WITH_GPERFTOOLS=OFF
-        
-    - name: Build Fuzz Targets
-      run: cmake --build build/Fuzz --parallel
-      
-    - name: Run Fuzz Tests (Short Duration for CI)
-      run: |
-        cd build/Fuzz
-        echo "Running UTF-8 fuzz tests..."
-        timeout 60s ./fuzz_utf8 -max_total_time=30 -print_final_stats=1 || true
-        echo "Running UTF-16 BE fuzz tests..."
-        timeout 60s ./fuzz_utf16_be -max_total_time=30 -print_final_stats=1 || true
-        echo "Running UTF-16 LE fuzz tests..."
-        timeout 60s ./fuzz_utf16_le -max_total_time=30 -print_final_stats=1 || true
-        echo "Running UTF-32 BE fuzz tests..."
-        timeout 60s ./fuzz_utf32_be -max_total_time=30 -print_final_stats=1 || true
-        echo "Running UTF-32 LE fuzz tests..."
-        timeout 60s ./fuzz_utf32_le -max_total_time=30 -print_final_stats=1 || true
-        
-    - name: Upload fuzz artifacts
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: fuzz-results-linux-clang
-        path: |
-          build/Fuzz/*.log
-          build/Fuzz/crash-*
-          build/Fuzz/leak-*
-          build/Fuzz/timeout-*
+
+          # Verify installation
+          clang --version
+          clang++ --version
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use static profile for Clang 18 with C++23 (fuzz testing)
+          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+          sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+          echo "=== Conan Profile ==="
+          conan profile show --profile:host=default
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-linux-clang-fuzz-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-linux-clang-fuzz-
+            conan-linux-clang-
+
+      - name: Install dependencies
+        run: |
+          export CC=clang
+          export CXX=clang++
+          conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
+
+      - name: Configure CMake with Fuzz Testing
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cmake -S . -B build/Fuzz \
+            -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DUTF_STRINGS_BUILD_TESTS=OFF \
+            -DUTF_STRINGS_BUILD_BENCHMARKS=OFF \
+            -DUTF_STRINGS_BUILD_FUZZ_TESTS=ON \
+            -DUTF_STRINGS_WITH_GPERFTOOLS=OFF
+
+      - name: Build Fuzz Targets
+        run: cmake --build build/Fuzz --parallel
+
+      - name: Run Fuzz Tests (Short Duration for CI)
+        run: |
+          cd build/Fuzz
+          echo "Running UTF-8 fuzz tests..."
+          timeout 60s ./fuzz_utf8 -max_total_time=30 -print_final_stats=1 || true
+          echo "Running UTF-16 BE fuzz tests..."
+          timeout 60s ./fuzz_utf16_be -max_total_time=30 -print_final_stats=1 || true
+          echo "Running UTF-16 LE fuzz tests..."
+          timeout 60s ./fuzz_utf16_le -max_total_time=30 -print_final_stats=1 || true
+          echo "Running UTF-32 BE fuzz tests..."
+          timeout 60s ./fuzz_utf32_be -max_total_time=30 -print_final_stats=1 || true
+          echo "Running UTF-32 LE fuzz tests..."
+          timeout 60s ./fuzz_utf32_le -max_total_time=30 -print_final_stats=1 || true
+
+      - name: Upload fuzz artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fuzz-results-linux-clang
+          path: |
+            build/Fuzz/*.log
+            build/Fuzz/crash-*
+            build/Fuzz/leak-*
+            build/Fuzz/timeout-*
 
   # ============================================================================
   # Linux x64 - Sanitizer Testing (GCC & Clang)
   # ============================================================================
-  
+
   linux-sanitizers:
     name: "Linux Sanitizer Testing (x64)"
     runs-on: ubuntu-24.04
@@ -425,303 +424,303 @@ jobs:
       matrix:
         sanitizer: [asan, tsan]
         compiler: [clang]
-        
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Install system dependencies
-      timeout-minutes: 15
-      run: |
-        set -e  # Exit on any error
-        
-        # Update package list first
-        sudo apt update
-        
-        # Install basic dependencies first
-        sudo apt install -y cmake python3-pip git wget curl
-        
-        # Install Clang 18 with retry logic (sanitizers use Clang only)
-        echo "Installing Clang 18..."
-        for i in {1..3}; do
-          if timeout 10m bash -c "
-            wget -q https://apt.llvm.org/llvm.sh &&
-            chmod +x llvm.sh &&
-            sudo ./llvm.sh 18
-          "; then
-            echo "LLVM installation successful on attempt $i"
-            sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
-            sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
-            break
-          else
-            echo "LLVM installation attempt $i failed, retrying..."
-            rm -f llvm.sh
-            if [ $i -eq 3 ]; then
-              echo "All LLVM installation attempts failed"
-              exit 1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        timeout-minutes: 15
+        run: |
+          set -e  # Exit on any error
+
+          # Update package list first
+          sudo apt update
+
+          # Install basic dependencies first
+          sudo apt install -y cmake python3-pip git wget curl
+
+          # Install Clang 18 with retry logic (sanitizers use Clang only)
+          echo "Installing Clang 18..."
+          for i in {1..3}; do
+            if timeout 10m bash -c "
+              wget -q https://apt.llvm.org/llvm.sh &&
+              chmod +x llvm.sh &&
+              sudo ./llvm.sh 18
+            "; then
+              echo "LLVM installation successful on attempt $i"
+              sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+              sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+              break
+            else
+              echo "LLVM installation attempt $i failed, retrying..."
+              rm -f llvm.sh
+              if [ $i -eq 3 ]; then
+                echo "All LLVM installation attempts failed"
+                exit 1
+              fi
+              sleep 30
             fi
-            sleep 30
+          done
+
+          # Verify Clang installation
+          clang --version
+          clang++ --version
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use static profile for Clang 18 with C++23 (sanitizers use Clang only)
+          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+          sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+          echo "=== Conan Profile ==="
+          conan profile show --profile:host=default
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-linux-clang-${{ matrix.sanitizer }}-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-linux-clang-${{ matrix.sanitizer }}-
+
+      - name: Install dependencies
+        run: |
+          export CC=clang
+          export CXX=clang++
+          conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
+
+      - name: Configure CMake with Sanitizers
+        run: |
+          export CC=clang
+          export CXX=clang++
+
+          if [ "${{ matrix.sanitizer }}" = "asan" ]; then
+            cmake --preset conan-debug -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+          else
+            cmake --preset conan-debug -DUTF_STRINGS_ENABLE_THREAD_SANITIZER=ON
           fi
-        done
-        
-        # Verify Clang installation
-        clang --version
-        clang++ --version
-        
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Conan
-      run: |
-        pip3 install --user conan
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Use static profile for Clang 18 with C++23 (sanitizers use Clang only)
-        sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
-        sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
-        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
-        echo "=== Conan Profile ==="
-        conan profile show --profile:host=default
-        
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-linux-clang-${{ matrix.sanitizer }}-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-linux-clang-${{ matrix.sanitizer }}-
-          
-    - name: Install dependencies
-      run: |
-        export CC=clang
-        export CXX=clang++
-        conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
-        
-    - name: Configure CMake with Sanitizers
-      run: |
-        export CC=clang
-        export CXX=clang++
-        
-        if [ "${{ matrix.sanitizer }}" = "asan" ]; then
-          cmake --preset conan-debug -DUTF_STRINGS_ENABLE_SANITIZERS=ON
-        else
-          cmake --preset conan-debug -DUTF_STRINGS_ENABLE_THREAD_SANITIZER=ON
-        fi
-        
-    - name: Build with Sanitizers
-      run: cmake --build --preset conan-debug --parallel
-      
-    - name: Test with Sanitizers
-      run: |
-        # Debug builds use build/build directory with Conan presets
-        cd build/build
-        ./utf_strings-tests --gtest_output=xml:test_results_clang_${{ matrix.sanitizer }}.xml
-        
-    - name: Upload sanitizer results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: sanitizer-results-clang-${{ matrix.sanitizer }}
-        path: build/build/test_results_clang_${{ matrix.sanitizer }}.xml
+
+      - name: Build with Sanitizers
+        run: cmake --build --preset conan-debug --parallel
+
+      - name: Test with Sanitizers
+        run: |
+          # Debug builds use build/build directory with Conan presets
+          cd build/build
+          ./utf_strings-tests --gtest_output=xml:test_results_clang_${{ matrix.sanitizer }}.xml
+
+      - name: Upload sanitizer results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sanitizer-results-clang-${{ matrix.sanitizer }}
+          path: build/build/test_results_clang_${{ matrix.sanitizer }}.xml
 
   # ============================================================================
   # Windows x64 - MSVC 2022
   # ============================================================================
-  
+
   windows-msvc:
     name: "Windows MSVC 2022 (x64)"
     runs-on: windows-2022
     timeout-minutes: 30
     strategy:
       matrix:
-        build_type: [Release]  # Debug builds timeout on Windows CI
-    
+        build_type: [Release] # Debug builds timeout on Windows CI
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Conan
-      run: |
-        pip install conan
-        
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Use static profile for MSVC 2022 with C++23
-        $profile = "$env:USERPROFILE\.conan2\profiles\default"
-        (Get-Content $profile) -replace 'compiler=.*', 'compiler=msvc' | Set-Content $profile
-        (Get-Content $profile) -replace 'compiler\.version=.*', 'compiler.version=193' | Set-Content $profile
-        (Get-Content $profile) -replace 'compiler\.runtime=.*', 'compiler.runtime=dynamic' | Set-Content $profile
-        (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
-        (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
-        (Get-Content $profile) -replace 'arch=.*', 'arch=x86_64' | Set-Content $profile
-        Write-Host "=== Conan Profile ==="
-        conan profile show --profile:host=default
-      shell: pwsh
-        
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-windows-msvc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-windows-msvc-${{ matrix.build_type }}-
-          conan-windows-msvc-
-          
-    - name: Install LLVM (for clang-format)
-      run: |
-        choco install llvm -y
-        
-    - name: Setup MSVC environment
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x64
-        
-    - name: Install dependencies
-      timeout-minutes: 20
-      run: |
-        # Optimize Conan builds for CI
-        conan config set tools.build:jobs=2
-        conan config set tools.build:verbosity=minimal
-        conan install . -s os=Windows -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=False
-        
-    - name: Configure CMake
-      run: |
-        # Windows: Use available configure preset with multi-config generator
-        cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64
-        
-    - name: Build
-      run: |
-        # Windows: Use available build preset with explicit configuration
-        cmake --build --preset conan-release --config ${{ matrix.build_type }} --parallel
-      
-    - name: Test
-      run: |
-        # Windows MSVC builds use configuration-specific subdirectories
-        cd build\build\${{ matrix.build_type }}
-        if ("${{ matrix.build_type }}" -eq "Debug") {
-          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_debug.xml
-        } else {
-          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_release.xml
-        }
-        
-    - name: Benchmark (Release only)
-      if: matrix.build_type == 'Release'
-      run: |
-        cd build\build\Release
-        .\utf_strings-bench.exe --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_msvc.json
-        
-    - name: Check code formatting (Release only)
-      if: matrix.build_type == 'Release'
-      run: |
-        $env:PATH = "C:\Program Files\LLVM\bin;$env:PATH"
-        cmake --build --preset conan-release --config Release --target format-check
-        
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results-windows-msvc-${{ matrix.build_type }}
-        path: |
-          build\build\Debug\test_results_msvc_debug.xml
-          build\build\Release\test_results_msvc_release.xml
-          build\build\Release\benchmark_results_msvc.json
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip install conan
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use static profile for MSVC 2022 with C++23
+          $profile = "$env:USERPROFILE\.conan2\profiles\default"
+          (Get-Content $profile) -replace 'compiler=.*', 'compiler=msvc' | Set-Content $profile
+          (Get-Content $profile) -replace 'compiler\.version=.*', 'compiler.version=193' | Set-Content $profile
+          (Get-Content $profile) -replace 'compiler\.runtime=.*', 'compiler.runtime=dynamic' | Set-Content $profile
+          (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
+          (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
+          (Get-Content $profile) -replace 'arch=.*', 'arch=x86_64' | Set-Content $profile
+          Write-Host "=== Conan Profile ==="
+          conan profile show --profile:host=default
+        shell: pwsh
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-windows-msvc-${{ matrix.build_type }}-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-windows-msvc-${{ matrix.build_type }}-
+            conan-windows-msvc-
+
+      - name: Install LLVM (for clang-format)
+        run: |
+          choco install llvm -y
+
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install dependencies
+        timeout-minutes: 20
+        run: |
+          # Optimize Conan builds for CI
+          conan config set tools.build:jobs=2
+          conan config set tools.build:verbosity=minimal
+          conan install . -s os=Windows -s build_type=${{ matrix.build_type }} --output-folder=build --build=missing -o with_gperftools=False
+
+      - name: Configure CMake
+        run: |
+          # Windows: Use available configure preset with multi-config generator
+          cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64
+
+      - name: Build
+        run: |
+          # Windows: Use available build preset with explicit configuration
+          cmake --build --preset conan-release --config ${{ matrix.build_type }} --parallel
+
+      - name: Test
+        run: |
+          # Windows MSVC builds use configuration-specific subdirectories
+          cd build\build\${{ matrix.build_type }}
+          if ("${{ matrix.build_type }}" -eq "Debug") {
+            .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_debug.xml
+          } else {
+            .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_release.xml
+          }
+
+      - name: Benchmark (Release only)
+        if: matrix.build_type == 'Release'
+        run: |
+          cd build\build\Release
+          .\utf_strings-bench.exe --benchmark_min_time=0.1s --benchmark_format=json --benchmark_out=benchmark_results_msvc.json
+
+      - name: Check code formatting (Release only)
+        if: matrix.build_type == 'Release'
+        run: |
+          $env:PATH = "C:\Program Files\LLVM\bin;$env:PATH"
+          cmake --build --preset conan-release --config Release --target format-check
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-windows-msvc-${{ matrix.build_type }}
+          path: |
+            build\build\Debug\test_results_msvc_debug.xml
+            build\build\Release\test_results_msvc_release.xml
+            build\build\Release\benchmark_results_msvc.json
 
   # ============================================================================
   # Windows - MSVC with AddressSanitizer
   # ============================================================================
-  
+
   windows-msvc-sanitizer:
     name: "Windows MSVC AddressSanitizer (x64)"
     runs-on: windows-2022
     timeout-minutes: 30
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Conan
-      run: |
-        pip install conan
-        
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Use static profile for MSVC 2022 with C++23 (sanitizer)
-        $profile = "$env:USERPROFILE\.conan2\profiles\default"
-        (Get-Content $profile) -replace 'compiler=.*', 'compiler=msvc' | Set-Content $profile
-        (Get-Content $profile) -replace 'compiler\.version=.*', 'compiler.version=193' | Set-Content $profile
-        (Get-Content $profile) -replace 'compiler\.runtime=.*', 'compiler.runtime=dynamic' | Set-Content $profile
-        (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
-        (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
-        (Get-Content $profile) -replace 'arch=.*', 'arch=x86_64' | Set-Content $profile
-        Write-Host "=== Conan Profile ==="
-        conan profile show --profile:host=default
-      shell: pwsh
-        
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-windows-msvc-asan-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-windows-msvc-asan-
-          conan-windows-msvc-
-          
-    - name: Setup MSVC environment
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: x64
-        
-    - name: Install dependencies
-      timeout-minutes: 20
-      run: |
-        # Optimize Conan builds for CI
-        conan config set tools.build:jobs=2
-        conan config set tools.build:verbosity=minimal
-        conan install . -s os=Windows -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=False
-        
-    - name: Configure CMake with AddressSanitizer
-      run: |
-        cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64 -DUTF_STRINGS_ENABLE_SANITIZERS=ON
-        
-    - name: Build with AddressSanitizer
-      run: cmake --build --preset conan-release --config Debug --parallel
-      
-    - name: Test with AddressSanitizer
-      run: |
-        cd build\Debug
-        .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_asan.xml
-        
-    - name: Upload sanitizer results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: sanitizer-results-windows-msvc-asan
-        path: build\Debug\test_results_msvc_asan.xml
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip install conan
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use static profile for MSVC 2022 with C++23 (sanitizer)
+          $profile = "$env:USERPROFILE\.conan2\profiles\default"
+          (Get-Content $profile) -replace 'compiler=.*', 'compiler=msvc' | Set-Content $profile
+          (Get-Content $profile) -replace 'compiler\.version=.*', 'compiler.version=193' | Set-Content $profile
+          (Get-Content $profile) -replace 'compiler\.runtime=.*', 'compiler.runtime=dynamic' | Set-Content $profile
+          (Get-Content $profile) -replace 'compiler\.cppstd=.*', 'compiler.cppstd=23' | Set-Content $profile
+          (Get-Content $profile) -replace 'os=.*', 'os=Windows' | Set-Content $profile
+          (Get-Content $profile) -replace 'arch=.*', 'arch=x86_64' | Set-Content $profile
+          Write-Host "=== Conan Profile ==="
+          conan profile show --profile:host=default
+        shell: pwsh
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-windows-msvc-asan-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-windows-msvc-asan-
+            conan-windows-msvc-
+
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install dependencies
+        timeout-minutes: 20
+        run: |
+          # Optimize Conan builds for CI
+          conan config set tools.build:jobs=2
+          conan config set tools.build:verbosity=minimal
+          conan install . -s os=Windows -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=False
+
+      - name: Configure CMake with AddressSanitizer
+        run: |
+          cmake --preset conan-default -DCMAKE_GENERATOR_PLATFORM=x64 -DUTF_STRINGS_ENABLE_SANITIZERS=ON
+
+      - name: Build with AddressSanitizer
+        run: cmake --build --preset conan-debug --config Debug --parallel
+
+      - name: Test with AddressSanitizer
+        run: |
+          cd build\build\Debug
+          .\utf_strings-tests.exe --gtest_output=xml:test_results_msvc_asan.xml
+
+      - name: Upload sanitizer results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sanitizer-results-windows-msvc-asan
+          path: build\build\Debug\test_results_msvc_asan.xml
 
   # ============================================================================
   # Performance Baseline Tracking
   # ============================================================================
-  
+
   performance-tracking:
     name: "Performance Baseline Tracking"
     runs-on: ubuntu-24.04
@@ -730,348 +729,355 @@ jobs:
       contents: write
       pages: write
       id-token: write
-    
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-      
-    - name: Install system dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y cmake python3-pip git
-        # Install Clang 18 for high-performance release builds
-        sudo apt install -y clang-18 libc++-18-dev libc++abi-18-dev
-        # Install profiling tools for flame graph generation
-        sudo apt install -y linux-tools-generic linux-tools-common perf-tools-unstable
-        # Install FlameGraph tools
-        git clone https://github.com/brendangregg/FlameGraph.git /tmp/FlameGraph
-        sudo cp /tmp/FlameGraph/*.pl /usr/local/bin/
-        sudo chmod +x /usr/local/bin/*.pl
-        # Set up alternatives to use Clang 18
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
-        
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Conan
-      run: |
-        pip3 install --user conan
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        
-    - name: Setup Conan profile
-      run: |
-        conan profile detect --force
-        # Use Clang 18 with libc++ for high-performance release builds
-        sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
-        sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
-        sed -i 's/compiler.libcxx=.*/compiler.libcxx=libc++/' ~/.conan2/profiles/default
-        sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
-        sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
-        sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
-        echo "=== Conan Profile ==="
-        conan profile show --profile:host=default
-        
-    - name: Cache Conan packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.conan2
-        key: conan-performance-baseline-${{ hashFiles('conanfile.py') }}
-        restore-keys: |
-          conan-performance-baseline-
-        
-    - name: Install dependencies
-      run: |
-        export CC=clang-18
-        export CXX=clang++-18
-        conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
-        
-    - name: Configure and Build (Release)
-      run: |
-        export CC=clang-18
-        export CXX=clang++-18
-        cmake --preset conan-release
-        cmake --build --preset conan-release --parallel
-        
-    - name: Run Performance Benchmarks and Generate Flame Graphs
-      run: |
-        cd build/build
-        
-        # Create docs/performance directory for all performance reports
-        mkdir -p ../../docs/performance
-        
-        # 1. Standard benchmark run for historical tracking
-        echo "Running standard benchmarks..."
-        ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_format=json --benchmark_out=performance_baseline.json
-        
-        # 2. Extended benchmark run for detailed analysis
-        echo "Running extended benchmarks..."
-        ./utf_strings-bench --benchmark_min_time=3.0s --benchmark_format=json --benchmark_out=../../docs/performance/detailed_benchmark.json
-        
-        # 3. Generate flame graphs with perf (if available)
-        echo "Generating flame graphs..."
-        if command -v perf >/dev/null 2>&1; then
-          # Try to run perf - may fail in containerized environment
-          if perf record -F 99 -g -- ./utf_strings-bench --benchmark_min_time=2.0s --benchmark_repetitions=5 2>/dev/null; then
-            echo "Perf recording successful, generating flame graph..."
-            perf script > ../../docs/performance/perf.script
-            stackcollapse-perf.pl ../../docs/performance/perf.script > ../../docs/performance/perf.folded
-            flamegraph.pl ../../docs/performance/perf.folded > ../../docs/performance/flamegraph.svg
-            echo "Flame graph generated successfully"
-          else
-            echo "Perf recording failed (likely due to container restrictions), creating placeholder"
-            echo "Flame graph generation requires privileged container access" > ../../docs/performance/flamegraph_unavailable.txt
-          fi
-        else
-          echo "Perf not available, skipping flame graph generation"
-        fi
-        
-        # 4. Generate comprehensive benchmark report with multiple formats
-        echo "Generating comprehensive reports..."
-        ./utf_strings-bench --benchmark_format=console --benchmark_min_time=1.0s > ../../docs/performance/benchmark_console.txt
-        ./utf_strings-bench --benchmark_format=csv --benchmark_min_time=1.0s --benchmark_out=../../docs/performance/benchmark_results.csv
-        
-        # 5. System information for performance context
-        echo "Collecting system information..."
-        cat > ../../docs/performance/system_info.txt << EOF
-        Performance Benchmark System Information
-        Generated: $(date)
-        Build: Clang 18 Release with libc++
-        
-        CPU Information:
-        $(cat /proc/cpuinfo | grep "model name" | head -1)
-        $(cat /proc/cpuinfo | grep "cpu MHz" | head -1)
-        $(cat /proc/cpuinfo | grep "cache size" | head -1)
-        CPU Cores: $(nproc)
-        
-        Memory Information:
-        $(free -h)
-        
-        Compiler Version:
-        $(clang++-18 --version)
-        
-        Build Flags Used:
-        Release build with -O3 -march=native -mtune=native -flto
-        EOF
-        
-        echo "Performance analysis complete!"
-        ls -la ../../docs/performance/
-        
-    - name: Setup docs directory and create performance index
-      run: |
-        # Configure git identity for GitHub Actions
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        
-        # Set up authentication for git push
-        git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-        
-        # Ensure docs directories exist
-        mkdir -p docs/dev/bench
-        mkdir -p docs/performance
-        
-        # Create performance index page
-        cat > docs/performance/index.html << 'EOF'
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>UTF Strings - Performance Analysis</title>
-            <style>
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 2rem;
-                    line-height: 1.6;
-                    color: #333;
-                }
-                .header {
-                    text-align: center;
-                    margin-bottom: 3rem;
-                    padding-bottom: 2rem;
-                    border-bottom: 2px solid #eee;
-                }
-                .card {
-                    background: #f8f9fa;
-                    border: 1px solid #e9ecef;
-                    border-radius: 8px;
-                    padding: 1.5rem;
-                    margin: 1rem 0;
-                }
-                .card h2 {
-                    margin-top: 0;
-                    color: #495057;
-                }
-                .btn {
-                    display: inline-block;
-                    padding: 0.5rem 1rem;
-                    background: #007bff;
-                    color: white;
-                    text-decoration: none;
-                    border-radius: 4px;
-                    margin: 0.5rem 0.5rem 0.5rem 0;
-                }
-                .btn:hover {
-                    background: #0056b3;
-                }
-                .flame-btn {
-                    background: #fd7e14;
-                }
-                .flame-btn:hover {
-                    background: #e8690a;
-                }
-                .data-btn {
-                    background: #28a745;
-                }
-                .data-btn:hover {
-                    background: #1e7e34;
-                }
-                .grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                    gap: 1rem;
-                }
-                .build-info {
-                    background: #e7f3ff;
-                    border-left: 4px solid #007bff;
-                    padding: 1rem;
-                    margin: 1rem 0;
-                }
-                iframe {
-                    width: 100%;
-                    height: 600px;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h1>UTF Strings Performance Analysis</h1>
-                <p>Comprehensive performance benchmarks and profiling results</p>
-                <div class="build-info">
-                    <strong>Build Configuration:</strong> Clang 18 Release with libc++, -O3 -march=native -flto
-                    <br><strong>Last Updated:</strong> <span id="timestamp"></span>
-                </div>
-            </div>
-            
-            <div class="grid">
-                <div class="card">
-                    <h2>🔥 Flame Graph Analysis</h2>
-                    <p>Interactive flame graph showing CPU time distribution and hot paths in the UTF string processing functions.</p>
-                    <a href="flamegraph.svg" class="btn flame-btn">View Flame Graph</a>
-                    <a href="perf.script" class="btn">Raw Perf Data</a>
-                </div>
-                
-                <div class="card">
-                    <h2>📊 Historical Benchmarks</h2>
-                    <p>Interactive charts showing performance trends over time with automatic regression detection.</p>
-                    <a href="../dev/bench/" class="btn">View Historical Charts</a>
-                </div>
-                
-                <div class="card">
-                    <h2>📈 Detailed Results</h2>
-                    <p>Comprehensive benchmark results in multiple formats for analysis and comparison.</p>
-                    <a href="detailed_benchmark.json" class="btn data-btn">JSON Results</a>
-                    <a href="benchmark_results.csv" class="btn data-btn">CSV Data</a>
-                    <a href="benchmark_console.txt" class="btn">Console Output</a>
-                </div>
-                
-                <div class="card">
-                    <h2>🖥️ System Information</h2>
-                    <p>Hardware and build environment details for performance context.</p>
-                    <a href="system_info.txt" class="btn">System Info</a>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h2>🔥 Interactive Flame Graph</h2>
-                <p>Embedded flame graph showing function call patterns and CPU time distribution:</p>
-                <iframe src="flamegraph.svg" title="Performance Flame Graph"></iframe>
-            </div>
-            
-            <script>
-                document.getElementById('timestamp').textContent = new Date().toLocaleString();
-            </script>
-        </body>
-        </html>
-        EOF
-        
-        # Create a basic README for docs if it doesn't exist
-        if [ ! -f docs/README.md ]; then
-          echo "# UTF Strings Documentation" > docs/README.md
-          echo "This directory contains automated performance benchmark results and documentation." >> docs/README.md
-        fi
-        
-    - name: Store Performance Results
-      uses: benchmark-action/github-action-benchmark@v1
-      with:
-        tool: 'googlecpp'
-        output-file-path: build/build/performance_baseline.json
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        auto-push: true
-        alert-threshold: '150%'
-        comment-on-alert: true
-        fail-on-alert: false
-        # Store in docs folder for GitHub Pages serving from /docs
-        gh-pages-branch: 'main'
-        benchmark-data-dir-path: 'docs/dev/bench'
-        
-    - name: Commit Performance Analysis Reports
-      run: |
-        # Add all generated performance files to git
-        git add docs/performance/
-        
-        # Check if there are changes to commit
-        if ! git diff --cached --quiet; then
-          git commit -m "Update performance analysis reports
 
-          - Detailed benchmark results (JSON, CSV, console)
-          - Flame graph analysis (if available)
-          - System information and build context
-          - Generated on: $(date)
-          - Build: Clang 18 Release with libc++"
-          
-          # Push the performance reports
-          git push origin main
-          
-          echo "Performance reports committed and pushed successfully"
-        else
-          echo "No changes in performance reports to commit"
-        fi
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cmake python3-pip git
+          # Install Clang 18 for high-performance release builds
+          sudo apt install -y clang-18 libc++-18-dev libc++abi-18-dev
+          # Install profiling tools for flame graph generation
+          sudo apt install -y linux-tools-generic linux-tools-common perf-tools-unstable
+          # Install FlameGraph tools
+          git clone https://github.com/brendangregg/FlameGraph.git /tmp/FlameGraph
+          sudo cp /tmp/FlameGraph/*.pl /usr/local/bin/
+          sudo chmod +x /usr/local/bin/*.pl
+          # Set up alternatives to use Clang 18
+          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use Clang 18 with libc++ for high-performance release builds
+          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libc++/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+          sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+          echo "=== Conan Profile ==="
+          conan profile show --profile:host=default
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-performance-baseline-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-performance-baseline-
+
+      - name: Install dependencies
+        run: |
+          export CC=clang-18
+          export CXX=clang++-18
+          conan install . -s os=Linux -s build_type=Release --output-folder=build --build=missing -o with_gperftools=True
+
+      - name: Configure and Build (Release)
+        run: |
+          export CC=clang-18
+          export CXX=clang++-18
+          cmake --preset conan-release
+          cmake --build --preset conan-release --parallel
+
+      - name: Run Performance Benchmarks and Generate Flame Graphs
+        run: |
+          cd build/build
+
+          # Create docs/performance directory for all performance reports
+          mkdir -p ../../docs/performance
+
+          # 1. Standard benchmark run for historical tracking
+          echo "Running standard benchmarks..."
+          ./utf_strings-bench --benchmark_min_time=1.0s --benchmark_format=json --benchmark_out=performance_baseline.json
+
+          # 2. Extended benchmark run for detailed analysis
+          echo "Running extended benchmarks..."
+          ./utf_strings-bench --benchmark_min_time=3.0s --benchmark_format=json --benchmark_out=../../docs/performance/detailed_benchmark.json
+
+          # 3. Generate flame graphs with perf (if available)
+          echo "Generating flame graphs..."
+          if command -v perf >/dev/null 2>&1; then
+            # Try to run perf - may fail in containerized environment
+            if perf record -F 99 -g -- ./utf_strings-bench --benchmark_min_time=2.0s --benchmark_repetitions=5 2>/dev/null; then
+              echo "Perf recording successful, generating flame graph..."
+              perf script > ../../docs/performance/perf.script
+              stackcollapse-perf.pl ../../docs/performance/perf.script > ../../docs/performance/perf.folded
+              flamegraph.pl ../../docs/performance/perf.folded > ../../docs/performance/flamegraph.svg
+              echo "Flame graph generated successfully"
+            else
+              echo "Perf recording failed (likely due to container restrictions), creating placeholder"
+              echo "Flame graph generation requires privileged container access" > ../../docs/performance/flamegraph_unavailable.txt
+            fi
+          else
+            echo "Perf not available, skipping flame graph generation"
+          fi
+
+          # 4. Generate comprehensive benchmark report with multiple formats
+          echo "Generating comprehensive reports..."
+          ./utf_strings-bench --benchmark_format=console --benchmark_min_time=1.0s > ../../docs/performance/benchmark_console.txt
+          ./utf_strings-bench --benchmark_format=csv --benchmark_min_time=1.0s --benchmark_out=../../docs/performance/benchmark_results.csv
+
+          # 5. System information for performance context
+          echo "Collecting system information..."
+          cat > ../../docs/performance/system_info.txt << EOF
+          Performance Benchmark System Information
+          Generated: $(date)
+          Build: Clang 18 Release with libc++
+
+          CPU Information:
+          $(cat /proc/cpuinfo | grep "model name" | head -1)
+          $(cat /proc/cpuinfo | grep "cpu MHz" | head -1)
+          $(cat /proc/cpuinfo | grep "cache size" | head -1)
+          CPU Cores: $(nproc)
+
+          Memory Information:
+          $(free -h)
+
+          Compiler Version:
+          $(clang++-18 --version)
+
+          Build Flags Used:
+          Release build with -O3 -march=native -mtune=native -flto
+          EOF
+
+          echo "Performance analysis complete!"
+          ls -la ../../docs/performance/
+
+      - name: Setup docs directory and create performance index
+        run: |
+          # Configure git identity for GitHub Actions
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          # Set up authentication for git push
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+
+          # Ensure docs directories exist
+          mkdir -p docs/dev/bench
+          mkdir -p docs/performance
+
+          # Create performance index page
+          cat > docs/performance/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>UTF Strings - Performance Analysis</title>
+              <style>
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                      max-width: 1200px;
+                      margin: 0 auto;
+                      padding: 2rem;
+                      line-height: 1.6;
+                      color: #333;
+                  }
+                  .header {
+                      text-align: center;
+                      margin-bottom: 3rem;
+                      padding-bottom: 2rem;
+                      border-bottom: 2px solid #eee;
+                  }
+                  .card {
+                      background: #f8f9fa;
+                      border: 1px solid #e9ecef;
+                      border-radius: 8px;
+                      padding: 1.5rem;
+                      margin: 1rem 0;
+                  }
+                  .card h2 {
+                      margin-top: 0;
+                      color: #495057;
+                  }
+                  .btn {
+                      display: inline-block;
+                      padding: 0.5rem 1rem;
+                      background: #007bff;
+                      color: white;
+                      text-decoration: none;
+                      border-radius: 4px;
+                      margin: 0.5rem 0.5rem 0.5rem 0;
+                  }
+                  .btn:hover {
+                      background: #0056b3;
+                  }
+                  .flame-btn {
+                      background: #fd7e14;
+                  }
+                  .flame-btn:hover {
+                      background: #e8690a;
+                  }
+                  .data-btn {
+                      background: #28a745;
+                  }
+                  .data-btn:hover {
+                      background: #1e7e34;
+                  }
+                  .grid {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                      gap: 1rem;
+                  }
+                  .build-info {
+                      background: #e7f3ff;
+                      border-left: 4px solid #007bff;
+                      padding: 1rem;
+                      margin: 1rem 0;
+                  }
+                  iframe {
+                      width: 100%;
+                      height: 600px;
+                      border: 1px solid #ddd;
+                      border-radius: 4px;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="header">
+                  <h1>UTF Strings Performance Analysis</h1>
+                  <p>Comprehensive performance benchmarks and profiling results</p>
+                  <div class="build-info">
+                      <strong>Build Configuration:</strong> Clang 18 Release with libc++, -O3 -march=native -flto
+                      <br><strong>Last Updated:</strong> <span id="timestamp"></span>
+                  </div>
+              </div>
+              
+              <div class="grid">
+                  <div class="card">
+                      <h2>🔥 Flame Graph Analysis</h2>
+                      <p>Interactive flame graph showing CPU time distribution and hot paths in the UTF string processing functions.</p>
+                      <a href="flamegraph.svg" class="btn flame-btn">View Flame Graph</a>
+                      <a href="perf.script" class="btn">Raw Perf Data</a>
+                  </div>
+                  
+                  <div class="card">
+                      <h2>📊 Historical Benchmarks</h2>
+                      <p>Interactive charts showing performance trends over time with automatic regression detection.</p>
+                      <a href="../dev/bench/" class="btn">View Historical Charts</a>
+                  </div>
+                  
+                  <div class="card">
+                      <h2>📈 Detailed Results</h2>
+                      <p>Comprehensive benchmark results in multiple formats for analysis and comparison.</p>
+                      <a href="detailed_benchmark.json" class="btn data-btn">JSON Results</a>
+                      <a href="benchmark_results.csv" class="btn data-btn">CSV Data</a>
+                      <a href="benchmark_console.txt" class="btn">Console Output</a>
+                  </div>
+                  
+                  <div class="card">
+                      <h2>🖥️ System Information</h2>
+                      <p>Hardware and build environment details for performance context.</p>
+                      <a href="system_info.txt" class="btn">System Info</a>
+                  </div>
+              </div>
+              
+              <div class="card">
+                  <h2>🔥 Interactive Flame Graph</h2>
+                  <p>Embedded flame graph showing function call patterns and CPU time distribution:</p>
+                  <iframe src="flamegraph.svg" title="Performance Flame Graph"></iframe>
+              </div>
+              
+              <script>
+                  document.getElementById('timestamp').textContent = new Date().toLocaleString();
+              </script>
+          </body>
+          </html>
+          EOF
+
+          # Create a basic README for docs if it doesn't exist
+          if [ ! -f docs/README.md ]; then
+            echo "# UTF Strings Documentation" > docs/README.md
+            echo "This directory contains automated performance benchmark results and documentation." >> docs/README.md
+          fi
+
+      - name: Store Performance Results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: "googlecpp"
+          output-file-path: build/build/performance_baseline.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: "150%"
+          comment-on-alert: true
+          fail-on-alert: false
+          # Store in docs folder for GitHub Pages serving from /docs
+          gh-pages-branch: "main"
+          benchmark-data-dir-path: "docs/dev/bench"
+
+      - name: Commit Performance Analysis Reports
+        run: |
+          # Add all generated performance files to git
+          git add docs/performance/
+
+          # Check if there are changes to commit
+          if ! git diff --cached --quiet; then
+            git commit -m "Update performance analysis reports
+
+            - Detailed benchmark results (JSON, CSV, console)
+            - Flame graph analysis (if available)
+            - System information and build context
+            - Generated on: $(date)
+            - Build: Clang 18 Release with libc++"
+            
+            # Push the performance reports
+            git push origin main
+            
+            echo "Performance reports committed and pushed successfully"
+          else
+            echo "No changes in performance reports to commit"
+          fi
 
   # ============================================================================
   # Publish Test Results
   # ============================================================================
-  
+
   publish-test-results:
     name: "Publish Test Results"
     runs-on: ubuntu-latest
-    needs: [linux-gcc, linux-clang, windows-msvc, linux-sanitizers, windows-msvc-sanitizer]
+    needs:
+      [
+        linux-gcc,
+        linux-clang,
+        windows-msvc,
+        linux-sanitizers,
+        windows-msvc-sanitizer,
+      ]
     if: always()
     permissions:
       contents: read
       issues: read
       checks: write
       pull-requests: write
-    
+
     steps:
-    - name: Download all artifacts
-      uses: actions/download-artifact@v4
-      
-    - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always()
-      with:
-        files: "**/*.xml"
-        comment_mode: always
-        check_name: "Unit Test Results"
-        report_individual_runs: true
-        deduplicate_classes_by_file_name: false
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: "**/*.xml"
+          comment_mode: always
+          check_name: "Unit Test Results"
+          report_individual_runs: true
+          deduplicate_classes_by_file_name: false
