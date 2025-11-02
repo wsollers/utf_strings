@@ -40,13 +40,13 @@ namespace utf {
  */
 struct version {
   static constexpr int major = 0;
-  static constexpr int minor = 1;
-  static constexpr int patch = 0;
+  static constexpr int minor = 0;
+  static constexpr int patch = 2;
 
   /**
    * @brief Get version as string in format "major.minor.patch"
    */
-  static constexpr const char* string() { return "0.1.0"; }
+  static constexpr const char* string() { return "0.0.2"; }
 
   /**
    * @brief Get version as integer in format MAJOR*10000 + MINOR*100 + PATCH
@@ -58,9 +58,9 @@ struct version {
 
 // Convenience macros
 #define UTF_STRINGS_VERSION_MAJOR 0
-#define UTF_STRINGS_VERSION_MINOR 1
-#define UTF_STRINGS_VERSION_PATCH 0
-#define UTF_STRINGS_VERSION_STRING "0.1.0"
-#define UTF_STRINGS_VERSION_NUMBER 100
+#define UTF_STRINGS_VERSION_MINOR 0
+#define UTF_STRINGS_VERSION_PATCH 2
+#define UTF_STRINGS_VERSION_STRING "0.0.2"
+#define UTF_STRINGS_VERSION_NUMBER 2
 
 #endif  // UTF_STRINGS_VERSION_HPP

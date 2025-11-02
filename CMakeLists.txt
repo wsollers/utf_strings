@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(utf_strings LANGUAGES CXX VERSION 0.1.0)
+project(utf_strings LANGUAGES CXX VERSION 0.0.2)
 
 # --------------------------------------------------------------------
 # Generate compile_commands.json for better IDE integration
