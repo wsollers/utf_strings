@@ -258,13 +258,16 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             try {
+              const scanIntensity = '${{ github.event.inputs.scan_intensity }}';
+              const severityLevel = scanIntensity === 'deep' ? 'all' : 'error';
+              
               const result = await github.rest.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 workflow_id: 'cppcheck-analysis.yml',
                 ref: context.ref,
                 inputs: {
-                  severity_level: '${{ github.event.inputs.scan_intensity == ''deep'' && ''all'' || ''error'' }}'
+                  severity_level: severityLevel
                 }
               });
               console.log('Cppcheck workflow triggered successfully');
@@ -285,13 +288,16 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             try {
+              const scanIntensity = '${{ github.event.inputs.scan_intensity }}';
+              const ruleset = scanIntensity === 'deep' ? 'auto' : 'r/c.lang.security';
+              
               const result = await github.rest.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 workflow_id: 'semgrep-security.yml',
                 ref: context.ref,
                 inputs: {
-                  ruleset: '${{ github.event.inputs.scan_intensity == ''deep'' && ''auto'' || ''r/c.lang.security'' }}'
+                  ruleset: ruleset
                 }
               });
               console.log('Semgrep workflow triggered successfully');
