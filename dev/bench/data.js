@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762069884251,
+  "lastUpdate": 1762070110587,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -390,6 +390,36 @@ window.BENCHMARK_DATA = {
             "value": 7583.870850387072,
             "unit": "ns/iter",
             "extra": "iterations: 184716\ncpu: 7583.522326165573 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "131fc065ad87d229960e70c0a709122ccfe2b47b",
+          "message": "Merge remote-tracking branch 'origin/main'",
+          "timestamp": "2025-11-02T02:52:56-05:00",
+          "tree_id": "1a975f6661fd3a46a46a8ce8839053e5bd2645d8",
+          "url": "https://github.com/wsollers/utf_strings/commit/131fc065ad87d229960e70c0a709122ccfe2b47b"
+        },
+        "date": 1762070110330,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_Length_Mixed",
+            "value": 7401.280336207924,
+            "unit": "ns/iter",
+            "extra": "iterations: 192262\ncpu: 7400.36684836317 ns\nthreads: 1"
           }
         ]
       }
