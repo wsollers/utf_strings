@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762118867124,
+  "lastUpdate": 1762129602440,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -1864,6 +1864,78 @@ window.BENCHMARK_DATA = {
             "value": 7066.255972370754,
             "unit": "ns/iter",
             "extra": "iterations: 199209\ncpu: 7065.885557379437 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "febe201b96fd33847c801b47d5947bc69d6ef984",
+          "message": "Merge pull request #3 from wsollers/refactor/utf-implementation\n\nRefactor UTF implementation to modern C++23 CodePoint API with compre…",
+          "timestamp": "2025-11-02T19:21:58-05:00",
+          "tree_id": "afa3f07eb2b2e39446aedf65c344a5bf68e4720c",
+          "url": "https://github.com/wsollers/utf_strings/commit/febe201b96fd33847c801b47d5947bc69d6ef984"
+        },
+        "date": 1762129601807,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_UTF8_CodePoint_Creation",
+            "value": 7.743719973564989,
+            "unit": "ns/iter",
+            "extra": "iterations: 179770342\ncpu: 7.743254062452639 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF16BE_CodePoint_Creation",
+            "value": 1.3095776427481025,
+            "unit": "ns/iter",
+            "extra": "iterations: 1074426325\ncpu: 1.3093962696790775 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF32LE_CodePoint_Creation",
+            "value": 0.6226702838559575,
+            "unit": "ns/iter",
+            "extra": "iterations: 2249461115\ncpu: 0.622501092667254 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_Scalar_Conversion",
+            "value": 2.4243739789042285,
+            "unit": "ns/iter",
+            "extra": "iterations: 578150964\ncpu: 2.424083701778624 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_Validation",
+            "value": 4.668523326828316,
+            "unit": "ns/iter",
+            "extra": "iterations: 299971428\ncpu: 4.668041070898259 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_to_UTF16BE_Conversion",
+            "value": 4.674494221746377,
+            "unit": "ns/iter",
+            "extra": "iterations: 299966930\ncpu: 4.674014205499254 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF16BE_to_UTF32LE_Conversion",
+            "value": 2.5394615438693573,
+            "unit": "ns/iter",
+            "extra": "iterations: 558265981\ncpu: 2.5392391624163824 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_Units_Access",
+            "value": 2.176938697373954,
+            "unit": "ns/iter",
+            "extra": "iterations: 643376484\ncpu: 2.1767289041916547 ns\nthreads: 1"
           }
         ]
       }
