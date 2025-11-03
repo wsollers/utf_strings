@@ -29,7 +29,7 @@
 #include <string>
 #include <vector>
 
-#include "utf/utf_strings.hpp"
+#include "utf/utf_codepoints.hpp"
 
 #ifdef HAVE_GPERFTOOLS
 #include <gperftools/profiler.h>

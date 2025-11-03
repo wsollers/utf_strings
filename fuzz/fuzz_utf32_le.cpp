@@ -29,7 +29,7 @@
 #include <string>
 #include <vector>
 
-#include "utf/utf_strings.hpp"
+#include "utf/utf_codepoints.hpp"
 
 // Fuzz target for UTF-32 Little Endian CodePoint validation and parsing
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {

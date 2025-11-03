@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "../include/utf/utf_strings.hpp"
+#include "../include/utf/utf_codepoints.hpp"
 
 // Template-heavy library; most implementation lives in the header.
 // This file exists primarily to ensure we have something to compile for the static library.

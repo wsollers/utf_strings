@@ -132,7 +132,7 @@ utf_strings-v{version}-{Platform}/
 ├── utf_strings-bench-release      # Optimized benchmark executable  
 ├── utf_strings-bench-debug        # Debug benchmark executable
 ├── include/utf/                   # Complete header files
-│   ├── utf_strings.hpp
+│   ├── utf_codepoints.hpp
 │   └── version.hpp
 ├── *.a/*.lib                      # Static libraries
 ├── LICENSE                        # License file

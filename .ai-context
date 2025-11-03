@@ -80,9 +80,9 @@ cd build/build && ./utf_strings-bench
 ### Key Files to Understand
 - `CMakeLists.txt`: Main build configuration
 - `conanfile.py`: Dependency management
-- `include/utf/utf_strings.hpp`: Main library header
+- `include/utf/utf_codepoints.hpp`: Main library header
 - `include/utf/version.hpp`: Version information
-- `src/utf_strings.cpp`: Core implementation
+- `src/utf_codepoints.cpp`: Core implementation
 
 ### Common Tasks
 1. **Adding new UTF conversion functions**: Update both header and implementation

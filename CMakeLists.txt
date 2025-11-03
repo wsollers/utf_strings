@@ -385,12 +385,12 @@ endfunction()
 # Sources
 # --------------------------------------------------------------------
 set(UTF_STRINGS_HEADERS
-    include/utf/utf_strings.hpp
+    include/utf/utf_codepoints.hpp
     include/utf/export.hpp
     include/utf/version.hpp
 )
 set(UTF_STRINGS_SOURCES
-    src/utf_strings.cpp
+    src/utf_codepoints.cpp
 )
 
 # --------------------------------------------------------------------
