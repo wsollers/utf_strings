@@ -8,6 +8,9 @@
 *.VC.db
 *.DS_Store
 
+# Crash dump files
+crash-*
+
 perf.data
 
 perf.script
