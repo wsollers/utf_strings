@@ -5,7 +5,7 @@ from conan.tools.cmake import CMakeDeps, CMakeToolchain
 
 class UtfStrings(ConanFile):
     name = "utf_strings"
-    version = "0.1.0"
+    version = "0.0.2"
     settings = "os", "arch", "compiler", "build_type"
     package_type = "application"
     exports = "LICENSE"

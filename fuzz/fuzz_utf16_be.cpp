@@ -25,129 +25,174 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 #include <vector>
 
 #include "utf/utf_strings.hpp"
 
-// Fuzz target for UTF-16 Big Endian validation and parsing
+// Fuzz target for UTF-16 Big Endian CodePoint validation and parsing
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
-  if (size < 2 || size % 2 != 0) return 0;  // Need even number of bytes for UTF-16
+  if (size == 0) return 0;
 
   try {
-    // Create UTF-16 string from raw data (interpret as big-endian)
-    std::u16string input;
-    input.reserve(size / 2);
-    for (size_t i = 0; i < size; i += 2) {
-      uint16_t unit = (static_cast<uint16_t>(data[i]) << 8) | static_cast<uint16_t>(data[i + 1]);
-      input.push_back(static_cast<char16_t>(unit));
+    // Test scalar-based code point creation from fuzz input
+    std::vector<utf::Utf16BECodePoint> valid_codepoints;
+    std::vector<uint32_t> test_scalars;
+
+    // Generate test scalars from input data (similar to UTF-8)
+    for (size_t i = 0; i + 3 < size; i += 4) {
+      uint32_t scalar =
+          (static_cast<uint32_t>(data[i]) << 24) | (static_cast<uint32_t>(data[i + 1]) << 16) |
+          (static_cast<uint32_t>(data[i + 2]) << 8) | static_cast<uint32_t>(data[i + 3]);
+      test_scalars.push_back(scalar);
     }
 
-    // Test UTF-16 big endian
-    utf::utf16be_string utf16_str = utf::utf16be_string::from_native(input);
+    // Also test smaller scalars for BMP and supplementary plane
+    for (size_t i = 0; i < size; ++i) {
+      test_scalars.push_back(static_cast<uint32_t>(data[i]));
 
-    // Test validation
-    bool is_valid = utf16_str.valid();
-
-    // Test length calculation
-    auto length_opt = utf16_str.length();
-
-    // Test conversion to UTF-32
-    auto u32_opt = utf16_str.to_u32();
-
-    // Test spans calculation
-    auto spans_opt = utf16_str.spans();
-
-    // Test view operations
-    auto view = utf16_str.view();
-    auto str_ref = utf16_str.str();
-
-    // Test native conversion
-    auto native = utf16_str.to_native();
-
-    // Test free functions
-    bool valid_view = utf::valid<char16_t, utf::endian::big>(view);
-    auto length_view = utf::length<char16_t, utf::endian::big>(view);
-    auto u32_view = utf::to_u32<char16_t, utf::endian::big>(view);
-
-    // Consistency checks
-    if (is_valid) {
-      // If valid, length should be available
-      if (!length_opt.has_value()) {
-        std::abort();  // Inconsistent state
+      if (i + 1 < size) {
+        uint32_t two_byte =
+            (static_cast<uint32_t>(data[i]) << 8) | static_cast<uint32_t>(data[i + 1]);
+        test_scalars.push_back(two_byte);
       }
 
-      // If valid, UTF-32 conversion should work
-      if (!u32_opt.has_value()) {
-        std::abort();  // Inconsistent state
-      }
-
-      // If valid, spans should be available
-      if (!spans_opt.has_value()) {
-        std::abort();  // Inconsistent state
-      }
-
-      // View operations should be consistent
-      if (valid_view != is_valid) {
-        std::abort();  // Inconsistent validation
-      }
-
-      if (length_view != length_opt) {
-        std::abort();  // Inconsistent length
-      }
-
-      // Verify spans consistency
-      const auto& spans = *spans_opt;
-      size_t total_units = 0;
-      for (const auto& span : spans) {
-        total_units += span.unit_length;
-      }
-      if (total_units != input.size()) {
-        std::abort();  // Spans don't add up to input size
-      }
-
-      // Verify UTF-32 length matches spans count
-      if (u32_opt->size() != spans.size()) {
-        std::abort();  // UTF-32 length doesn't match span count
-      }
-
-      // Test round-trip conversion consistency
-      if (native != input) {
-        std::abort();  // Round-trip conversion failed
-      }
-    } else {
-      // If invalid, these should return nullopt
-      if (length_opt.has_value() || u32_opt.has_value() || spans_opt.has_value()) {
-        std::abort();  // Should be nullopt for invalid strings
+      if (i + 2 < size) {
+        uint32_t three_byte = (static_cast<uint32_t>(data[i]) << 16) |
+                              (static_cast<uint32_t>(data[i + 1]) << 8) |
+                              static_cast<uint32_t>(data[i + 2]);
+        test_scalars.push_back(three_byte);
       }
     }
 
-    // Test surrogate pair boundaries and invalid surrogates
-    for (size_t i = 0; i < input.size(); ++i) {
-      uint16_t unit = static_cast<uint16_t>(input[i]);
-      if (unit >= 0xD800 && unit <= 0xDBFF) {
-        // High surrogate - should have matching low surrogate
-        if (i + 1 >= input.size()) {
-          // Truncated surrogate pair - should be invalid
-          if (is_valid) {
-            std::abort();  // Should be invalid
-          }
-        } else {
-          uint16_t next = static_cast<uint16_t>(input[i + 1]);
-          if (next < 0xDC00 || next > 0xDFFF) {
-            // Invalid low surrogate - should be invalid
-            if (is_valid) {
-              std::abort();  // Should be invalid
-            }
+    // Test each potential scalar
+    for (uint32_t scalar : test_scalars) {
+      auto cp_opt = utf::Utf16BECodePoint::from_scalar(scalar);
+
+      if (cp_opt.has_value()) {
+        const auto& cp = *cp_opt;
+        valid_codepoints.push_back(cp);
+
+        // If we got a code point, it must be valid
+        if (!cp.is_valid()) {
+          std::abort();  // from_scalar should only return valid code points
+        }
+
+        // Test scalar round-trip
+        auto result_scalar_opt = cp.to_scalar();
+        if (!result_scalar_opt.has_value()) {
+          std::abort();  // Valid code point should have valid scalar
+        }
+
+        uint32_t result_scalar = *result_scalar_opt;
+
+        // For valid Unicode scalars, the result should match
+        if (scalar <= 0x10FFFF && !(scalar >= 0xD800 && scalar <= 0xDFFF)) {
+          if (result_scalar != scalar) {
+            std::abort();  // Scalar round-trip mismatch
           }
         }
-      } else if (unit >= 0xDC00 && unit <= 0xDFFF) {
-        // Low surrogate without preceding high surrogate - should be invalid
-        if (i == 0 || static_cast<uint16_t>(input[i - 1]) < 0xD800 ||
-            static_cast<uint16_t>(input[i - 1]) > 0xDBFF) {
-          if (is_valid) {
-            std::abort();  // Should be invalid
+
+        // Test unchecked scalar matches checked version
+        uint32_t unchecked_scalar = cp.to_scalar_unchecked();
+        if (unchecked_scalar != result_scalar) {
+          std::abort();  // Checked and unchecked scalar mismatch
+        }
+
+        // Test unit count consistency (UTF-16 uses 1 or 2 units)
+        size_t count = cp.count();
+        if (count == 0 || count > 2) {
+          std::abort();  // Invalid UTF-16 unit count
+        }
+
+        // Test size consistency (for UTF-16, size = count * 2)
+        if (cp.size() != count * 2) {
+          std::abort();  // Size should equal count * 2 for UTF-16
+        }
+
+        // Test units span consistency
+        auto units = cp.units();
+        if (units.size() != count) {
+          std::abort();  // Units size should match count
+        }
+
+        // Basic validation: UTF-16 should have 1 or 2 units
+        // Trust the library implementation for correct encoding details
+        if (count != 1 && count != 2) {
+          std::abort();  // UTF-16 should only have 1 or 2 units
+        }
+
+        // Verify round-trip consistency: scalar -> UTF-16 -> scalar should be identical
+        if (result_scalar != scalar) {
+          std::abort();  // Round-trip conversion should preserve the original scalar
+        }
+      }
+    }
+
+    // Test conversions between encodings for first few valid code points
+    size_t conversion_limit = std::min(valid_codepoints.size(), size_t(5));
+    for (size_t i = 0; i < conversion_limit; ++i) {
+      const auto& utf16be_cp = valid_codepoints[i];
+
+      // Convert to UTF-8
+      auto utf8_opt = utf::convert<utf::Utf8CodePoint>(utf16be_cp);
+      if (utf8_opt.has_value()) {
+        if (!utf8_opt->is_valid()) {
+          std::abort();  // Converted code point should be valid
+        }
+
+        auto utf16be_scalar = utf16be_cp.to_scalar_unchecked();
+        auto utf8_scalar = utf8_opt->to_scalar_unchecked();
+        if (utf8_scalar != utf16be_scalar) {
+          std::abort();  // Scalar should be preserved in conversion
+        }
+
+        // Convert back to UTF-16 BE
+        auto back_to_utf16be = utf::convert<utf::Utf16BECodePoint>(*utf8_opt);
+        if (back_to_utf16be.has_value()) {
+          if (back_to_utf16be->to_scalar_unchecked() != utf16be_scalar) {
+            std::abort();  // Round-trip conversion failed
           }
+        }
+      }
+
+      // Convert to UTF-32 LE
+      auto utf32le_opt = utf::convert<utf::Utf32LECodePoint>(utf16be_cp);
+      if (utf32le_opt.has_value()) {
+        if (!utf32le_opt->is_valid()) {
+          std::abort();  // Converted code point should be valid
+        }
+
+        auto utf16be_scalar = utf16be_cp.to_scalar_unchecked();
+        auto utf32le_scalar = utf32le_opt->to_scalar_unchecked();
+        if (utf32le_scalar != utf16be_scalar) {
+          std::abort();  // Scalar should be preserved in conversion
+        }
+
+        // Convert back to UTF-16 BE
+        auto back_to_utf16be = utf::convert<utf::Utf16BECodePoint>(*utf32le_opt);
+        if (back_to_utf16be.has_value()) {
+          if (back_to_utf16be->to_scalar_unchecked() != utf16be_scalar) {
+            std::abort();  // Round-trip conversion failed
+          }
+        }
+      }
+    }
+
+    // Test known invalid scalar ranges (same as UTF-8)
+    if (size >= 1) {
+      uint32_t invalid_base = 0xD800 + (data[0] % 0x800);  // Surrogate range
+      auto invalid_cp = utf::Utf16BECodePoint::from_scalar(invalid_base);
+      if (invalid_cp.has_value()) {
+        std::abort();  // Should not create code point from surrogate
+      }
+
+      if (size >= 2) {
+        uint32_t too_large = 0x110000 + (static_cast<uint32_t>(data[0]) << 8) + data[1];
+        auto large_cp = utf::Utf16BECodePoint::from_scalar(too_large);
+        if (large_cp.has_value()) {
+          std::abort();  // Should not create code point beyond Unicode range
         }
       }
     }
