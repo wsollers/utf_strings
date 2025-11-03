@@ -1153,7 +1153,8 @@ jobs:
             $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
           }
           # Override generator for Windows builds to ensure Visual Studio generator is used
-          cmake --preset $preset -G "Visual Studio 17 2022" -A x64 ${{ matrix.cmake_args }}
+          # Force C++23 standard for MSVC
+          cmake --preset $preset -G "Visual Studio 17 2022" -A x64 -DCMAKE_CXX_STANDARD=23 -DCMAKE_CXX_FLAGS="/std:c++latest /Zc:__cplusplus" ${{ matrix.cmake_args }}
 
       - name: Build
         run: |
@@ -1268,7 +1269,8 @@ jobs:
           # (annotate_string/annotate_vector mismatch between ASAN and non-ASAN builds)
           # AddressSanitizer testing is comprehensively covered by Linux CI jobs
           # Override generator for Windows builds to ensure Visual Studio generator is used
-          cmake --preset conan-default -G "Visual Studio 17 2022" -A x64
+          # Force C++23 standard for MSVC
+          cmake --preset conan-default -G "Visual Studio 17 2022" -A x64 -DCMAKE_CXX_STANDARD=23 -DCMAKE_CXX_FLAGS="/std:c++latest /Zc:__cplusplus"
 
       - name: Build Debug
         run: cmake --build --preset conan-debug --config Debug --parallel

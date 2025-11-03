@@ -109,12 +109,38 @@ cmake --preset conan-release \
 - Prefer standard library functions over platform-specific alternatives
 - Write clear, self-documenting code with appropriate comments
 
+## Code Review Requirements
+
+**⚠️ MANDATORY**: All code must undergo comprehensive review before every push to origin.
+
+### Pre-Push Review Checklist
+
+Before submitting any changes, review your code against our **[Code Review Guidelines](CODE_REVIEW_GUIDELINES.md)**:
+
+- [ ] **Security Analysis**: No undefined behavior, memory safety issues, or vulnerabilities
+- [ ] **Performance Analysis**: Efficient algorithms, no unnecessary allocations
+- [ ] **Correctness**: Edge cases handled, proper error handling, const correctness
+- [ ] **C++ Guidelines**: RAII, exception safety, modern C++23 features used appropriately
+- [ ] **Design Quality**: Consistent API, proper abstraction levels, clear naming
+- [ ] **Documentation**: Adequate comments, API docs, up-to-date examples
+- [ ] **Test Coverage**: Comprehensive unit tests including edge cases
+
+### Review Standards
+
+Every change must meet:
+- 🔴 **Zero Critical Issues**: No security vulnerabilities, UB, or crashes
+- 🟡 **Minimal Important Issues**: Address performance and correctness concerns
+- ✅ **Production Ready**: Code must be deployable to production
+
+See **[CODE_REVIEW_GUIDELINES.md](CODE_REVIEW_GUIDELINES.md)** for complete review parameters.
+
 ## Submitting Changes
 
-1. Make sure your changes build successfully
-2. Run the tests to ensure functionality is preserved
-3. The pre-commit hook will automatically format your code
-4. Submit a pull request with a clear description of changes
+1. **Pre-Push Review**: Complete comprehensive code review using guidelines above
+2. **Build Verification**: Ensure changes build successfully across all configurations
+3. **Test Validation**: Run full test suite to ensure functionality is preserved  
+4. **Code Formatting**: Pre-commit hook will automatically format your code
+5. **Submit PR**: Create pull request with clear description referencing review checklist
 
 ## CI/CD
 

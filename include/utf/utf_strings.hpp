@@ -51,11 +51,6 @@
 #define UTF_STRING_VERSION_MINOR 3
 #define UTF_STRING_VERSION_PATCH 0
 
-// Require C++23
-#if __cplusplus < 202302L
-#error "UTF String library requires C++23 or later"
-#endif
-
 #include <algorithm>
 #include <compare>
 #include <cstring>
@@ -167,7 +162,7 @@ class CodePointIterator {
 
     if constexpr (ByteOriented<UtfType>) {
       // UTF-8: Read based on lead byte
-      std::size_t remaining = end_ - current_;
+      std::size_t remaining = static_cast<std::size_t>(end_ - current_);
       if (remaining == 0) return;
 
       // Determine how many bytes needed
@@ -200,7 +195,7 @@ class CodePointIterator {
 
     } else if constexpr (std::same_as<UtfType, Utf16>) {
       // UTF-16: Read 1 or 2 units
-      std::size_t remaining = end_ - current_;
+      std::size_t remaining = static_cast<std::size_t>(end_ - current_);
       if (remaining == 0) return;
 
       current_code_point_.rune[0] = *current_;
