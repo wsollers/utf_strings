@@ -1,0 +1,391 @@
+/* Custom Doxygen CSS for UTF Strings Library */
+/* Modern, clean styling that matches GitHub Pages theme */
+
+/* ==========================================================================
+   Variables and Base Styling
+   ========================================================================== */
+
+:root {
+  --primary-color: #0366d6;
+  --secondary-color: #586069;
+  --background-color: #ffffff;
+  --surface-color: #f6f8fa;
+  --border-color: #e1e4e8;
+  --text-color: #24292e;
+  --text-muted: #6a737d;
+  --code-background: #f6f8fa;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-hover: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #58a6ff;
+    --secondary-color: #8b949e;
+    --background-color: #0d1117;
+    --surface-color: #161b22;
+    --border-color: #30363d;
+    --text-color: #f0f6fc;
+    --text-muted: #8b949e;
+    --code-background: #161b22;
+  }
+}
+
+/* ==========================================================================
+   Layout and Navigation
+   ========================================================================== */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background: var(--background-color);
+  margin: 0;
+  padding: 0;
+}
+
+/* Header styling */
+#top {
+  background: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.header {
+  padding: 1rem 2rem;
+}
+
+.header .headertitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.header .summary {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Navigation tabs */
+.tabs, .tabs2, .tabs3 {
+  background: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tablist li {
+  background: transparent;
+  border: none;
+  margin-right: 0.5rem;
+}
+
+.tablist li a {
+  color: var(--secondary-color);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px 6px 0 0;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tablist li a:hover,
+.tablist li.current a {
+  color: var(--primary-color);
+  background: var(--background-color);
+  border-color: var(--border-color);
+  border-bottom-color: var(--background-color);
+}
+
+/* ==========================================================================
+   Content Styling
+   ========================================================================== */
+
+.contents {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.5em 0 0.5em 0;
+}
+
+h1 { font-size: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+/* Links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Code styling */
+code, .code {
+  font-family: 'SFMono-Regular', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 0.875rem;
+  background: var(--code-background);
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  border: 1px solid var(--border-color);
+}
+
+pre {
+  background: var(--code-background);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.4;
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* ==========================================================================
+   Class and Function Documentation
+   ========================================================================== */
+
+/* Class/struct boxes */
+.contents .textblock {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: var(--shadow);
+}
+
+/* Member sections */
+.groupheader {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px 6px 0 0;
+  font-weight: 600;
+  margin: 2rem 0 0 0;
+}
+
+.memberdecls {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  padding: 0;
+}
+
+.memitem {
+  border-bottom: 1px solid var(--border-color);
+  margin: 0;
+  background: transparent;
+}
+
+.memitem:last-child {
+  border-bottom: none;
+}
+
+.memproto {
+  background: var(--code-background);
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-family: 'SFMono-Regular', monospace;
+  font-size: 0.875rem;
+}
+
+.memdoc {
+  padding: 1rem;
+  background: var(--background-color);
+}
+
+/* Parameter tables */
+.params, .retval, .exception {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--surface-color);
+}
+
+.params th, .retval th, .exception th {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.params td, .retval td, .exception td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   Tree View (Navigation)
+   ========================================================================== */
+
+#nav-tree {
+  background: var(--surface-color);
+  border-right: 1px solid var(--border-color);
+  width: 250px;
+}
+
+#nav-tree .children_ul {
+  margin: 0;
+  padding: 0;
+}
+
+#nav-tree .item {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#nav-tree .item:hover {
+  background: var(--code-background);
+}
+
+#nav-tree .selected {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* ==========================================================================
+   Search and Index
+   ========================================================================== */
+
+#MSearchBox {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+#MSearchField {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  outline: none;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Diagrams and Images
+   ========================================================================== */
+
+.center img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+}
+
+/* Class hierarchy diagrams */
+.inherit_header {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .contents {
+    padding: 1rem;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+  
+  #nav-tree {
+    width: 200px;
+  }
+  
+  .textblock {
+    padding: 1rem;
+  }
+  
+  .memproto {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+.note, .attention, .warning, .todo, .bug {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid;
+}
+
+.note {
+  background: #e3f2fd;
+  border-left-color: #2196f3;
+}
+
+.attention {
+  background: #fff3e0;
+  border-left-color: #ff9800;
+}
+
+.warning {
+  background: #ffebee;
+  border-left-color: #f44336;
+}
+
+.todo {
+  background: #f3e5f5;
+  border-left-color: #9c27b0;
+}
+
+.bug {
+  background: #ffebee;
+  border-left-color: #f44336;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .note { background: #1a237e; }
+  .attention { background: #e65100; }
+  .warning { background: #b71c1c; }
+  .todo { background: #4a148c; }
+  .bug { background: #b71c1c; }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  .header, #nav-tree, .tabs, .tabs2, .tabs3 {
+    display: none;
+  }
+  
+  .contents {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}

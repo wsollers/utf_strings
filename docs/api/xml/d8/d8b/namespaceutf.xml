@@ -1,0 +1,1290 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d8/d8b/namespaceutf" kind="namespace" language="C++">
+    <compoundname>utf</compoundname>
+    <innerclass refid="d4/d7c/structutf_1_1CodePoint" prot="public">utf::CodePoint</innerclass>
+    <innerclass refid="dd/dbd/structutf_1_1UnicodeScalar" prot="public">utf::UnicodeScalar</innerclass>
+    <innerclass refid="da/d74/structutf_1_1version" prot="public">utf::version</innerclass>
+    <innernamespace refid="dd/d4a/namespaceutf_1_1encodings">utf::encodings</innernamespace>
+    <innernamespace refid="d4/db8/namespaceutf_1_1endianness">utf::endianness</innernamespace>
+    <innernamespace refid="d2/dc1/namespaceutf_1_1limits">utf::limits</innernamespace>
+    <innernamespace refid="d9/df7/namespaceutf_1_1string">utf::string</innernamespace>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="d8/d8b/namespaceutf_1a54ef1028d44d0a398aab503ce1fb6e83" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>ErrorCode</name>
+        <qualifiedname>utf::ErrorCode</qualifiedname>
+        <enumvalue id="d8/d8b/namespaceutf_1a54ef1028d44d0a398aab503ce1fb6e83a66ca57e2b64df877e64422c58e694bf3" prot="public">
+          <name>invalid_scalar</name>
+          <briefdescription>
+<para>Unicode scalar value is invalid. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="d8/d8b/namespaceutf_1a54ef1028d44d0a398aab503ce1fb6e83a6a0e0bbe71573653a91e08488f6d7e60" prot="public">
+          <name>overlong_encoding</name>
+          <briefdescription>
+<para>UTF-8 overlong encoding detected (security issue) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="d8/d8b/namespaceutf_1a54ef1028d44d0a398aab503ce1fb6e83a451397e2250844b705b9ff95f3c91f62" prot="public">
+          <name>invalid_surrogate</name>
+          <briefdescription>
+<para>Invalid surrogate pair or unpaired surrogate. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="d8/d8b/namespaceutf_1a54ef1028d44d0a398aab503ce1fb6e83a4fb901c70a0fdc05b55d95985f3300b0" prot="public">
+          <name>out_of_range</name>
+          <briefdescription>
+<para>Code point exceeds valid Unicode range. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="d8/d8b/namespaceutf_1a54ef1028d44d0a398aab503ce1fb6e83a3c77c8fa3468fd7bfd6123cbcbc26a3e" prot="public">
+          <name>truncated_sequence</name>
+          <briefdescription>
+<para>Incomplete UTF sequence. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Error codes for UTF operations. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="103" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="103" bodyend="109"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1a0b85b65835fd1eb8379678ce28248fef" prot="public" static="no">
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">endianness::Type</ref></type>
+        <definition>using utf::Endian = typedef endianness::Type</definition>
+        <argsstring></argsstring>
+        <name>Endian</name>
+        <qualifiedname>utf::Endian</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="138" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="138" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1a92065af0f64383ab6e668b2f00100b1e" prot="public" static="no">
+        <type><ref refid="d6/de3/structutf_1_1encodings_1_1Utf8" kindref="compound">encodings::Utf8</ref></type>
+        <definition>using utf::Utf8 = typedef encodings::Utf8</definition>
+        <argsstring></argsstring>
+        <name>Utf8</name>
+        <qualifiedname>utf::Utf8</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="169" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="169" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" prot="public" static="no">
+        <type><ref refid="d2/d56/structutf_1_1encodings_1_1Utf16" kindref="compound">encodings::Utf16</ref></type>
+        <definition>using utf::Utf16 = typedef encodings::Utf16</definition>
+        <argsstring></argsstring>
+        <name>Utf16</name>
+        <qualifiedname>utf::Utf16</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="170" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="170" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" prot="public" static="no">
+        <type><ref refid="da/d6e/structutf_1_1encodings_1_1Utf32" kindref="compound">encodings::Utf32</ref></type>
+        <definition>using utf::Utf32 = typedef encodings::Utf32</definition>
+        <argsstring></argsstring>
+        <name>Utf32</name>
+        <qualifiedname>utf::Utf32</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="171" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="171" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1a35cbeb1de803798da4df4b2fe37fbd32" prot="private" static="no">
+        <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a92065af0f64383ab6e668b2f00100b1e" kindref="member">Utf8</ref>, Endian::None &gt;</type>
+        <definition>using utf::Utf8CodePoint = typedef CodePoint&lt;Utf8, Endian::None&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf8CodePoint</name>
+        <qualifiedname>utf::Utf8CodePoint</qualifiedname>
+        <briefdescription>
+<para>UTF-8 code point (endianness not applicable) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="735" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="735" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1ae3558d564f6e888860463d4b8f04b355" prot="private" static="no">
+        <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" kindref="member">Utf16</ref>, Endian::BE &gt;</type>
+        <definition>using utf::Utf16BECodePoint = typedef CodePoint&lt;Utf16, Endian::BE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf16BECodePoint</name>
+        <qualifiedname>utf::Utf16BECodePoint</qualifiedname>
+        <briefdescription>
+<para>UTF-16 code point in big-endian byte order. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="738" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="738" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1aaf21711dc6d9f846392d41f54c4c66f8" prot="private" static="no">
+        <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" kindref="member">Utf16</ref>, Endian::LE &gt;</type>
+        <definition>using utf::Utf16LECodePoint = typedef CodePoint&lt;Utf16, Endian::LE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf16LECodePoint</name>
+        <qualifiedname>utf::Utf16LECodePoint</qualifiedname>
+        <briefdescription>
+<para>UTF-16 code point in little-endian byte order. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="741" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="741" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1a83357561dbfc9077b3ca4079e131438f" prot="private" static="no">
+        <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" kindref="member">Utf32</ref>, Endian::BE &gt;</type>
+        <definition>using utf::Utf32BECodePoint = typedef CodePoint&lt;Utf32, Endian::BE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf32BECodePoint</name>
+        <qualifiedname>utf::Utf32BECodePoint</qualifiedname>
+        <briefdescription>
+<para>UTF-32 code point in big-endian byte order. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="744" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="744" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/d8b/namespaceutf_1a978087abb3029f6ff969d6dbfa2ffb80" prot="private" static="no">
+        <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" kindref="member">Utf32</ref>, Endian::LE &gt;</type>
+        <definition>using utf::Utf32LECodePoint = typedef CodePoint&lt;Utf32, Endian::LE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf32LECodePoint</name>
+        <qualifiedname>utf::Utf32LECodePoint</qualifiedname>
+        <briefdescription>
+<para>UTF-32 code point in little-endian byte order. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="747" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="747" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>utf::ByteOriented</definition>
+        <argsstring></argsstring>
+        <name>ByteOriented</name>
+        <qualifiedname>utf::ByteOriented</qualifiedname>
+        <initializer>= std::same_as&lt;UtfType, <ref refid="d8/d8b/namespaceutf_1a92065af0f64383ab6e668b2f00100b1e" kindref="member">Utf8</ref>&gt;</initializer>
+        <briefdescription>
+<para>Concept for byte-oriented UTF encodings (UTF-8) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="202" column="2" bodyfile="include/utf/utf_codepoints.hpp" bodystart="202" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d8b/namespaceutf_1aecc7104706f976715b81a290a7180281" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>utf::MultiByteOriented</definition>
+        <argsstring></argsstring>
+        <name>MultiByteOriented</name>
+        <qualifiedname>utf::MultiByteOriented</qualifiedname>
+        <initializer>= std::same_as&lt;<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" kindref="member">Utf16</ref>&gt; || std::same_as&lt;<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" kindref="member">Utf32</ref>&gt;</initializer>
+        <briefdescription>
+<para>Concept for multi-byte UTF encodings (UTF-16, UTF-32) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="206" column="2" bodyfile="include/utf/utf_codepoints.hpp" bodystart="206" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>E</declname>
+            <defname>E</defname>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>utf::ValidEndianness</definition>
+        <argsstring></argsstring>
+        <name>ValidEndianness</name>
+        <qualifiedname>utf::ValidEndianness</qualifiedname>
+        <initializer>= (<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">ByteOriented</ref>&lt;<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>&gt; &amp;&amp; <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> == Endian::None) ||
+                          (<ref refid="d8/d8b/namespaceutf_1aecc7104706f976715b81a290a7180281" kindref="member">MultiByteOriented</ref>&lt;<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>&gt; &amp;&amp; <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> != Endian::None)</initializer>
+        <briefdescription>
+<para>Concept validating endianness for a given encoding. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>UTF-8 must use Endian::None, UTF-16/32 must use BE or LE </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="211" column="2" bodyfile="include/utf/utf_codepoints.hpp" bodystart="211" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>utf::IsCodePoint</definition>
+        <argsstring></argsstring>
+        <name>IsCodePoint</name>
+        <qualifiedname>utf::IsCodePoint</qualifiedname>
+        <initializer>=  {
+  <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> T::encoding_type;
+  { T::endianness } -&gt; std::convertible_to&lt;<ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Endian</ref>&gt;;
+}</initializer>
+        <briefdescription>
+<para>Concept to check if a type is a valid <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> instantiation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="221" column="2" bodyfile="include/utf/utf_codepoints.hpp" bodystart="221" bodyend="224"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" prot="public" static="no" mutable="no">
+        <templateparamlist>
+          <param>
+            <type>Endian</type>
+            <declname>E</declname>
+            <defname>E</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">ByteOriented</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a92065af0f64383ab6e668b2f00100b1e" kindref="member">Utf8</ref> &gt; &amp;&amp;</type>
+        <definition>MultiByteOriented&lt; Utf32 &gt; utf::E</definition>
+        <argsstring></argsstring>
+        <name>E</name>
+        <qualifiedname>utf::E</qualifiedname>
+        <initializer>== Endian::None)
+<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">struct</ref> <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt;<ref refid="d8/d8b/namespaceutf_1a92065af0f64383ab6e668b2f00100b1e" kindref="member">Utf8</ref></initializer>
+        <briefdescription>
+<para>UTF-8 code point representation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>UTF-32 code point representation.</para>
+<para>UTF-16 code point representation.</para>
+<para>Stores a single Unicode code point encoded as UTF-8 (1-4 bytes). Total size: exactly 4 bytes (optimal alignment).</para>
+<para>UTF-8 is byte-oriented so endianness does not apply. Length is computed on-demand from the leading byte pattern.</para>
+<para><simplesect kind="note"><para>Construction may create invalid code points. Always check <ref refid="d8/d8b/namespaceutf_1ae14b58287d878195d4e1b2fa3150db32" kindref="member">is_valid()</ref> after construction, or use <ref refid="d8/d8b/namespaceutf_1aaf26b05167a52afbef51db19d428bb16" kindref="member">from_scalar()</ref> factory function for safe construction. Default construction creates U+0000 (null character), which is a valid code point.</para>
+</simplesect>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>E</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Endianness (must be BE or LE, not None)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Stores a single Unicode code point encoded as UTF-16 (1-2 units). Total size: exactly 4 bytes (optimal alignment). Handles both BMP characters (single unit) and supplementary characters (surrogate pairs). Length is computed on-demand from surrogate detection.</para>
+<para><simplesect kind="note"><para>Construction may create invalid code points. Always check <ref refid="d8/d8b/namespaceutf_1ae14b58287d878195d4e1b2fa3150db32" kindref="member">is_valid()</ref> after construction, or use <ref refid="d8/d8b/namespaceutf_1aaf26b05167a52afbef51db19d428bb16" kindref="member">from_scalar()</ref> factory function for safe construction. Default construction creates U+0000 (null character), which is a valid code point.</para>
+</simplesect>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>E</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Endianness (must be BE or LE, not None)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Stores a single Unicode code point as a single UTF-32 unit. Total size: exactly 4 bytes (optimal alignment). This is the simplest encoding where one unit always equals one code point.</para>
+<para><simplesect kind="note"><para>Construction may create invalid code points. Always check <ref refid="d8/d8b/namespaceutf_1ae14b58287d878195d4e1b2fa3150db32" kindref="member">is_valid()</ref> after construction, or use <ref refid="d8/d8b/namespaceutf_1aaf26b05167a52afbef51db19d428bb16" kindref="member">from_scalar()</ref> factory function for safe construction. Default construction creates U+0000 (null character), which is a valid code point. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="241" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="241" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d8b/namespaceutf_1a7cad408999897e9b8943104a7e112cb2" prot="public" static="yes" mutable="no">
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Endian</ref></type>
+        <definition>static Endian utf::endianness</definition>
+        <argsstring></argsstring>
+        <name>endianness</name>
+        <qualifiedname>utf::endianness</qualifiedname>
+        <initializer>= <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="244" column="18" bodyfile="include/utf/utf_codepoints.hpp" bodystart="244" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d8b/namespaceutf_1ab5f6346dd885cb3f2210bd1a95da710e" prot="public" static="no" mutable="no">
+        <type>std::array&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref>, 4 &gt;</type>
+        <definition>uint32_t utf::rune</definition>
+        <argsstring></argsstring>
+        <name>rune</name>
+        <qualifiedname>utf::rune</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+<para>UTF-8 encoded bytes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The UTF-32 encoded unit (stored in target endianness)</para>
+<para>UTF-16 encoded units (stored in target endianness) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="246" column="14" bodyfile="include/utf/utf_codepoints.hpp" bodystart="246" bodyend="246"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1aabb7bc93a6aeb8f5e92e2028efa4c9cd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">char</ref> *</type>
+        <definition>const char * utf::get_version</definition>
+        <argsstring>()</argsstring>
+        <name>get_version</name>
+        <qualifiedname>utf::get_version</qualifiedname>
+        <briefdescription>
+<para>Get the library version as a string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Version string in format &quot;major.minor.patch&quot; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="123" column="20" bodyfile="include/utf.hpp" bodystart="123" bodyend="123"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a7d2037351747c10c8c8fc552b71c3ed1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">int</ref></type>
+        <definition>int utf::get_version_number</definition>
+        <argsstring>()</argsstring>
+        <name>get_version_number</name>
+        <qualifiedname>utf::get_version_number</qualifiedname>
+        <briefdescription>
+<para>Get the library version as an integer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Version number in format MAJOR*10000 + MINOR*100 + PATCH </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="129" column="13" bodyfile="include/utf.hpp" bodystart="129" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a663824c6b087e4351edd113e00bfeac6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::version_at_least</definition>
+        <argsstring>(int major, int minor=0, int patch=0)</argsstring>
+        <name>version_at_least</name>
+        <qualifiedname>utf::version_at_least</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">int</ref></type>
+          <declname>major</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">int</ref></type>
+          <declname>minor</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">int</ref></type>
+          <declname>patch</declname>
+          <defval>0</defval>
+        </param>
+        <briefdescription>
+<para>Check if the library version is at least the specified version. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>major</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Major version number </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>minor</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Minor version number </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>patch</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Patch version number </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if current version &gt;= specified version </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="138" column="14" bodyfile="include/utf.hpp" bodystart="138" bodyend="141"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a3d44c3e0e47ebff7448ff30b21ab4a91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>utf::CodePoint</definition>
+        <argsstring>()=default</argsstring>
+        <name>CodePoint</name>
+        <qualifiedname>utf::CodePoint</qualifiedname>
+        <briefdescription>
+<para>Default constructor creates a null character (U+0000) </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>U+0000 is a valid Unicode code point. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="250" column="4" declfile="include/utf/utf_codepoints.hpp" declline="250" declcolumn="4"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a9044d0968e5ef99d8070a14a3535ff49" prot="public" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>utf::CodePoint</definition>
+        <argsstring>(uint32_t unicode_scalar)</argsstring>
+        <name>CodePoint</name>
+        <qualifiedname>utf::CodePoint</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+          <declname>unicode_scalar</declname>
+        </param>
+        <briefdescription>
+<para>Construct from a Unicode scalar value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>unicode_scalar</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The Unicode code point to encode (U+0000 to U+10FFFF) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>May create invalid <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> if scalar is out of range or a surrogate. Always check <ref refid="d8/d8b/namespaceutf_1ae14b58287d878195d4e1b2fa3150db32" kindref="member">is_valid()</ref> after construction. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="256" column="13" bodyfile="include/utf/utf_codepoints.hpp" bodystart="256" bodyend="287"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1aaf26b05167a52afbef51db19d428bb16" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> &gt;</type>
+        <definition>static std::optional&lt; CodePoint &gt; utf::from_scalar</definition>
+        <argsstring>(uint32_t scalar)</argsstring>
+        <name>from_scalar</name>
+        <qualifiedname>utf::from_scalar</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+          <declname>scalar</declname>
+        </param>
+        <briefdescription>
+<para>Factory function for safe construction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>scalar</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The Unicode code point to encode </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> if valid, std::nullopt if invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="292" column="26" bodyfile="include/utf/utf_codepoints.hpp" bodystart="292" bodyend="295"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a8fd52ae54800689f2989255a273b6c17" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::count</definition>
+        <argsstring>() const</argsstring>
+        <name>count</name>
+        <qualifiedname>utf::count</qualifiedname>
+        <briefdescription>
+<para>Get the number of UTF-8 code units (bytes) </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the number of UTF-32 code units (always 1)</para>
+<para>Get the number of UTF-16 code units.</para>
+<para><simplesect kind="return"><para>Number of valid bytes (0-4), 0 indicates invalid</para>
+</simplesect>
+<simplesect kind="return"><para>Number of valid units (0-2), 0 indicates invalid</para>
+</simplesect>
+<simplesect kind="return"><para>1 </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="299" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="299" bodyend="309"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1aa03e0dcf6a7d65ca406eda03c32d98e6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>std::span&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> &gt;</type>
+        <definition>std::span&lt; const uint32_t &gt; utf::units</definition>
+        <argsstring>() const</argsstring>
+        <name>units</name>
+        <qualifiedname>utf::units</qualifiedname>
+        <briefdescription>
+<para>Get a span view of the valid UTF-8 bytes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get a span view of the single UTF-32 unit.</para>
+<para>Get a span view of the valid UTF-16 units.</para>
+<para><simplesect kind="return"><para>Span covering only the valid bytes (length 1-4)</para>
+</simplesect>
+<simplesect kind="return"><para>Span covering only the valid units (length 1-2)</para>
+</simplesect>
+<simplesect kind="return"><para>Span covering the single unit </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="313" column="15" bodyfile="include/utf/utf_codepoints.hpp" bodystart="313" bodyend="315"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a5d4022c3926a218fa2b8fa57f1f04093" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> *</type>
+        <definition>const uint32_t * utf::data</definition>
+        <argsstring>() const</argsstring>
+        <name>data</name>
+        <qualifiedname>utf::data</qualifiedname>
+        <briefdescription>
+<para>Get direct pointer to the UTF-8 data. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get direct pointer to the UTF-32 data.</para>
+<para>Get direct pointer to the UTF-16 data.</para>
+<para><simplesect kind="return"><para>Pointer to the first byte of the encoded sequence </para>
+</simplesect>
+<simplesect kind="note"><para>For performance-critical code. Use <ref refid="d8/d8b/namespaceutf_1a8fd52ae54800689f2989255a273b6c17" kindref="member">count()</ref> to determine valid length.</para>
+</simplesect>
+<simplesect kind="return"><para>Pointer to the first unit of the encoded sequence </para>
+</simplesect>
+<simplesect kind="note"><para>For performance-critical code. Use <ref refid="d8/d8b/namespaceutf_1a8fd52ae54800689f2989255a273b6c17" kindref="member">count()</ref> to determine valid length.</para>
+</simplesect>
+<simplesect kind="return"><para>Pointer to the encoded unit </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="320" column="19" bodyfile="include/utf/utf_codepoints.hpp" bodystart="320" bodyend="320"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a20c3540c7d47120abe3b8537aa5c6708" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref> &gt;</type>
+        <definition>std::optional&lt; uint32_t &gt; utf::to_scalar</definition>
+        <argsstring>() const</argsstring>
+        <name>to_scalar</name>
+        <qualifiedname>utf::to_scalar</qualifiedname>
+        <briefdescription>
+<para>Decode to Unicode scalar value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>The Unicode scalar value if valid, std::nullopt if invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="324" column="19" bodyfile="include/utf/utf_codepoints.hpp" bodystart="324" bodyend="346"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a55ddcc7f3153b3dbf16a8f2eb3edff94" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::to_scalar_unchecked</definition>
+        <argsstring>() const</argsstring>
+        <name>to_scalar_unchecked</name>
+        <qualifiedname>utf::to_scalar_unchecked</qualifiedname>
+        <briefdescription>
+<para>Decode to Unicode scalar value without validation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>The Unicode scalar value, or invalid_scalar if invalid </para>
+</simplesect>
+<simplesect kind="warning"><para>Precondition: <ref refid="d8/d8b/namespaceutf_1ae14b58287d878195d4e1b2fa3150db32" kindref="member">is_valid()</ref> must be true. Undefined behavior otherwise. </para>
+</simplesect>
+<simplesect kind="note"><para>For performance-critical code when validity is already guaranteed.</para>
+</simplesect>
+<simplesect kind="return"><para>The Unicode scalar value </para>
+</simplesect>
+<simplesect kind="warning"><para>Precondition: <ref refid="d8/d8b/namespaceutf_1ae14b58287d878195d4e1b2fa3150db32" kindref="member">is_valid()</ref> must be true. Undefined behavior otherwise. </para>
+</simplesect>
+<simplesect kind="note"><para>For performance-critical code when validity is already guaranteed. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="352" column="14" bodyfile="include/utf/utf_codepoints.hpp" bodystart="352" bodyend="355"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1ae14b58287d878195d4e1b2fa3150db32" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::is_valid</definition>
+        <argsstring>() const</argsstring>
+        <name>is_valid</name>
+        <qualifiedname>utf::is_valid</qualifiedname>
+        <briefdescription>
+<para>Check if this represents a valid UTF-8 encoded code point. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Check if this represents a valid Unicode code point.</para>
+<para>Check if this represents a valid UTF-16 encoded code point.</para>
+<para><simplesect kind="return"><para>true if valid, false otherwise</para>
+</simplesect>
+Validates:<itemizedlist>
+<listitem><para>Length is in valid range (1-4)</para>
+</listitem><listitem><para>Decoded scalar is in valid Unicode range</para>
+</listitem><listitem><para>Not a surrogate value</para>
+</listitem><listitem><para>No overlong encodings</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="return"><para>true if valid, false otherwise</para>
+</simplesect>
+Validates:<itemizedlist>
+<listitem><para>Length is in valid range (1-2)</para>
+</listitem><listitem><para>Single units are not surrogates</para>
+</listitem><listitem><para>Surrogate pairs have valid high and low surrogates</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="return"><para>true if valid, false otherwise</para>
+</simplesect>
+Validates:<itemizedlist>
+<listitem><para>Value is in valid Unicode range (0 to 0x10FFFF)</para>
+</listitem><listitem><para>Value is not a surrogate (0xD800-0xDFFF) </para>
+</listitem></itemizedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="364" column="10" bodyfile="include/utf/utf_codepoints.hpp" bodystart="364" bodyend="383"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1ad5c275d1ec431fc98c6f209efb921806" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>utf::size</qualifiedname>
+        <briefdescription>
+<para>Get the size in bytes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the size in bytes (always 4)</para>
+<para><simplesect kind="return"><para>Size in bytes (same as <ref refid="d8/d8b/namespaceutf_1a8fd52ae54800689f2989255a273b6c17" kindref="member">count()</ref> for UTF-8)</para>
+</simplesect>
+<simplesect kind="return"><para>Size in bytes (count * 2)</para>
+</simplesect>
+<simplesect kind="return"><para>4 </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="387" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="387" bodyend="387"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a99a039e686a0d85322126de3e52c6af4" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::operator==</definition>
+        <argsstring>(uint32_t scalar) const</argsstring>
+        <name>operator==</name>
+        <qualifiedname>utf::operator==</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+          <declname>scalar</declname>
+        </param>
+        <briefdescription>
+<para>Compare with a Unicode scalar value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>scalar</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The scalar value to compare with </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if this code point represents the given scalar </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="392" column="9" bodyfile="include/utf/utf_codepoints.hpp" bodystart="392" bodyend="394"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a41a280ade2cad67fec985cd88c48b999" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">auto</ref></type>
+        <definition>auto utf::operator&lt;=&gt;</definition>
+        <argsstring>(const CodePoint &amp;) const =default</argsstring>
+        <name>operator&lt;=&gt;</name>
+        <qualifiedname>utf::operator&lt;=&gt;</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> &amp;</type>
+          <defname>other</defname>
+        </param>
+        <briefdescription>
+<para>Three-way comparison operator. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="706" column="4" bodyfile="include/utf/utf_codepoints.hpp" bodystart="706" bodyend="708" declfile="include/utf/utf_codepoints.hpp" declline="397" declcolumn="4"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a39559fff21cb1df2f120177faafc0ac0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void swap</definition>
+        <argsstring>(CodePoint &amp;a, CodePoint &amp;b)</argsstring>
+        <name>swap</name>
+        <qualifiedname>utf::swap</qualifiedname>
+        <param>
+          <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> &amp;</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> &amp;</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+<para>Swap two code points. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="400" column="16" bodyfile="include/utf/utf_codepoints.hpp" bodystart="400" bodyend="400"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a3fa034ee649073e4cf152080ea1828d2" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>static bool utf::is_surrogate</definition>
+        <argsstring>(uint16_t u)</argsstring>
+        <name>is_surrogate</name>
+        <qualifiedname>utf::is_surrogate</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+          <declname>u</declname>
+        </param>
+        <briefdescription>
+<para>Check if a UTF-16 unit is any surrogate (high or low) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="579" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="579" bodyend="581"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a055c901cac420a5d56b6a51ff1150776" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>static bool utf::is_high_surrogate</definition>
+        <argsstring>(uint16_t u)</argsstring>
+        <name>is_high_surrogate</name>
+        <qualifiedname>utf::is_high_surrogate</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+          <declname>u</declname>
+        </param>
+        <briefdescription>
+<para>Check if a UTF-16 unit is a high surrogate. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="584" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="584" bodyend="586"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a3d553b30f4879ce464afbb585d12ce50" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>static bool utf::is_low_surrogate</definition>
+        <argsstring>(uint16_t u)</argsstring>
+        <name>is_low_surrogate</name>
+        <qualifiedname>utf::is_low_surrogate</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+          <declname>u</declname>
+        </param>
+        <briefdescription>
+<para>Check if a UTF-16 unit is a low surrogate. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="589" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="589" bodyend="591"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1abfc2651376644f251ee212d53e14f056" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+        <definition>static uint16_t utf::to_target_endian</definition>
+        <argsstring>(uint16_t v)</argsstring>
+        <name>to_target_endian</name>
+        <qualifiedname>utf::to_target_endian</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Convert value to target endianness. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="594" column="21" bodyfile="include/utf/utf_codepoints.hpp" bodystart="594" bodyend="601"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a13f673e21cfb282ed8cdf07924697661" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+        <definition>static uint16_t utf::from_target_endian</definition>
+        <argsstring>(uint16_t v)</argsstring>
+        <name>from_target_endian</name>
+        <qualifiedname>utf::from_target_endian</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Convert value from target endianness to native. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="604" column="21" bodyfile="include/utf/utf_codepoints.hpp" bodystart="604" bodyend="606"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a9d98c7207e729e7729ad181f7e477f65" prot="private" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::operator==</definition>
+        <argsstring>(const CodePoint &amp;other) const</argsstring>
+        <name>operator==</name>
+        <qualifiedname>utf::operator==</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Three-way comparison (compare native values) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="701" column="9" bodyfile="include/utf/utf_codepoints.hpp" bodystart="701" bodyend="703"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1aee11628968f51d2cf1e0e807ee112a84" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t utf::to_target_endian</definition>
+        <argsstring>(uint32_t v)</argsstring>
+        <name>to_target_endian</name>
+        <qualifiedname>utf::to_target_endian</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Convert value to target endianness. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="715" column="21" bodyfile="include/utf/utf_codepoints.hpp" bodystart="715" bodyend="722"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a6cec7430cea71a72515b6fb22797cdbe" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t utf::from_target_endian</definition>
+        <argsstring>(uint32_t v)</argsstring>
+        <name>from_target_endian</name>
+        <qualifiedname>utf::from_target_endian</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Convert value from target endianness to native. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="725" column="21" bodyfile="include/utf/utf_codepoints.hpp" bodystart="725" bodyend="727"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1ad539ff667e5d7e6f1b7c44e3d3b9e15d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename DestCodePoint</type>
+          </param>
+          <param>
+            <type>typename SrcCodePoint</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">DestCodePoint</ref> &gt; &amp;&amp;<ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &gt; std::optional&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">DestCodePoint</ref> &gt;</type>
+        <definition>IsCodePoint&lt; DestCodePoint &gt; &amp;&amp;IsCodePoint&lt; SrcCodePoint &gt; std::optional&lt; DestCodePoint &gt; utf::convert</definition>
+        <argsstring>(const SrcCodePoint &amp;from)</argsstring>
+        <name>convert</name>
+        <qualifiedname>utf::convert</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+<para>Convert between different UTF encodings and endiannesses. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>DestCodePoint</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The destination <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> type </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>SrcCodePoint</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> type (deduced) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>from</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source code point to convert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The converted code point, or std::nullopt if source is invalid</para>
+</simplesect>
+This function safely converts between any valid <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> types. If the source code point is invalid, std::nullopt is returned.</para>
+<para>Example: <programlisting><codeline><highlight class="normal"><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">utf::Utf8CodePoint</ref><sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">u8</ref>{0x1F4A9};</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">u16</ref><sp/>=<sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">utf::convert&lt;utf::Utf16BECodePoint&gt;</ref>(<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">u8</ref>);</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">u16</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Use<sp/>*u16</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="772" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="772" bodyend="776"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a42a48a3c89e0d1f9384f69726dfc67f9" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename DestCodePoint</type>
+          </param>
+          <param>
+            <type>typename SrcCodePoint</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">DestCodePoint</ref> &gt; &amp;&amp;<ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &gt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">DestCodePoint</ref></type>
+        <definition>IsCodePoint&lt; DestCodePoint &gt; &amp;&amp;IsCodePoint&lt; SrcCodePoint &gt; DestCodePoint utf::convert_unchecked</definition>
+        <argsstring>(const SrcCodePoint &amp;from)</argsstring>
+        <name>convert_unchecked</name>
+        <qualifiedname>utf::convert_unchecked</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+<para>Convert between UTF encodings without validation (fast path) </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>DestCodePoint</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The destination <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> type </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>SrcCodePoint</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> type (deduced) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>from</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source code point to convert </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The converted code point</para>
+</simplesect>
+<simplesect kind="warning"><para>Precondition: from.is_valid() must be true. Undefined behavior otherwise. </para>
+</simplesect>
+<simplesect kind="note"><para>Use this for performance-critical code when validity is guaranteed.</para>
+</simplesect>
+Example: <programlisting><codeline><highlight class="normal"><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">utf::Utf8CodePoint</ref><sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">u8</ref>{0x41};<sp/><sp/></highlight><highlight class="comment">//<sp/>&apos;A&apos;<sp/>-<sp/>known<sp/>valid</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">u32</ref><sp/>=<sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">utf::convert_unchecked&lt;utf::Utf32BECodePoint&gt;</ref>(<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">u8</ref>);</highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="794" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="794" bodyend="797"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a6591c81ae87be27401c6da6e97748008" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcCodePoint</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &gt; std::optional&lt; <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">Utf8CodePoint</ref> &gt;</type>
+        <definition>IsCodePoint&lt; SrcCodePoint &gt; std::optional&lt; Utf8CodePoint &gt; utf::to_utf8</definition>
+        <argsstring>(const SrcCodePoint &amp;from)</argsstring>
+        <name>to_utf8</name>
+        <qualifiedname>utf::to_utf8</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+<para>Convert any <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> to UTF-8. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>from</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source code point </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>UTF-8 encoded code point, or std::nullopt if source is invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="804" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="804" bodyend="806"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a125944d6e7e2d267faa3880ce92a2df8" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcCodePoint</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &gt; std::optional&lt; <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">Utf16BECodePoint</ref> &gt;</type>
+        <definition>IsCodePoint&lt; SrcCodePoint &gt; std::optional&lt; Utf16BECodePoint &gt; utf::to_utf16_be</definition>
+        <argsstring>(const SrcCodePoint &amp;from)</argsstring>
+        <name>to_utf16_be</name>
+        <qualifiedname>utf::to_utf16_be</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+<para>Convert any <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> to UTF-16 Big Endian. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>from</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source code point </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>UTF-16 BE encoded code point, or std::nullopt if source is invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="813" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="813" bodyend="816"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a13522c204b9f1ba4d35ec65f7d98174e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcCodePoint</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &gt; std::optional&lt; <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">Utf16LECodePoint</ref> &gt;</type>
+        <definition>IsCodePoint&lt; SrcCodePoint &gt; std::optional&lt; Utf16LECodePoint &gt; utf::to_utf16_le</definition>
+        <argsstring>(const SrcCodePoint &amp;from)</argsstring>
+        <name>to_utf16_le</name>
+        <qualifiedname>utf::to_utf16_le</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+<para>Convert any <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> to UTF-16 Little Endian. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>from</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source code point </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>UTF-16 LE encoded code point, or std::nullopt if source is invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="823" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="823" bodyend="826"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a26cc1f98c50200530c0e49f95fde2ca4" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcCodePoint</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &gt; std::optional&lt; <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">Utf32BECodePoint</ref> &gt;</type>
+        <definition>IsCodePoint&lt; SrcCodePoint &gt; std::optional&lt; Utf32BECodePoint &gt; utf::to_utf32_be</definition>
+        <argsstring>(const SrcCodePoint &amp;from)</argsstring>
+        <name>to_utf32_be</name>
+        <qualifiedname>utf::to_utf32_be</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+<para>Convert any <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> to UTF-32 Big Endian. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>from</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source code point </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>UTF-32 BE encoded code point, or std::nullopt if source is invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="833" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="833" bodyend="836"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d8b/namespaceutf_1a5d7cfb1387a10ddd644c3b429fe60947" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcCodePoint</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a5602300f840469db7a7672f876a4d05d" kindref="member">IsCodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &gt; std::optional&lt; <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">Utf32LECodePoint</ref> &gt;</type>
+        <definition>IsCodePoint&lt; SrcCodePoint &gt; std::optional&lt; Utf32LECodePoint &gt; utf::to_utf32_le</definition>
+        <argsstring>(const SrcCodePoint &amp;from)</argsstring>
+        <name>to_utf32_le</name>
+        <qualifiedname>utf::to_utf32_le</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcCodePoint</ref> &amp;</type>
+          <declname>from</declname>
+        </param>
+        <briefdescription>
+<para>Convert any <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref> to UTF-32 Little Endian. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>from</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source code point </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>UTF-32 LE encoded code point, or std::nullopt if source is invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="843" column="17" bodyfile="include/utf/utf_codepoints.hpp" bodystart="843" bodyend="846"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Root namespace for the UTF Strings library. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This namespace contains all UTF-related functionality including:<itemizedlist>
+<listitem><para>Version information (<ref refid="da/d74/structutf_1_1version" kindref="compound">utf::version</ref>)</para>
+</listitem><listitem><para>UTF codepoint types and operations</para>
+</listitem><listitem><para>UTF string types and string views</para>
+</listitem><listitem><para>Conversion utilities between encodings</para>
+</listitem><listitem><para>Factory methods for creating strings from raw byte data</para>
+</listitem></itemizedlist>
+</para>
+<para>All library functionality is accessed through this namespace or its nested namespaces (such as <ref refid="d9/df7/namespaceutf_1_1string" kindref="compound">utf::string</ref> for string types). </para>
+    </detaileddescription>
+    <location file="include/utf.hpp" line="117" column="1"/>
+  </compounddef>
+</doxygen>

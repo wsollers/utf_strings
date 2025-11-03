@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="da/d6e/structutf_1_1encodings_1_1Utf32" kind="struct" language="C++" prot="public">
+    <compoundname>utf::encodings::Utf32</compoundname>
+    <includes refid="d9/d34/utf__codepoints_8hpp" local="no">utf_codepoints.hpp</includes>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="da/d6e/structutf_1_1encodings_1_1Utf32_1a724edc1e695510532932245668f2f369" prot="public" static="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>using utf::encodings::Utf32::storage_type =  uint32_t</definition>
+        <argsstring></argsstring>
+        <name>storage_type</name>
+        <qualifiedname>utf::encodings::Utf32::storage_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="162" column="3" bodyfile="include/utf/utf_codepoints.hpp" bodystart="162" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="da/d6e/structutf_1_1encodings_1_1Utf32_1ae5dfe12863fc87488e1df30bf16499a4" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::encodings::Utf32::unit_size</definition>
+        <argsstring></argsstring>
+        <name>unit_size</name>
+        <qualifiedname>utf::encodings::Utf32::unit_size</qualifiedname>
+        <initializer>= 4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="163" column="23" bodyfile="include/utf/utf_codepoints.hpp" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d6e/structutf_1_1encodings_1_1Utf32_1a5a1875deecfc7720530520e3a8dcda05" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::encodings::Utf32::max_units</definition>
+        <argsstring></argsstring>
+        <name>max_units</name>
+        <qualifiedname>utf::encodings::Utf32::max_units</qualifiedname>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="164" column="23" bodyfile="include/utf/utf_codepoints.hpp" bodystart="164" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>UTF-32 encoding specification. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/utf/utf_codepoints.hpp" line="161" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="161" bodyend="165"/>
+    <listofallmembers>
+      <member refid="da/d6e/structutf_1_1encodings_1_1Utf32_1a5a1875deecfc7720530520e3a8dcda05" prot="public" virt="non-virtual"><scope>utf::encodings::Utf32</scope><name>max_units</name></member>
+      <member refid="da/d6e/structutf_1_1encodings_1_1Utf32_1a724edc1e695510532932245668f2f369" prot="public" virt="non-virtual"><scope>utf::encodings::Utf32</scope><name>storage_type</name></member>
+      <member refid="da/d6e/structutf_1_1encodings_1_1Utf32_1ae5dfe12863fc87488e1df30bf16499a4" prot="public" virt="non-virtual"><scope>utf::encodings::Utf32</scope><name>unit_size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

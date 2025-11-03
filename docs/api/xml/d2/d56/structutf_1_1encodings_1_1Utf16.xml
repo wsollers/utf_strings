@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d2/d56/structutf_1_1encodings_1_1Utf16" kind="struct" language="C++" prot="public">
+    <compoundname>utf::encodings::Utf16</compoundname>
+    <includes refid="d9/d34/utf__codepoints_8hpp" local="no">utf_codepoints.hpp</includes>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="d2/d56/structutf_1_1encodings_1_1Utf16_1acc1d0d3f9c3ca9539fe58c9f5dbdf62a" prot="public" static="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+        <definition>using utf::encodings::Utf16::storage_type =  uint16_t</definition>
+        <argsstring></argsstring>
+        <name>storage_type</name>
+        <qualifiedname>utf::encodings::Utf16::storage_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="155" column="3" bodyfile="include/utf/utf_codepoints.hpp" bodystart="155" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="d2/d56/structutf_1_1encodings_1_1Utf16_1a9b32ee767a86a75c814d2940ac4598aa" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::encodings::Utf16::unit_size</definition>
+        <argsstring></argsstring>
+        <name>unit_size</name>
+        <qualifiedname>utf::encodings::Utf16::unit_size</qualifiedname>
+        <initializer>= 2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="156" column="23" bodyfile="include/utf/utf_codepoints.hpp" bodystart="156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/d56/structutf_1_1encodings_1_1Utf16_1a51c2683c67ccff41de9de79fb15cde1b" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::encodings::Utf16::max_units</definition>
+        <argsstring></argsstring>
+        <name>max_units</name>
+        <qualifiedname>utf::encodings::Utf16::max_units</qualifiedname>
+        <initializer>= 2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="157" column="23" bodyfile="include/utf/utf_codepoints.hpp" bodystart="157" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>UTF-16 encoding specification. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/utf/utf_codepoints.hpp" line="154" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="154" bodyend="158"/>
+    <listofallmembers>
+      <member refid="d2/d56/structutf_1_1encodings_1_1Utf16_1a51c2683c67ccff41de9de79fb15cde1b" prot="public" virt="non-virtual"><scope>utf::encodings::Utf16</scope><name>max_units</name></member>
+      <member refid="d2/d56/structutf_1_1encodings_1_1Utf16_1acc1d0d3f9c3ca9539fe58c9f5dbdf62a" prot="public" virt="non-virtual"><scope>utf::encodings::Utf16</scope><name>storage_type</name></member>
+      <member refid="d2/d56/structutf_1_1encodings_1_1Utf16_1a9b32ee767a86a75c814d2940ac4598aa" prot="public" virt="non-virtual"><scope>utf::encodings::Utf16</scope><name>unit_size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

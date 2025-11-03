@@ -674,6 +674,48 @@ if(UTF_STRINGS_BUILD_FUZZ_TESTS)
 endif()
 
 # --------------------------------------------------------------------
+# Documentation (Doxygen)
+# --------------------------------------------------------------------
+find_package(Doxygen OPTIONAL_COMPONENTS dot)
+
+if(DOXYGEN_FOUND)
+    # Set Doxygen configuration variables
+    set(DOXYGEN_INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src")
+    set(DOXYGEN_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/docs/api")
+    set(DOXYGEN_PROJECT_NAME "UTF Strings Library")
+    set(DOXYGEN_PROJECT_VERSION "${PROJECT_VERSION}")
+    
+    # Create documentation target
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+    
+    # Create clean-docs target
+    add_custom_target(clean-docs
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${DOXYGEN_OUTPUT_DIR}
+        COMMENT "Cleaning generated documentation"
+        VERBATIM
+    )
+    
+    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}")
+    if(DOXYGEN_DOT_FOUND)
+        message(STATUS "Graphviz dot found: ${DOXYGEN_DOT_EXECUTABLE}")
+        message(STATUS "Documentation will include dependency graphs and diagrams")
+    else()
+        message(STATUS "Graphviz dot not found. Install graphviz for enhanced documentation with diagrams")
+    endif()
+    message(STATUS "Available targets:")
+    message(STATUS "  docs       - Generate API documentation")
+    message(STATUS "  clean-docs - Remove generated documentation")
+else()
+    message(STATUS "Doxygen not found. Documentation generation not available.")
+    message(STATUS "Install with: sudo apt install doxygen graphviz")
+endif()
+
+# --------------------------------------------------------------------
 # Code Formatting (clang-format)
 # --------------------------------------------------------------------
 find_program(CLANG_FORMAT_EXECUTABLE
@@ -745,6 +787,7 @@ message(STATUS "  UTF_STRINGS_BUILD_FUZZ_TESTS: ${UTF_STRINGS_BUILD_FUZZ_TESTS}"
 message(STATUS "  UTF_STRINGS_ENABLE_SANITIZERS: ${UTF_STRINGS_ENABLE_SANITIZERS}")
 message(STATUS "  UTF_STRINGS_ENABLE_THREAD_SANITIZER: ${UTF_STRINGS_ENABLE_THREAD_SANITIZER}")
 message(STATUS "  UTF_STRINGS_WITH_GPERFTOOLS: ${UTF_STRINGS_WITH_GPERFTOOLS}")
+message(STATUS "  DOXYGEN_FOUND: ${DOXYGEN_FOUND}")
 message(STATUS "")
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "Release build optimizations enabled:")

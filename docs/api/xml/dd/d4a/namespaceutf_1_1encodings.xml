@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dd/d4a/namespaceutf_1_1encodings" kind="namespace" language="C++">
+    <compoundname>utf::encodings</compoundname>
+    <innerclass refid="d2/d56/structutf_1_1encodings_1_1Utf16" prot="public">utf::encodings::Utf16</innerclass>
+    <innerclass refid="da/d6e/structutf_1_1encodings_1_1Utf32" prot="public">utf::encodings::Utf32</innerclass>
+    <innerclass refid="d6/de3/structutf_1_1encodings_1_1Utf8" prot="public">utf::encodings::Utf8</innerclass>
+    <briefdescription>
+<para>UTF encoding type definitions. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/utf/utf_codepoints.hpp" line="145" column="1"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,541 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dd/d60/classutf_1_1string_1_1StringView" kind="class" language="C++" prot="public">
+    <compoundname>utf::string::StringView</compoundname>
+    <includes refid="d5/d1a/utf__strings_8hpp" local="no">utf_strings.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref></type>
+      </param>
+      <param>
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Endian</ref></type>
+        <declname>E</declname>
+        <defname>E</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="dd/d60/classutf_1_1string_1_1StringView_1aaa147e8b2733b59db4fb13ba1cc8807d" prot="public" static="no">
+        <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>using utf::string::StringView&lt; UtfType, E &gt;::value_type =  CodePoint&lt;UtfType, E&gt;</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>utf::string::StringView::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="253" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="253" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" prot="public" static="no">
+        <type>std::size_t</type>
+        <definition>using utf::string::StringView&lt; UtfType, E &gt;::size_type =  std::size_t</definition>
+        <argsstring></argsstring>
+        <name>size_type</name>
+        <qualifiedname>utf::string::StringView::size_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="254" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="254" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" prot="public" static="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> UtfType::storage_type</type>
+        <definition>using utf::string::StringView&lt; UtfType, E &gt;::storage_type =  typename UtfType::storage_type</definition>
+        <argsstring></argsstring>
+        <name>storage_type</name>
+        <qualifiedname>utf::string::StringView::storage_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="255" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="255" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="dd/d60/classutf_1_1string_1_1StringView_1abb7a77f36d66dd26877cc238f29c273e" prot="public" static="no">
+        <type><ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator" kindref="compound">CodePointIterator</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>using utf::string::StringView&lt; UtfType, E &gt;::iterator =  CodePointIterator&lt;UtfType, E&gt;</definition>
+        <argsstring></argsstring>
+        <name>iterator</name>
+        <qualifiedname>utf::string::StringView::iterator</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="256" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="256" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="dd/d60/classutf_1_1string_1_1StringView_1ae0c7f0ae449bc345673d22ed2f95f602" prot="public" static="no">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1abb7a77f36d66dd26877cc238f29c273e" kindref="member">iterator</ref></type>
+        <definition>using utf::string::StringView&lt; UtfType, E &gt;::const_iterator =  iterator</definition>
+        <argsstring></argsstring>
+        <name>const_iterator</name>
+        <qualifiedname>utf::string::StringView::const_iterator</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="257" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="257" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="dd/d60/classutf_1_1string_1_1StringView_1ac7dde2eb793265d6edd98ae2c8b06af5" prot="public" static="no">
+        <type><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>using utf::string::StringView&lt; UtfType, E &gt;::string_type =  String&lt;UtfType, E&gt;</definition>
+        <argsstring></argsstring>
+        <name>string_type</name>
+        <qualifiedname>utf::string::StringView::string_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="258" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="258" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="dd/d60/classutf_1_1string_1_1StringView_1a4002a1e2fbe399894ef29a92108b217f" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref> *</type>
+        <definition>const storage_type* utf::string::StringView&lt; UtfType, E &gt;::data_</definition>
+        <argsstring></argsstring>
+        <name>data_</name>
+        <qualifiedname>utf::string::StringView::data_</qualifiedname>
+        <initializer>{<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">nullptr</ref>}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="362" column="22" bodyfile="include/utf/utf_strings.hpp" bodystart="362" bodyend="362"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d60/classutf_1_1string_1_1StringView_1a3c67172c01f10bea3ebb5a1213e1a6b4" prot="private" static="no" mutable="no">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+        <definition>size_type utf::string::StringView&lt; UtfType, E &gt;::length_</definition>
+        <argsstring></argsstring>
+        <name>length_</name>
+        <qualifiedname>utf::string::StringView::length_</qualifiedname>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="363" column="13" bodyfile="include/utf/utf_strings.hpp" bodystart="363" bodyend="363"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a21122ae78a487418121d2772579dae3b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::StringView&lt; UtfType, E &gt;::StringView</definition>
+        <argsstring>()=default</argsstring>
+        <name>StringView</name>
+        <qualifiedname>utf::string::StringView::StringView</qualifiedname>
+        <briefdescription>
+<para>Default constructor creates an empty view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="261" column="4"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a004997aab6dcbe74e7d80171ff4f47e1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::StringView&lt; UtfType, E &gt;::StringView</definition>
+        <argsstring>(const storage_type *data, size_type length)</argsstring>
+        <name>StringView</name>
+        <qualifiedname>utf::string::StringView::StringView</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref> *</type>
+          <declname>data</declname>
+        </param>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+<para>Construct from pointer and length (in storage units) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="264" column="4" bodyfile="include/utf/utf_strings.hpp" bodystart="264" bodyend="265"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a31c30ac032651e036f179f6981085471" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::StringView&lt; UtfType, E &gt;::StringView</definition>
+        <argsstring>(const storage_type *data)</argsstring>
+        <name>StringView</name>
+        <qualifiedname>utf::string::StringView::StringView</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref> *</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+<para>Construct from null-terminated string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Computes length by scanning for null terminator </para>
+</simplesect>
+<simplesect kind="warning"><para><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref> must be null-terminated </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="270" column="13" bodyfile="include/utf/utf_strings.hpp" bodystart="270" bodyend="271"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a5e8b6abb2ff42542e3e2f61d9436eab4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">Traits</ref></type>
+          </param>
+          <param>
+            <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">Allocator</ref></type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>utf::string::StringView&lt; UtfType, E &gt;::StringView</definition>
+        <argsstring>(const std::basic_string&lt; storage_type, Traits, Allocator &gt; &amp;str)</argsstring>
+        <name>StringView</name>
+        <qualifiedname>utf::string::StringView::StringView</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> std::basic_string&lt; <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref>, <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">Traits</ref>, <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">Allocator</ref> &gt; &amp;</type>
+          <declname>str</declname>
+        </param>
+        <briefdescription>
+<para>Construct from std::basic_string. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="275" column="4" bodyfile="include/utf/utf_strings.hpp" bodystart="275" bodyend="276"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a19c89b9eba843a6ff289a0836c3af10b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">Traits</ref></type>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>utf::string::StringView&lt; UtfType, E &gt;::StringView</definition>
+        <argsstring>(std::basic_string_view&lt; storage_type, Traits &gt; sv)</argsstring>
+        <name>StringView</name>
+        <qualifiedname>utf::string::StringView::StringView</qualifiedname>
+        <param>
+          <type>std::basic_string_view&lt; <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref>, <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">Traits</ref> &gt;</type>
+          <declname>sv</declname>
+        </param>
+        <briefdescription>
+<para>Construct from std::basic_string_view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="280" column="4" bodyfile="include/utf/utf_strings.hpp" bodystart="280" bodyend="281"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1af18b3abe5383f5ca8dc3553a30d8576a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref> *</type>
+        <definition>const storage_type * utf::string::StringView&lt; UtfType, E &gt;::data</definition>
+        <argsstring>() const</argsstring>
+        <name>data</name>
+        <qualifiedname>utf::string::StringView::data</qualifiedname>
+        <briefdescription>
+<para>Get pointer to the underlying data. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="284" column="24" bodyfile="include/utf/utf_strings.hpp" bodystart="284" bodyend="284"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a1de6110e9925e5239f0127a54691f35c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+        <definition>size_type utf::string::StringView&lt; UtfType, E &gt;::length</definition>
+        <argsstring>() const</argsstring>
+        <name>length</name>
+        <qualifiedname>utf::string::StringView::length</qualifiedname>
+        <briefdescription>
+<para>Get the length in storage units (not code points!) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="287" column="15" bodyfile="include/utf/utf_strings.hpp" bodystart="287" bodyend="287"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a381826e119fba00283aa21ae519fd384" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+        <definition>size_type utf::string::StringView&lt; UtfType, E &gt;::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>utf::string::StringView::size</qualifiedname>
+        <briefdescription>
+<para>Get the size in storage units (alias for <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a1de6110e9925e5239f0127a54691f35c" kindref="member">length()</ref>) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="290" column="15" bodyfile="include/utf/utf_strings.hpp" bodystart="290" bodyend="290"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a6588bd1268d82f72555a43d58f302463" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+        <definition>size_type utf::string::StringView&lt; UtfType, E &gt;::size_bytes</definition>
+        <argsstring>() const</argsstring>
+        <name>size_bytes</name>
+        <qualifiedname>utf::string::StringView::size_bytes</qualifiedname>
+        <briefdescription>
+<para>Get the size in bytes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="293" column="15" bodyfile="include/utf/utf_strings.hpp" bodystart="293" bodyend="295"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1aae7cb583f3b8486557df94c525f41482" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::string::StringView&lt; UtfType, E &gt;::empty</definition>
+        <argsstring>() const</argsstring>
+        <name>empty</name>
+        <qualifiedname>utf::string::StringView::empty</qualifiedname>
+        <briefdescription>
+<para>Check if the view is empty. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="298" column="10" bodyfile="include/utf/utf_strings.hpp" bodystart="298" bodyend="298"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a44dd964e7a46504e84fb08324ef84b20" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1abb7a77f36d66dd26877cc238f29c273e" kindref="member">iterator</ref></type>
+        <definition>iterator utf::string::StringView&lt; UtfType, E &gt;::begin</definition>
+        <argsstring>() const</argsstring>
+        <name>begin</name>
+        <qualifiedname>utf::string::StringView::begin</qualifiedname>
+        <briefdescription>
+<para>Get iterator to the beginning. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="301" column="14" bodyfile="include/utf/utf_strings.hpp" bodystart="301" bodyend="303"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a8e62dd3eb1e7b5e25f1df935feccabd1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1abb7a77f36d66dd26877cc238f29c273e" kindref="member">iterator</ref></type>
+        <definition>iterator utf::string::StringView&lt; UtfType, E &gt;::end</definition>
+        <argsstring>() const</argsstring>
+        <name>end</name>
+        <qualifiedname>utf::string::StringView::end</qualifiedname>
+        <briefdescription>
+<para>Get iterator to the end. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="306" column="14" bodyfile="include/utf/utf_strings.hpp" bodystart="306" bodyend="308"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1aafb3514060bfb24536f23a0239bafa1e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+        <definition>size_type utf::string::StringView&lt; UtfType, E &gt;::count_code_points</definition>
+        <argsstring>() const</argsstring>
+        <name>count_code_points</name>
+        <qualifiedname>utf::string::StringView::count_code_points</qualifiedname>
+        <briefdescription>
+<para>Count the number of code points in the string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>This iterates through the string, <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">O(n)</ref> complexity </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="312" column="15" bodyfile="include/utf/utf_strings.hpp" bodystart="312" bodyend="318"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a034c0c19037fec1de814560fc1e2857e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::string::StringView&lt; UtfType, E &gt;::is_valid</definition>
+        <argsstring>() const</argsstring>
+        <name>is_valid</name>
+        <qualifiedname>utf::string::StringView::is_valid</qualifiedname>
+        <briefdescription>
+<para>Validate the entire string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>true if all code points are valid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="322" column="10" bodyfile="include/utf/utf_strings.hpp" bodystart="322" bodyend="329"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a681faff31d0e2f2732bdd6530eabab19" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::basic_string_view&lt; <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref> &gt;</type>
+        <definition>std::basic_string_view&lt; storage_type &gt; utf::string::StringView&lt; UtfType, E &gt;::to_std_string_view</definition>
+        <argsstring>() const</argsstring>
+        <name>to_std_string_view</name>
+        <qualifiedname>utf::string::StringView::to_std_string_view</qualifiedname>
+        <briefdescription>
+<para>Convert to std::basic_string_view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="332" column="28" bodyfile="include/utf/utf_strings.hpp" bodystart="332" bodyend="334"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a345243fa0d139a8fc74b12199da6f42f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref></type>
+        <definition>StringView utf::string::StringView&lt; UtfType, E &gt;::substr</definition>
+        <argsstring>(size_type pos, size_type count=std::string_view::npos) const</argsstring>
+        <name>substr</name>
+        <qualifiedname>utf::string::StringView::substr</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+          <declname>pos</declname>
+        </param>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+          <declname>count</declname>
+          <defval>std::string_view::npos</defval>
+        </param>
+        <briefdescription>
+<para>Create a substring view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="337" column="16" bodyfile="include/utf/utf_strings.hpp" bodystart="337" bodyend="345"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a5c7d148a801984cb973a84d7273a2f04" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::string::StringView&lt; UtfType, E &gt;::operator==</definition>
+        <argsstring>(const StringView &amp;other) const</argsstring>
+        <name>operator==</name>
+        <qualifiedname>utf::string::StringView::operator==</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Equality comparison. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="348" column="10" bodyfile="include/utf/utf_strings.hpp" bodystart="348" bodyend="351"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1abcb9cdd1b8792a614db33585d94a58b2" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::strong_ordering</type>
+        <definition>std::strong_ordering utf::string::StringView&lt; UtfType, E &gt;::operator&lt;=&gt;</definition>
+        <argsstring>(const StringView &amp;other) const</argsstring>
+        <name>operator&lt;=&gt;</name>
+        <qualifiedname>utf::string::StringView::operator&lt;=&gt;</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+<para>Three-way comparison. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="354" column="5" bodyfile="include/utf/utf_strings.hpp" bodystart="354" bodyend="359"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="dd/d60/classutf_1_1string_1_1StringView_1a157dc320ee7d2e0e7039b58ca3000e84" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" kindref="member">size_type</ref></type>
+        <definition>static size_type utf::string::StringView&lt; UtfType, E &gt;::compute_length</definition>
+        <argsstring>(const storage_type *str)</argsstring>
+        <name>compute_length</name>
+        <qualifiedname>utf::string::StringView::compute_length</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" kindref="member">storage_type</ref> *</type>
+          <declname>str</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="365" column="21" bodyfile="include/utf/utf_strings.hpp" bodystart="365" bodyend="373"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Non-owning view of a UTF-encoded string. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>UtfType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The UTF encoding type (Utf8, Utf16, or Utf32) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>E</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The endianness (Endian::None for UTF-8, BE or LE for UTF-16/32) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+    </detaileddescription>
+    <location file="include/utf/utf_strings.hpp" line="251" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="251" bodyend="374"/>
+    <listofallmembers>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a44dd964e7a46504e84fb08324ef84b20" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>begin</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a157dc320ee7d2e0e7039b58ca3000e84" prot="private" virt="non-virtual"><scope>utf::string::StringView</scope><name>compute_length</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1ae0c7f0ae449bc345673d22ed2f95f602" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>const_iterator</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1aafb3514060bfb24536f23a0239bafa1e" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>count_code_points</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1af18b3abe5383f5ca8dc3553a30d8576a" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>data</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a4002a1e2fbe399894ef29a92108b217f" prot="private" virt="non-virtual"><scope>utf::string::StringView</scope><name>data_</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1aae7cb583f3b8486557df94c525f41482" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>empty</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a8e62dd3eb1e7b5e25f1df935feccabd1" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>end</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a034c0c19037fec1de814560fc1e2857e" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>is_valid</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1abb7a77f36d66dd26877cc238f29c273e" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>iterator</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a1de6110e9925e5239f0127a54691f35c" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>length</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a3c67172c01f10bea3ebb5a1213e1a6b4" prot="private" virt="non-virtual"><scope>utf::string::StringView</scope><name>length_</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1abcb9cdd1b8792a614db33585d94a58b2" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>operator&lt;=&gt;</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a5c7d148a801984cb973a84d7273a2f04" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>operator==</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a381826e119fba00283aa21ae519fd384" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>size</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a6588bd1268d82f72555a43d58f302463" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>size_bytes</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a72929839599dc2edc1f268e428d8f7ce" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>size_type</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a529bb8205087a00afb42b63cd932e61c" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>storage_type</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1ac7dde2eb793265d6edd98ae2c8b06af5" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>string_type</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a21122ae78a487418121d2772579dae3b" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>StringView</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a004997aab6dcbe74e7d80171ff4f47e1" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>StringView</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a31c30ac032651e036f179f6981085471" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>StringView</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a5e8b6abb2ff42542e3e2f61d9436eab4" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>StringView</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a19c89b9eba843a6ff289a0836c3af10b" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>StringView</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a345243fa0d139a8fc74b12199da6f42f" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>substr</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1a681faff31d0e2f2732bdd6530eabab19" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>to_std_string_view</name></member>
+      <member refid="dd/d60/classutf_1_1string_1_1StringView_1aaa147e8b2733b59db4fb13ba1cc8807d" prot="public" virt="non-virtual"><scope>utf::string::StringView</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

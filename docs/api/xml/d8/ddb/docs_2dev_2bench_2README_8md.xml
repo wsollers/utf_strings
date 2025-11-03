@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d8/ddb/docs_2dev_2bench_2README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Historical<sp/>Benchmark<sp/>Charts</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>directory<sp/>contains<sp/>interactive<sp/>charts<sp/>showing<sp/>performance<sp/>trends<sp/>over<sp/>time.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">These<sp/>files<sp/>are<sp/>generated<sp/>by<sp/>the<sp/>`benchmark-action/github-action-benchmark`<sp/>and<sp/>stored<sp/>on<sp/>the<sp/>`gh-pages`<sp/>branch.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>charts<sp/>include:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Performance<sp/>trend<sp/>graphs</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Regression<sp/>detection</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Comparative<sp/>analysis<sp/>across<sp/>commits</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Interactive<sp/>data<sp/>visualization</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Access<sp/>these<sp/>charts<sp/>via:<sp/>https://wsollers.github.io/utf_strings/dev/bench/</highlight></codeline>
+    </programlisting>
+    <location file="docs/dev/bench/README.md"/>
+  </compounddef>
+</doxygen>

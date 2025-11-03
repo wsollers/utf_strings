@@ -1,0 +1,448 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kind="class" language="C++" prot="public">
+    <compoundname>utf::string::SmallStringBuffer</compoundname>
+    <includes refid="d5/d1a/utf__strings_8hpp" local="no">utf_strings.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref></type>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a5dca48072f63fe8dea278fdf41d29950" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::string::SmallStringBuffer&lt; StorageType &gt;::total_size</definition>
+        <argsstring></argsstring>
+        <name>total_size</name>
+        <qualifiedname>utf::string::SmallStringBuffer::total_size</qualifiedname>
+        <initializer>= 32</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="393" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="393" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab9c028f33ccd8f81b88db53739634e25" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::string::SmallStringBuffer&lt; StorageType &gt;::metadata_size</definition>
+        <argsstring></argsstring>
+        <name>metadata_size</name>
+        <qualifiedname>utf::string::SmallStringBuffer::metadata_size</qualifiedname>
+        <initializer>=
+      <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">sizeof</ref>(std::size_t) + <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">sizeof</ref>(std::size_t) + <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">sizeof</ref>(<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="394" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="394" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a702ced159bb9ee5414905bebe8068e40" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::string::SmallStringBuffer&lt; StorageType &gt;::inline_capacity</definition>
+        <argsstring></argsstring>
+        <name>inline_capacity</name>
+        <qualifiedname>utf::string::SmallStringBuffer::inline_capacity</qualifiedname>
+        <initializer>= (<ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a5dca48072f63fe8dea278fdf41d29950" kindref="member">total_size</ref> - <ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab9c028f33ccd8f81b88db53739634e25" kindref="member">metadata_size</ref>) / <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">sizeof</ref>(<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="396" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="396" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1adaa9e88433053bac4776274376f8bb9c" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::string::SmallStringBuffer&lt; StorageType &gt;::size_</definition>
+        <argsstring></argsstring>
+        <name>size_</name>
+        <qualifiedname>utf::string::SmallStringBuffer::size_</qualifiedname>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="576" column="15" bodyfile="include/utf/utf_strings.hpp" bodystart="576" bodyend="576"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a59ffcb6a34039100242a3916aa36b2ff" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::string::SmallStringBuffer&lt; StorageType &gt;::capacity_</definition>
+        <argsstring></argsstring>
+        <name>capacity_</name>
+        <qualifiedname>utf::string::SmallStringBuffer::capacity_</qualifiedname>
+        <initializer>{<ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a702ced159bb9ee5414905bebe8068e40" kindref="member">inline_capacity</ref>}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="577" column="15" bodyfile="include/utf/utf_strings.hpp" bodystart="577" bodyend="577"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1aeb8a5643a3f0cab15cbb3de18ab62af7" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::string::SmallStringBuffer&lt; StorageType &gt;::is_inline_</definition>
+        <argsstring></argsstring>
+        <name>is_inline_</name>
+        <qualifiedname>utf::string::SmallStringBuffer::is_inline_</qualifiedname>
+        <initializer>{<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">true</ref>}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="578" column="8" bodyfile="include/utf/utf_strings.hpp" bodystart="578" bodyend="578"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a8198dd40416f4ddd0ee6dd3889dc90cc" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">union</ref> <ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">utf::string::SmallStringBuffer</ref></type>
+        <definition>union utf::string::SmallStringBuffer utf::string::SmallStringBuffer&lt; StorageType &gt;</definition>
+        <argsstring></argsstring>
+        <name></name>
+        <qualifiedname>utf::string::SmallStringBuffer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="583" column="3"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a5713c4af814941ba96534e1e94c14424" prot="public" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref></type>
+        <definition>StorageType utf::string::SmallStringBuffer&lt; StorageType &gt;::inline_data_[inline_capacity]</definition>
+        <argsstring>[inline_capacity]</argsstring>
+        <name>inline_data_</name>
+        <qualifiedname>utf::string::SmallStringBuffer::inline_data_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="581" column="17" bodyfile="include/utf/utf_strings.hpp" bodystart="581" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ae84e7ab4caedc01c0ddbd0f8537ab3a8" prot="public" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref> *</type>
+        <definition>StorageType* utf::string::SmallStringBuffer&lt; StorageType &gt;::heap_data_</definition>
+        <argsstring></argsstring>
+        <name>heap_data_</name>
+        <qualifiedname>utf::string::SmallStringBuffer::heap_data_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="582" column="17" bodyfile="include/utf/utf_strings.hpp" bodystart="582" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab36c630860eb82f32adf3dd0976a7ea0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::SmallStringBuffer&lt; StorageType &gt;::SmallStringBuffer</definition>
+        <argsstring>()</argsstring>
+        <name>SmallStringBuffer</name>
+        <qualifiedname>utf::string::SmallStringBuffer::SmallStringBuffer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="399" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="399" bodyend="400"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a98411e2177a5165ce0c7b87fbe160c27" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::SmallStringBuffer&lt; StorageType &gt;::~SmallStringBuffer</definition>
+        <argsstring>()</argsstring>
+        <name>~SmallStringBuffer</name>
+        <qualifiedname>utf::string::SmallStringBuffer::~SmallStringBuffer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="403" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="403" bodyend="407"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab99d610311a5c2fd60a1c1605d56c3f7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::SmallStringBuffer&lt; StorageType &gt;::SmallStringBuffer</definition>
+        <argsstring>(const SmallStringBuffer &amp;other)</argsstring>
+        <name>SmallStringBuffer</name>
+        <qualifiedname>utf::string::SmallStringBuffer::SmallStringBuffer</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">SmallStringBuffer</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="410" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="410" bodyend="418"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab589c43b1cdbf08da1df4abbe2e10013" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::SmallStringBuffer&lt; StorageType &gt;::SmallStringBuffer</definition>
+        <argsstring>(SmallStringBuffer &amp;&amp;other)</argsstring>
+        <name>SmallStringBuffer</name>
+        <qualifiedname>utf::string::SmallStringBuffer::SmallStringBuffer</qualifiedname>
+        <param>
+          <type><ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">SmallStringBuffer</ref> &amp;&amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="421" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="421" bodyend="432"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a0a6979f2735c22e2b0e64a2608035ae4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">SmallStringBuffer</ref> &amp;</type>
+        <definition>SmallStringBuffer &amp; utf::string::SmallStringBuffer&lt; StorageType &gt;::operator=</definition>
+        <argsstring>(const SmallStringBuffer &amp;other)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>utf::string::SmallStringBuffer::operator=</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">SmallStringBuffer</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="435" column="21" bodyfile="include/utf/utf_strings.hpp" bodystart="435" bodyend="441"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a34316d638216c43a60c7fabc51429ab9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">SmallStringBuffer</ref> &amp;</type>
+        <definition>SmallStringBuffer &amp; utf::string::SmallStringBuffer&lt; StorageType &gt;::operator=</definition>
+        <argsstring>(SmallStringBuffer &amp;&amp;other)</argsstring>
+        <name>operator=</name>
+        <qualifiedname>utf::string::SmallStringBuffer::operator=</qualifiedname>
+        <param>
+          <type><ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">SmallStringBuffer</ref> &amp;&amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="444" column="21" bodyfile="include/utf/utf_strings.hpp" bodystart="444" bodyend="449"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1afff35a70b20f75d2c3e6808ce95fae1b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref> *</type>
+        <definition>const StorageType * utf::string::SmallStringBuffer&lt; StorageType &gt;::data</definition>
+        <argsstring>() const</argsstring>
+        <name>data</name>
+        <qualifiedname>utf::string::SmallStringBuffer::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="451" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="451" bodyend="453"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1af26b6479ae98d0ae974363cadc46e388" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref> *</type>
+        <definition>StorageType * utf::string::SmallStringBuffer&lt; StorageType &gt;::data</definition>
+        <argsstring>()</argsstring>
+        <name>data</name>
+        <qualifiedname>utf::string::SmallStringBuffer::data</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="455" column="17" bodyfile="include/utf/utf_strings.hpp" bodystart="455" bodyend="457"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a1cbfb7f97762cb290dec354cb00e16ca" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::string::SmallStringBuffer&lt; StorageType &gt;::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <qualifiedname>utf::string::SmallStringBuffer::size</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="459" column="17" bodyfile="include/utf/utf_strings.hpp" bodystart="459" bodyend="459"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1af925c5f1829034de2ecca1e226dd28da" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::string::SmallStringBuffer&lt; StorageType &gt;::capacity</definition>
+        <argsstring>() const</argsstring>
+        <name>capacity</name>
+        <qualifiedname>utf::string::SmallStringBuffer::capacity</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="461" column="17" bodyfile="include/utf/utf_strings.hpp" bodystart="461" bodyend="461"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a12ae892811ed6417c876ca70b6b2b9eb" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::string::SmallStringBuffer&lt; StorageType &gt;::is_inline</definition>
+        <argsstring>() const</argsstring>
+        <name>is_inline</name>
+        <qualifiedname>utf::string::SmallStringBuffer::is_inline</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="463" column="10" bodyfile="include/utf/utf_strings.hpp" bodystart="463" bodyend="463"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1abc52017f30619b43b9409d3012d76672" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void utf::string::SmallStringBuffer&lt; StorageType &gt;::clear</definition>
+        <argsstring>()</argsstring>
+        <name>clear</name>
+        <qualifiedname>utf::string::SmallStringBuffer::clear</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="465" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="465" bodyend="465"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a4fcb5d2c828503d3714186e2362b9c0b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void utf::string::SmallStringBuffer&lt; StorageType &gt;::reserve</definition>
+        <argsstring>(std::size_t new_capacity)</argsstring>
+        <name>reserve</name>
+        <qualifiedname>utf::string::SmallStringBuffer::reserve</qualifiedname>
+        <param>
+          <type>std::size_t</type>
+          <declname>new_capacity</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="467" column="8" bodyfile="include/utf/utf_strings.hpp" bodystart="467" bodyend="492"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ac58363fa11453ada7c81c55a9ca3f662" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void utf::string::SmallStringBuffer&lt; StorageType &gt;::push_back</definition>
+        <argsstring>(StorageType value)</argsstring>
+        <name>push_back</name>
+        <qualifiedname>utf::string::SmallStringBuffer::push_back</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="494" column="8" bodyfile="include/utf/utf_strings.hpp" bodystart="494" bodyend="504"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1aa19457c92d48c120b933678e44339a52" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void utf::string::SmallStringBuffer&lt; StorageType &gt;::append</definition>
+        <argsstring>(const StorageType *src, std::size_t count)</argsstring>
+        <name>append</name>
+        <qualifiedname>utf::string::SmallStringBuffer::append</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">StorageType</ref> *</type>
+          <declname>src</declname>
+        </param>
+        <param>
+          <type>std::size_t</type>
+          <declname>count</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="506" column="8" bodyfile="include/utf/utf_strings.hpp" bodystart="506" bodyend="531"/>
+      </memberdef>
+      <memberdef kind="function" id="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a91f172308ca1d562cb78c560b155b18d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void utf::string::SmallStringBuffer&lt; StorageType &gt;::swap</definition>
+        <argsstring>(SmallStringBuffer &amp;other)</argsstring>
+        <name>swap</name>
+        <qualifiedname>utf::string::SmallStringBuffer::swap</qualifiedname>
+        <param>
+          <type><ref refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" kindref="compound">SmallStringBuffer</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="533" column="8" bodyfile="include/utf/utf_strings.hpp" bodystart="533" bodyend="573"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Small buffer optimization for UTF strings. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Strings up to 32 bytes total (including metadata) are stored inline on the stack. Actual data capacity is 32 - 2*sizeof(size_t) bytes. <simplesect kind="note"><para>StorageType must be trivially copyable (enforced by static_assert) </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <location file="include/utf/utf_strings.hpp" line="385" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="385" bodyend="584"/>
+    <listofallmembers>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1aa19457c92d48c120b933678e44339a52" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>append</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1af925c5f1829034de2ecca1e226dd28da" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>capacity</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a59ffcb6a34039100242a3916aa36b2ff" prot="private" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>capacity_</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1abc52017f30619b43b9409d3012d76672" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>clear</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1afff35a70b20f75d2c3e6808ce95fae1b" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>data</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1af26b6479ae98d0ae974363cadc46e388" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>data</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ae84e7ab4caedc01c0ddbd0f8537ab3a8" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>heap_data_</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a702ced159bb9ee5414905bebe8068e40" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>inline_capacity</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a5713c4af814941ba96534e1e94c14424" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>inline_data_</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a12ae892811ed6417c876ca70b6b2b9eb" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>is_inline</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1aeb8a5643a3f0cab15cbb3de18ab62af7" prot="private" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>is_inline_</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab9c028f33ccd8f81b88db53739634e25" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>metadata_size</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a0a6979f2735c22e2b0e64a2608035ae4" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>operator=</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a34316d638216c43a60c7fabc51429ab9" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>operator=</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ac58363fa11453ada7c81c55a9ca3f662" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>push_back</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a4fcb5d2c828503d3714186e2362b9c0b" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>reserve</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a1cbfb7f97762cb290dec354cb00e16ca" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>size</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1adaa9e88433053bac4776274376f8bb9c" prot="private" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>size_</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab36c630860eb82f32adf3dd0976a7ea0" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>SmallStringBuffer</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab99d610311a5c2fd60a1c1605d56c3f7" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>SmallStringBuffer</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1ab589c43b1cdbf08da1df4abbe2e10013" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>SmallStringBuffer</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a91f172308ca1d562cb78c560b155b18d" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>swap</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a5dca48072f63fe8dea278fdf41d29950" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>total_size</name></member>
+      <member refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer_1a98411e2177a5165ce0c7b87fbe160c27" prot="public" virt="non-virtual"><scope>utf::string::SmallStringBuffer</scope><name>~SmallStringBuffer</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

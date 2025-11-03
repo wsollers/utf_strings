@@ -1,0 +1,332 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="da/d1c/utf_8hpp" kind="file" language="C++">
+    <compoundname>utf.hpp</compoundname>
+    <includes refid="d4/d5b/export_8hpp" local="yes">utf/export.hpp</includes>
+    <includes refid="d9/d34/utf__codepoints_8hpp" local="yes">utf/utf_codepoints.hpp</includes>
+    <includes refid="d5/d1a/utf__strings_8hpp" local="yes">utf/utf_strings.hpp</includes>
+    <includes refid="d7/dad/version_8hpp" local="yes">utf/version.hpp</includes>
+    <incdepgraph>
+      <node id="1">
+        <label>include/utf.hpp</label>
+        <link refid="da/d1c/utf_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>utf/export.hpp</label>
+        <link refid="d4/d5b/export_8hpp"/>
+      </node>
+      <node id="3">
+        <label>utf/utf_codepoints.hpp</label>
+        <link refid="d9/d34/utf__codepoints_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>utf/utf_strings.hpp</label>
+        <link refid="d5/d1a/utf__strings_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>utf/version.hpp</label>
+        <link refid="d7/dad/version_8hpp"/>
+      </node>
+      <node id="11">
+        <label>algorithm</label>
+      </node>
+      <node id="4">
+        <label>array</label>
+      </node>
+      <node id="5">
+        <label>bit</label>
+      </node>
+      <node id="12">
+        <label>compare</label>
+      </node>
+      <node id="6">
+        <label>concepts</label>
+      </node>
+      <node id="7">
+        <label>cstdint</label>
+      </node>
+      <node id="13">
+        <label>cstring</label>
+      </node>
+      <node id="14">
+        <label>iterator</label>
+      </node>
+      <node id="15">
+        <label>limits</label>
+      </node>
+      <node id="16">
+        <label>memory</label>
+      </node>
+      <node id="8">
+        <label>optional</label>
+      </node>
+      <node id="17">
+        <label>ranges</label>
+      </node>
+      <node id="9">
+        <label>span</label>
+      </node>
+      <node id="18">
+        <label>stdexcept</label>
+      </node>
+      <node id="19">
+        <label>string</label>
+      </node>
+      <node id="20">
+        <label>string_view</label>
+      </node>
+      <node id="21">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="d8/d8b/namespaceutf">utf</innernamespace>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="da/d1c/utf_8hpp_1a224ca60d7f407afa8338e7c42559da5c" prot="public" static="no">
+        <name>UTF_HPP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="89" column="9" bodyfile="include/utf.hpp" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="da/d1c/utf_8hpp_1ac178b08488d350461cf90ee0fabdc86f" prot="public" static="no">
+        <name>UTF_VERSION_MAJOR</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="92" column="9" bodyfile="include/utf.hpp" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="da/d1c/utf_8hpp_1ae2d98a20bef1399c1fae070c45c06ff4" prot="public" static="no">
+        <name>UTF_VERSION_MINOR</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="93" column="9" bodyfile="include/utf.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="da/d1c/utf_8hpp_1aba4636fbffc5cc15169a65a5b5b46697" prot="public" static="no">
+        <name>UTF_VERSION_PATCH</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="94" column="9" bodyfile="include/utf.hpp" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="da/d1c/utf_8hpp_1ab6aa1a9c9c430e3bd8781cca83f515bd" prot="public" static="no">
+        <name>UTF_VERSION_STRING</name>
+        <initializer>&quot;0.0.2&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="95" column="9" bodyfile="include/utf.hpp" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="da/d1c/utf_8hpp_1a5aa9f69f6f1f7461cf30acd58afaf6e2" prot="public" static="no">
+        <name>UTF_VERSION_NUMBER</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="96" column="9" bodyfile="include/utf.hpp" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="da/d1c/utf_8hpp_1a0b5d7a6389fa464660952448f9ea63ff" prot="public" static="no">
+        <name>UTF_VERSION_AT_LEAST</name>
+        <param><defname>major</defname></param>
+        <param><defname>minor</defname></param>
+        <param><defname>patch</defname></param>
+        <initializer>  (<ref refid="da/d1c/utf_8hpp_1a5aa9f69f6f1f7461cf30acd58afaf6e2" kindref="member">UTF_VERSION_NUMBER</ref> &gt;= ((major) * 10000 + (minor) * 100 + (patch)))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf.hpp" line="146" column="9" bodyfile="include/utf.hpp" bodystart="146" bodyend="147"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Central UTF Strings library header - main API entry point. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This is the primary header for the UTF Strings library. It provides a unified namespace and includes all necessary components for working with UTF-8, UTF-16, and UTF-32 strings with explicit endianness control.</para>
+<para>Features:<itemizedlist>
+<listitem><para>UTF-8/16/32 string views and containers</para>
+</listitem><listitem><para>Small String Optimization (SSO) - strings &lt;= 32 bytes stored on stack</para>
+</listitem><listitem><para>Iterator support for code point traversal</para>
+</listitem><listitem><para>String conversion between encodings</para>
+</listitem><listitem><para>String concatenation operators</para>
+</listitem><listitem><para>Validation and sanitization</para>
+</listitem><listitem><para>constexpr and noexcept throughout for zero runtime overhead</para>
+</listitem><listitem><para>Range-based operations</para>
+</listitem><listitem><para>Factory methods for creating strings from byte arrays</para>
+</listitem></itemizedlist>
+</para>
+<para>Requirements:<itemizedlist>
+<listitem><para>C++23 or later</para>
+</listitem><listitem><para>Standard library support for: &lt;string&gt;, &lt;string_view&gt;, &lt;ranges&gt;</para>
+</listitem></itemizedlist>
+</para>
+<para>Example Usage: <programlisting><codeline><highlight class="preprocessor">#include<sp/>&lt;<ref refid="da/d1c/utf_8hpp" kindref="compound">utf.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>Create<sp/>UTF-8<sp/>string<sp/>view</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">utf::string::Utf8StringView</ref><sp/>sv{u8</highlight><highlight class="stringliteral">&quot;Hello<sp/>世界<sp/>💩&quot;</highlight><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>Iterate<sp/>over<sp/>code<sp/>points</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>cp<sp/>:<sp/>sv)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cp.is_valid())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>scalar<sp/>=<sp/>cp.to_scalar();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>...</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>Convert<sp/>between<sp/>encodings</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">utf::string::Utf32BEString</ref><sp/>u32{0x1F4A9};</highlight></codeline>
+<codeline><highlight class="normal"><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">utf::string::Utf8String</ref><sp/>u8{u32};<sp/><sp/></highlight><highlight class="comment">//<sp/>Converting<sp/>constructor</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">u8<sp/>=<sp/>u32;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Converting<sp/>assignment</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>Factory<sp/>methods<sp/>from<sp/>byte<sp/>arrays</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">std::array&lt;uint8_t,<sp/>4&gt;<sp/>utf8_bytes<sp/>=<sp/>{0x48,<sp/>0x65,<sp/>0x6C,<sp/>0x6C};<sp/><sp/></highlight><highlight class="comment">//<sp/>&quot;Hell&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>utf8_str<sp/>=<sp/>utf::string::Utf8String::from_bytes(utf8_bytes.data(),<sp/>utf8_bytes.size());</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(utf8_str.has_value())<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Use<sp/>the<sp/>string</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>String<sp/>concatenation</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>combined<sp/>=<sp/>u8<sp/>+<sp/>u8;</highlight></codeline>
+<codeline><highlight class="normal">u8<sp/>+=<sp/><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">utf::Utf8CodePoint</ref>{0x21};<sp/><sp/></highlight><highlight class="comment">//<sp/>Append<sp/>&apos;!&apos;</highlight></codeline>
+</programlisting></para>
+<para><simplesect kind="version"><para>0.0.2 </para>
+</simplesect>
+<simplesect kind="author"><para>William Sollers </para>
+</simplesect>
+<simplesect kind="copyright"><para>BSD 2-Clause License </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(c)<sp/>2025<sp/>William<sp/>Sollers</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/>Redistribution<sp/>and<sp/>use<sp/>in<sp/>source<sp/>and<sp/>binary<sp/>forms,<sp/>with<sp/>or<sp/>without</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*<sp/>modification,<sp/>are<sp/>permitted<sp/>provided<sp/>that<sp/>the<sp/>following<sp/>conditions<sp/>are<sp/>met:</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>1.<sp/>Redistributions<sp/>of<sp/>source<sp/>code<sp/>must<sp/>retain<sp/>the<sp/>above<sp/>copyright<sp/>notice,<sp/>this</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer.</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/>2.<sp/>Redistributions<sp/>in<sp/>binary<sp/>form<sp/>must<sp/>reproduce<sp/>the<sp/>above<sp/>copyright<sp/>notice,</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/>this<sp/>list<sp/>of<sp/>conditions<sp/>and<sp/>the<sp/>following<sp/>disclaimer<sp/>in<sp/>the<sp/>documentation</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/>and/or<sp/>other<sp/>materials<sp/>provided<sp/>with<sp/>the<sp/>distribution.</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/>THIS<sp/>SOFTWARE<sp/>IS<sp/>PROVIDED<sp/>BY<sp/>THE<sp/>COPYRIGHT<sp/>HOLDERS<sp/>AND<sp/>CONTRIBUTORS<sp/>&quot;AS<sp/>IS&quot;</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>AND<sp/>ANY<sp/>EXPRESS<sp/>OR<sp/>IMPLIED<sp/>WARRANTIES,<sp/>INCLUDING,<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO,<sp/>THE</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>IMPLIED<sp/>WARRANTIES<sp/>OF<sp/>MERCHANTABILITY<sp/>AND<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE<sp/>ARE</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/>DISCLAIMED.<sp/>IN<sp/>NO<sp/>EVENT<sp/>SHALL<sp/>THE<sp/>COPYRIGHT<sp/>HOLDER<sp/>OR<sp/>CONTRIBUTORS<sp/>BE<sp/>LIABLE</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/>FOR<sp/>ANY<sp/>DIRECT,<sp/>INDIRECT,<sp/>INCIDENTAL,<sp/>SPECIAL,<sp/>EXEMPLARY,<sp/>OR<sp/>CONSEQUENTIAL</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>DAMAGES<sp/>(INCLUDING,<sp/>BUT<sp/>NOT<sp/>LIMITED<sp/>TO,<sp/>PROCUREMENT<sp/>OF<sp/>SUBSTITUTE<sp/>GOODS<sp/>OR</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>SERVICES;<sp/>LOSS<sp/>OF<sp/>USE,<sp/>DATA,<sp/>OR<sp/>PROFITS;<sp/>OR<sp/>BUSINESS<sp/>INTERRUPTION)<sp/>HOWEVER</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>CAUSED<sp/>AND<sp/>ON<sp/>ANY<sp/>THEORY<sp/>OF<sp/>LIABILITY,<sp/>WHETHER<sp/>IN<sp/>CONTRACT,<sp/>STRICT<sp/>LIABILITY,</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/>OR<sp/>TORT<sp/>(INCLUDING<sp/>NEGLIGENCE<sp/>OR<sp/>OTHERWISE)<sp/>ARISING<sp/>IN<sp/>ANY<sp/>WAY<sp/>OUT<sp/>OF<sp/>THE<sp/>USE</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*<sp/>OF<sp/>THIS<sp/>SOFTWARE,<sp/>EVEN<sp/>IF<sp/>ADVISED<sp/>OF<sp/>THE<sp/>POSSIBILITY<sp/>OF<sp/>SUCH<sp/>DAMAGE.</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>UTF_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89" refid="da/d1c/utf_8hpp_1a224ca60d7f407afa8338e7c42559da5c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UTF_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Version<sp/>information<sp/>-<sp/>this<sp/>is<sp/>the<sp/>authoritative<sp/>version<sp/>for<sp/>the<sp/>library</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="da/d1c/utf_8hpp_1ac178b08488d350461cf90ee0fabdc86f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UTF_VERSION_MAJOR<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93" refid="da/d1c/utf_8hpp_1ae2d98a20bef1399c1fae070c45c06ff4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UTF_VERSION_MINOR<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94" refid="da/d1c/utf_8hpp_1aba4636fbffc5cc15169a65a5b5b46697" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UTF_VERSION_PATCH<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95" refid="da/d1c/utf_8hpp_1ab6aa1a9c9c430e3bd8781cca83f515bd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UTF_VERSION_STRING<sp/>&quot;0.0.2&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96" refid="da/d1c/utf_8hpp_1a5aa9f69f6f1f7461cf30acd58afaf6e2" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UTF_VERSION_NUMBER<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Include<sp/>all<sp/>UTF<sp/>library<sp/>components</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="d4/d5b/export_8hpp" kindref="compound">utf/export.hpp</ref>&quot;</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Platform-specific<sp/>export<sp/>macros</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="d9/d34/utf__codepoints_8hpp" kindref="compound">utf/utf_codepoints.hpp</ref>&quot;</highlight><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Core<sp/>UTF<sp/>codepoint<sp/>functionality</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="d5/d1a/utf__strings_8hpp" kindref="compound">utf/utf_strings.hpp</ref>&quot;</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>UTF<sp/>string<sp/>types<sp/>and<sp/>operations</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="d7/dad/version_8hpp" kindref="compound">utf/version.hpp</ref>&quot;</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Detailed<sp/>version<sp/>information</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117" refid="d8/d8b/namespaceutf" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="d8/d8b/namespaceutf" kindref="compound">utf</ref><sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123" refid="d8/d8b/namespaceutf_1aabb7bc93a6aeb8f5e92e2028efa4c9cd" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="d8/d8b/namespaceutf_1aabb7bc93a6aeb8f5e92e2028efa4c9cd" kindref="member">get_version</ref>()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="da/d1c/utf_8hpp_1ab6aa1a9c9c430e3bd8781cca83f515bd" kindref="member">UTF_VERSION_STRING</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129" refid="d8/d8b/namespaceutf_1a7d2037351747c10c8c8fc552b71c3ed1" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="d8/d8b/namespaceutf_1a7d2037351747c10c8c8fc552b71c3ed1" kindref="member">get_version_number</ref>()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="da/d1c/utf_8hpp_1a5aa9f69f6f1f7461cf30acd58afaf6e2" kindref="member">UTF_VERSION_NUMBER</ref>;<sp/>}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="138" refid="d8/d8b/namespaceutf_1a663824c6b087e4351edd113e00bfeac6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="d8/d8b/namespaceutf_1a663824c6b087e4351edd113e00bfeac6" kindref="member">version_at_least</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>major,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>minor<sp/>=<sp/>0,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>patch<sp/>=<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">required</ref><sp/>=<sp/>major<sp/>*<sp/>10000<sp/>+<sp/>minor<sp/>*<sp/>100<sp/>+<sp/>patch;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="da/d1c/utf_8hpp_1a5aa9f69f6f1f7461cf30acd58afaf6e2" kindref="member">UTF_VERSION_NUMBER</ref><sp/>&gt;=<sp/><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">required</ref>;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>utf</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Convenience<sp/>macros<sp/>for<sp/>version<sp/>checking</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="146" refid="da/d1c/utf_8hpp_1a0b5d7a6389fa464660952448f9ea63ff" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>UTF_VERSION_AT_LEAST(major,<sp/>minor,<sp/>patch)<sp/>\</highlight></codeline>
+<codeline lineno="147"><highlight class="preprocessor"><sp/><sp/>(UTF_VERSION_NUMBER<sp/>&gt;=<sp/>((major)<sp/>*<sp/>10000<sp/>+<sp/>(minor)<sp/>*<sp/>100<sp/>+<sp/>(patch)))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>UTF_HPP</highlight></codeline>
+    </programlisting>
+    <location file="include/utf.hpp"/>
+  </compounddef>
+</doxygen>

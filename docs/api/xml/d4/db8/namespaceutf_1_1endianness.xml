@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d4/db8/namespaceutf_1_1endianness" kind="namespace" language="C++">
+    <compoundname>utf::endianness</compoundname>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>Type</name>
+        <qualifiedname>utf::endianness::Type</qualifiedname>
+        <enumvalue id="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62da6adf97f83acf6453d4a6a4b1070f3754" prot="public">
+          <name>None</name>
+          <briefdescription>
+<para>Byte-oriented encoding (no endianness applies, e.g., UTF-8) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62dad3dcf429c679f9af82eb9a3b31c4df44" prot="public">
+          <name>BE</name>
+          <briefdescription>
+<para>Big Endian (network byte order) </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62dacfe6055d2e0503be378bb63449ec7ba6" prot="public">
+          <name>LE</name>
+          <briefdescription>
+<para>Little Endian. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Byte order specification. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="118" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="118" bodyend="122"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="d4/db8/namespaceutf_1_1endianness_1a323db568a8a440a39da67234e33e27cc" prot="public" static="no" mutable="no">
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Type</ref></type>
+        <definition>Type utf::endianness::none</definition>
+        <argsstring></argsstring>
+        <name>none</name>
+        <qualifiedname>utf::endianness::none</qualifiedname>
+        <initializer>= <ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62da6adf97f83acf6453d4a6a4b1070f3754" kindref="member">Type::None</ref></initializer>
+        <briefdescription>
+<para>Convenience alias for byte-oriented encoding. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="125" column="14" bodyfile="include/utf/utf_codepoints.hpp" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/db8/namespaceutf_1_1endianness_1ae5048338c17ebe02b787af32a52482eb" prot="public" static="no" mutable="no">
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Type</ref></type>
+        <definition>Type utf::endianness::big_endian</definition>
+        <argsstring></argsstring>
+        <name>big_endian</name>
+        <qualifiedname>utf::endianness::big_endian</qualifiedname>
+        <initializer>= <ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62dad3dcf429c679f9af82eb9a3b31c4df44" kindref="member">Type::BE</ref></initializer>
+        <briefdescription>
+<para>Convenience alias for big endian. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="128" column="14" bodyfile="include/utf/utf_codepoints.hpp" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/db8/namespaceutf_1_1endianness_1a616844ade9c9d3df4930d603789711b2" prot="public" static="no" mutable="no">
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Type</ref></type>
+        <definition>Type utf::endianness::little_endian</definition>
+        <argsstring></argsstring>
+        <name>little_endian</name>
+        <qualifiedname>utf::endianness::little_endian</qualifiedname>
+        <initializer>= <ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62dacfe6055d2e0503be378bb63449ec7ba6" kindref="member">Type::LE</ref></initializer>
+        <briefdescription>
+<para>Convenience alias for little endian. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="131" column="14" bodyfile="include/utf/utf_codepoints.hpp" bodystart="131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/db8/namespaceutf_1_1endianness_1a99e4486d0d4d416eed8fa19afdcb5677" prot="public" static="no" mutable="no">
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Type</ref></type>
+        <definition>Type utf::endianness::network_byte_order</definition>
+        <argsstring></argsstring>
+        <name>network_byte_order</name>
+        <qualifiedname>utf::endianness::network_byte_order</qualifiedname>
+        <initializer>= <ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62dad3dcf429c679f9af82eb9a3b31c4df44" kindref="member">Type::BE</ref></initializer>
+        <briefdescription>
+<para>Convenience alias for network byte order (same as big endian) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="134" column="14" bodyfile="include/utf/utf_codepoints.hpp" bodystart="134" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Endianness-related types and constants. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/utf/utf_codepoints.hpp" line="116" column="1"/>
+  </compounddef>
+</doxygen>
