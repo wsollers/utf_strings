@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762184746997,
+  "lastUpdate": 1762187921984,
   "repoUrl": "https://github.com/wsollers/utf_strings",
   "entries": {
     "Benchmark": [
@@ -2698,6 +2698,180 @@ window.BENCHMARK_DATA = {
             "value": 93.75757701924807,
             "unit": "ns/iter",
             "extra": "iterations: 14915265\ncpu: 93.7460863752675 ns\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "committer": {
+            "email": "wsollers@gmail.com",
+            "name": "BoondockTaints",
+            "username": "wsollers"
+          },
+          "distinct": true,
+          "id": "f112ba0fa56ff011e48b0f52690ed4800eb74007",
+          "message": "Merge branch 'feature/utf-strings'",
+          "timestamp": "2025-11-03T11:25:58-05:00",
+          "tree_id": "32b7ac4364130e4bf758d732dcbb3e9df435828b",
+          "url": "https://github.com/wsollers/utf_strings/commit/f112ba0fa56ff011e48b0f52690ed4800eb74007"
+        },
+        "date": 1762187921597,
+        "tool": "googlecpp",
+        "benches": [
+          {
+            "name": "BM_UTF8_CodePoint_Creation",
+            "value": 6.437859507363149,
+            "unit": "ns/iter",
+            "extra": "iterations: 219094087\ncpu: 6.4372619421719035 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF16BE_CodePoint_Creation",
+            "value": 1.8550167498280403,
+            "unit": "ns/iter",
+            "extra": "iterations: 745012723\ncpu: 1.8546989055917107 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF32LE_CodePoint_Creation",
+            "value": 0.6236083519451874,
+            "unit": "ns/iter",
+            "extra": "iterations: 2248962652\ncpu: 0.6235518659026625 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_Scalar_Conversion",
+            "value": 2.410811249860455,
+            "unit": "ns/iter",
+            "extra": "iterations: 566752381\ncpu: 2.41054992233019 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_Validation",
+            "value": 3.330780810983384,
+            "unit": "ns/iter",
+            "extra": "iterations: 421781093\ncpu: 3.3306219963728902 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_to_UTF16BE_Conversion",
+            "value": 4.581604537750423,
+            "unit": "ns/iter",
+            "extra": "iterations: 309882357\ncpu: 4.581306669872785 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF16BE_to_UTF32LE_Conversion",
+            "value": 2.672200387247467,
+            "unit": "ns/iter",
+            "extra": "iterations: 521456217\ncpu: 2.671803086394115 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_Units_Access",
+            "value": 2.6136248688717783,
+            "unit": "ns/iter",
+            "extra": "iterations: 536248082\ncpu: 2.613346736408466 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_FromBytes",
+            "value": 138.50743760559726,
+            "unit": "ns/iter",
+            "extra": "iterations: 10188494\ncpu: 138.50099445511762 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF16BE_String_FromBytes",
+            "value": 55.83815025373958,
+            "unit": "ns/iter",
+            "extra": "iterations: 25069406\ncpu: 55.83511296597931 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF32LE_String_FromBytes",
+            "value": 26.86972305207917,
+            "unit": "ns/iter",
+            "extra": "iterations: 56463865\ncpu: 26.868029632757178 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_FromCString",
+            "value": 17.85340910666871,
+            "unit": "ns/iter",
+            "extra": "iterations: 78451872\ncpu: 17.85229947094192 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_CopyConstruction",
+            "value": 6.395904912951287,
+            "unit": "ns/iter",
+            "extra": "iterations: 218560238\ncpu: 6.395358843816782 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_Assignment",
+            "value": 18.374173974246702,
+            "unit": "ns/iter",
+            "extra": "iterations: 76790584\ncpu: 18.372368258066647 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_to_UTF16BE_String_Conversion",
+            "value": 191.98853153080174,
+            "unit": "ns/iter",
+            "extra": "iterations: 7277170\ncpu: 191.97243983581532 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF16BE_to_UTF32LE_String_Conversion",
+            "value": 107.80317053521509,
+            "unit": "ns/iter",
+            "extra": "iterations: 13030986\ncpu: 107.79598021208831 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_RoundTrip_Conversion",
+            "value": 390.26683723573285,
+            "unit": "ns/iter",
+            "extra": "iterations: 3586426\ncpu: 390.23622793276604 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_Concatenation",
+            "value": 21.499614668705757,
+            "unit": "ns/iter",
+            "extra": "iterations: 64848094\ncpu: 21.49764816526449 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_Append_Operator",
+            "value": 18.42488372818753,
+            "unit": "ns/iter",
+            "extra": "iterations: 76045301\ncpu: 18.423359715546457 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_CodePoint_Counting",
+            "value": 38.950421002760606,
+            "unit": "ns/iter",
+            "extra": "iterations: 36880637\ncpu: 38.94697477703545 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_Iteration",
+            "value": 92.70258372164885,
+            "unit": "ns/iter",
+            "extra": "iterations: 15115057\ncpu: 92.69632406943617 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_String_Validation",
+            "value": 128.72314555196206,
+            "unit": "ns/iter",
+            "extra": "iterations: 10966228\ncpu: 128.71700989620146 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_StringView_Creation",
+            "value": 2.890677454361694,
+            "unit": "ns/iter",
+            "extra": "iterations: 483758329\ncpu: 2.8904917025211465 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_StringView_CodePoint_Counting",
+            "value": 38.19364121825119,
+            "unit": "ns/iter",
+            "extra": "iterations: 39939317\ncpu: 38.19081831068881 ns\nthreads: 1"
+          },
+          {
+            "name": "BM_UTF8_StringView_Iteration",
+            "value": 94.04640080198611,
+            "unit": "ns/iter",
+            "extra": "iterations: 14912975\ncpu: 94.041378397 ns\nthreads: 1"
           }
         ]
       }
