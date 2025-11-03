@@ -1,10 +1,16 @@
 var searchData=
 [
-  ['patch_0',['patch',['../da/d74/structutf_1_1version.html#acc20a403577dbbc628c1665cc6a178ad',1,'utf::version']]],
-  ['performance_20benchmarks_1',['Performance Benchmarks',['..//media/wsollers/extradrive1/projects/utf_strings/docs/README.md#autotoc_md19',1,'']]],
-  ['platform_20c_2023_20library_2',['UTF Strings - Cross-Platform C++23 Library',['../index.html',1,'']]],
-  ['pointer_3',['pointer',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#adf4526ea3c2e166b41b834c8bf7fb9d1',1,'utf::string::CodePointIterator']]],
-  ['position_4',['position',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#a763d2694ca6a4c8897d1f9a1704cf26e',1,'utf::string::CodePointIterator']]],
-  ['prompts_5',['Common AI Prompts',['../index.html#autotoc_md8',1,'']]],
-  ['push_5fback_6',['push_back',['../d5/d60/classutf_1_1string_1_1SmallStringBuffer.html#ac58363fa11453ada7c81c55a9ca3f662',1,'utf::string::SmallStringBuffer']]]
+  ['maintenance_0',['🔄 Maintenance',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md49',1,'']]],
+  ['major_1',['major',['../da/d74/structutf_1_1version.html#aab279b32d7929f665fd15ee42873cf06',1,'utf::version']]],
+  ['management_2',['Version Management',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md54',1,'']]],
+  ['mandatory_20code_20reviews_20strong_3',['&lt;strong&gt;Mandatory Code Reviews&lt;/strong&gt;',['../index.html#autotoc_md10',1,'']]],
+  ['manual_20setup_20advanced_4',['Manual Setup (Advanced)',['../index.html#autotoc_md3',1,'']]],
+  ['max_5funits_5',['max_units',['../d6/de3/structutf_1_1encodings_1_1Utf8.html#acad3902590433724f0215764ed371836',1,'utf::encodings::Utf8::max_units'],['../da/d6e/structutf_1_1encodings_1_1Utf32.html#a5a1875deecfc7720530520e3a8dcda05',1,'utf::encodings::Utf32::max_units'],['../d2/d56/structutf_1_1encodings_1_1Utf16.html#a51c2683c67ccff41de9de79fb15cde1b',1,'utf::encodings::Utf16::max_units']]],
+  ['metadata_5fsize_6',['metadata_size',['../d5/d60/classutf_1_1string_1_1SmallStringBuffer.html#ab9c028f33ccd8f81b88db53739634e25',1,'utf::string::SmallStringBuffer']]],
+  ['metrics_7',['metrics',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md35',1,'📊 Quality Metrics'],['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md38',1,'Performance Metrics'],['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md23',1,'Quality Metrics']]],
+  ['minor_8',['minor',['../da/d74/structutf_1_1version.html#a603289b48dfe12a86f796e7bc7cbf334',1,'utf::version']]],
+  ['missing_20diagrams_9',['2. Missing Diagrams',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md42',1,'']]],
+  ['modifying_20styling_10',['Modifying Styling',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md57',1,'']]],
+  ['monthly_11',['Monthly',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md51',1,'']]],
+  ['multibyteoriented_12',['MultiByteOriented',['../d8/d8b/namespaceutf.html#aecc7104706f976715b81a290a7180281',1,'utf']]]
 ];

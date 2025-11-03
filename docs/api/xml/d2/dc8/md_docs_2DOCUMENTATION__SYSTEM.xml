@@ -1,0 +1,446 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM" kind="page">
+    <compoundname>md_docs_2DOCUMENTATION__SYSTEM</compoundname>
+    <title>UTF Strings Documentation System</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md14"/> This document describes the comprehensive documentation pipeline for the UTF Strings library, including API documentation generation, deployment, and maintenance.</para>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md15">
+<title>🏗️ Architecture</title>
+<para>The documentation system consists of several integrated components:</para>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md16">
+<title>1. &lt;strong&gt;Doxygen Configuration&lt;/strong&gt;</title>
+<para><itemizedlist>
+<listitem><para><bold>File:</bold> <computeroutput>Doxyfile</computeroutput></para>
+</listitem><listitem><para><bold>Purpose:</bold> Generates comprehensive API documentation from source code comments</para>
+</listitem><listitem><para><bold>Features:</bold><itemizedlist>
+<listitem><para>C++23 support with concepts and requires clauses</para>
+</listitem><listitem><para>SVG diagrams with Graphviz integration</para>
+</listitem><listitem><para>Interactive search functionality</para>
+</listitem><listitem><para>XML output for integration with other tools</para>
+</listitem><listitem><para>Modern responsive styling</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md17">
+<title>2. &lt;strong&gt;GitHub Actions Workflow&lt;/strong&gt;</title>
+<para><itemizedlist>
+<listitem><para><bold>File:</bold> <computeroutput>.github/workflows/docs.yml</computeroutput></para>
+</listitem><listitem><para><bold>Purpose:</bold> Automated documentation building and deployment</para>
+</listitem><listitem><para><bold>Triggers:</bold> Push to main/develop, pull requests, releases</para>
+</listitem><listitem><para><bold>Features:</bold><itemizedlist>
+<listitem><para>Multi-step documentation generation</para>
+</listitem><listitem><para>Quality metrics and statistics reporting</para>
+</listitem><listitem><para>PR comments with build status</para>
+</listitem><listitem><para>Automatic deployment to GitHub Pages</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md18">
+<title>3. &lt;strong&gt;Custom Styling&lt;/strong&gt;</title>
+<para><itemizedlist>
+<listitem><para><bold>File:</bold> <computeroutput>docs/assets/css/doxygen-custom.css</computeroutput></para>
+</listitem><listitem><para><bold>Purpose:</bold> Modern, GitHub-style appearance</para>
+</listitem><listitem><para><bold>Features:</bold><itemizedlist>
+<listitem><para>Dark mode support</para>
+</listitem><listitem><para>Responsive design</para>
+</listitem><listitem><para>Clean typography and spacing</para>
+</listitem><listitem><para>Consistent branding</para>
+</listitem></itemizedlist>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md19">
+<title>4. &lt;strong&gt;CMake Integration&lt;/strong&gt;</title>
+<para><itemizedlist>
+<listitem><para><bold>Targets:</bold> <computeroutput>docs</computeroutput>, <computeroutput>clean-docs</computeroutput></para>
+</listitem><listitem><para><bold>Purpose:</bold> Local documentation generation</para>
+</listitem><listitem><para><bold>Requirements:</bold> Doxygen and Graphviz</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md20">
+<title>📚 Generated Documentation</title>
+<para>The system generates comprehensive documentation including:</para>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md21">
+<title>API Reference</title>
+<para><itemizedlist>
+<listitem><para><bold>Classes:</bold> All public classes with detailed member documentation</para>
+</listitem><listitem><para><bold>Namespaces:</bold> Complete namespace hierarchy and organization <linebreak/>
+</para>
+</listitem><listitem><para><bold>Functions:</bold> All public functions with parameters and return values</para>
+</listitem><listitem><para><bold>Types:</bold> Type aliases, concepts, and enumerations</para>
+</listitem><listitem><para><bold>Examples:</bold> Code examples and usage patterns</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md22">
+<title>Visual Elements</title>
+<para><itemizedlist>
+<listitem><para><bold>Class Diagrams:</bold> Inheritance and collaboration relationships</para>
+</listitem><listitem><para><bold>Dependency Graphs:</bold> Include and dependency relationships</para>
+</listitem><listitem><para><bold>Directory Structure:</bold> Visual project organization</para>
+</listitem><listitem><para><bold>Interactive Navigation:</bold> Searchable tree view</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md23">
+<title>Quality Metrics</title>
+<para><itemizedlist>
+<listitem><para><bold>Coverage Statistics:</bold> Documentation coverage by file and class</para>
+</listitem><listitem><para><bold>Build Quality:</bold> Warnings and errors from generation</para>
+</listitem><listitem><para><bold>File Statistics:</bold> Counts of classes, functions, and documentation</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md24">
+<title>🚀 Usage</title>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md25">
+<title>Local Documentation Generation</title>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md26">
+<title>Prerequisites</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Ubuntu/Debian</highlight></codeline>
+<codeline><highlight class="normal">sudo<sp/>apt<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>macOS<sp/>with<sp/>Homebrew<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">brew<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Windows<sp/>with<sp/>Chocolatey</highlight></codeline>
+<codeline><highlight class="normal">choco<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md27">
+<title>Build Commands</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Using<sp/>CMake<sp/>targets<sp/>(recommended)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset=conan-debug<sp/>--target<sp/>docs</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset=conan-debug<sp/>--target<sp/>clean-docs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Direct<sp/>Doxygen<sp/>invocation</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>Doxyfile</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Clean<sp/>generated<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">rm<sp/>-rf<sp/>docs/api/</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md28">
+<title>Accessing Documentation</title>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md29">
+<title>Local Access</title>
+<para>After building locally:<itemizedlist>
+<listitem><para><bold>Main Index:</bold> <computeroutput>docs/api/html/index.html</computeroutput></para>
+</listitem><listitem><para><bold>API Reference:</bold> <computeroutput>docs/api/html/annotated.html</computeroutput></para>
+</listitem><listitem><para><bold>Search:</bold> Available through the web interface</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md30">
+<title>Online Access (GitHub Pages)</title>
+<para><itemizedlist>
+<listitem><para><bold>Base URL:</bold> <computeroutput><ulink url="https://wsollers.github.io/utf_strings/">https://wsollers.github.io/utf_strings/</ulink></computeroutput></para>
+</listitem><listitem><para><bold>API Docs:</bold> <computeroutput><ulink url="https://wsollers.github.io/utf_strings/api/">https://wsollers.github.io/utf_strings/api/</ulink></computeroutput></para>
+</listitem><listitem><para><bold>Performance:</bold> <computeroutput><ulink url="https://wsollers.github.io/utf_strings/performance/">https://wsollers.github.io/utf_strings/performance/</ulink></computeroutput></para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md31">
+<title>🔧 Configuration</title>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md32">
+<title>Doxygen Settings</title>
+<para>Key configuration options in <computeroutput>Doxyfile</computeroutput>:</para>
+<para><programlisting><codeline><highlight class="normal">PROJECT_NAME<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>&quot;UTF<sp/>Strings<sp/>Library&quot;</highlight></codeline>
+<codeline><highlight class="normal">PROJECT_VERSION<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>&quot;v1.3.0&quot;</highlight></codeline>
+<codeline><highlight class="normal">INPUT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>include/<sp/>src/<sp/>README.md<sp/>docs/</highlight></codeline>
+<codeline><highlight class="normal">RECURSIVE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">GENERATE_HTML<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">GENERATE_XML<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">USE_MATHJAX<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">HAVE_DOT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">INTERACTIVE_SVG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md33">
+<title>GitHub Actions Configuration</title>
+<para>The workflow is configured for:<itemizedlist>
+<listitem><para><bold>Build Matrix:</bold> Ubuntu latest with Doxygen 1.9.8+</para>
+</listitem><listitem><para><bold>Deployment:</bold> GitHub Pages with proper permissions</para>
+</listitem><listitem><para><bold>Artifacts:</bold> 30-day retention for documentation builds</para>
+</listitem><listitem><para><bold>Comments:</bold> Automatic PR status updates</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md34">
+<title>Custom CSS Variables</title>
+<para>The styling system uses CSS custom properties:</para>
+<para><programlisting filename=".css"><codeline><highlight class="normal">:root<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--primary-color:<sp/>#0366d6;<sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Links<sp/>and<sp/>accents<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--background-color:<sp/>#ffffff;<sp/><sp/><sp/><sp/>/*<sp/>Main<sp/>background<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--surface-color:<sp/>#f6f8fa;<sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Cards<sp/>and<sp/>surfaces<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--text-color:<sp/>#24292e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Primary<sp/>text<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--code-background:<sp/>#f6f8fa;<sp/><sp/><sp/><sp/>/*<sp/>Code<sp/>blocks<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md35">
+<title>📊 Quality Metrics</title>
+<para>The documentation system tracks:</para>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md36">
+<title>Coverage Statistics</title>
+<para><itemizedlist>
+<listitem><para><bold>Header Files:</bold> Count of documented header files</para>
+</listitem><listitem><para><bold>Source Files:</bold> Count of documented implementation files <linebreak/>
+</para>
+</listitem><listitem><para><bold>Classes/Structs:</bold> Count of documented classes and structures</para>
+</listitem><listitem><para><bold>Functions:</bold> Count of documented functions and methods</para>
+</listitem><listitem><para><bold>Generated Pages:</bold> Total HTML pages created</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md37">
+<title>Build Quality</title>
+<para><itemizedlist>
+<listitem><para><bold>Doxygen Warnings:</bold> Parser and generation warnings</para>
+</listitem><listitem><para><bold>Doxygen Errors:</bold> Critical errors preventing generation</para>
+</listitem><listitem><para><bold>Missing Documentation:</bold> Undocumented public APIs</para>
+</listitem><listitem><para><bold>Link Resolution:</bold> Broken cross-references</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md38">
+<title>Performance Metrics</title>
+<para><itemizedlist>
+<listitem><para><bold>Generation Time:</bold> Time to build complete documentation</para>
+</listitem><listitem><para><bold>Output Size:</bold> Total size of generated documentation</para>
+</listitem><listitem><para><bold>File Counts:</bold> Number of HTML, CSS, JS, and image files</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md39">
+<title>🔍 Troubleshooting</title>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md40">
+<title>Common Issues</title>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md41">
+<title>1. Doxygen Not Found</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Error:<sp/>Doxygen<sp/>not<sp/>found</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Install<sp/>Doxygen</highlight></codeline>
+<codeline><highlight class="normal">sudo<sp/>apt<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md42">
+<title>2. Missing Diagrams</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Error:<sp/>Graphs<sp/>not<sp/>generated</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Install<sp/>Graphviz</highlight></codeline>
+<codeline><highlight class="normal">sudo<sp/>apt<sp/>install<sp/>graphviz</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md43">
+<title>3. Build Warnings</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Warning:<sp/>Undocumented<sp/>members</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Add<sp/>///<sp/>@brief<sp/>comments<sp/>to<sp/>public<sp/>APIs</highlight></codeline>
+</programlisting></para>
+</sect3>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md44">
+<title>4. GitHub Pages Deployment Fails</title>
+<para><programlisting filename=".yaml"><codeline><highlight class="normal">#<sp/>Error:<sp/>Permission<sp/>denied</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Ensure<sp/>workflow<sp/>has<sp/>pages:<sp/>write<sp/>permission</highlight></codeline>
+<codeline><highlight class="normal">permissions:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>contents:<sp/>read</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>pages:<sp/>write</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>id-token:<sp/>write</highlight></codeline>
+</programlisting></para>
+</sect3>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md45">
+<title>Debug Commands</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Check<sp/>Doxygen<sp/>version<sp/>and<sp/>features</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>--version</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>-h</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Validate<sp/>Doxyfile<sp/>syntax</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>-s<sp/>-g<sp/>/tmp/test.doxyfile</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Test<sp/>with<sp/>verbose<sp/>output</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>Doxyfile<sp/>2&gt;&amp;1<sp/>|<sp/>tee<sp/>doxygen.log</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Check<sp/>generated<sp/>file<sp/>structure</highlight></codeline>
+<codeline><highlight class="normal">find<sp/>docs/api/html<sp/>-name<sp/>&quot;*.html&quot;<sp/>|<sp/>head<sp/>-10</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md46">
+<title>🚦 CI/CD Pipeline</title>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md47">
+<title>Workflow Stages</title>
+<para><orderedlist>
+<listitem><para><bold>Setup Phase</bold><itemizedlist>
+<listitem><para>Install Doxygen and Graphviz</para>
+</listitem><listitem><para>Validate project structure</para>
+</listitem><listitem><para>Count documentable items</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><bold>Generation Phase</bold><itemizedlist>
+<listitem><para>Run Doxygen with full configuration</para>
+</listitem><listitem><para>Generate HTML and XML output</para>
+</listitem><listitem><para>Create quality metrics</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><bold>Analysis Phase</bold><itemizedlist>
+<listitem><para>Count warnings and errors</para>
+</listitem><listitem><para>Generate coverage statistics</para>
+</listitem><listitem><para>Create quality report</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><bold>Deployment Phase</bold> (main branch only)<itemizedlist>
+<listitem><para>Prepare for GitHub Pages</para>
+</listitem><listitem><para>Upload artifacts</para>
+</listitem><listitem><para>Deploy to live site</para>
+</listitem></itemizedlist>
+</para>
+</listitem><listitem><para><bold>Reporting Phase</bold><itemizedlist>
+<listitem><para>Comment on pull requests</para>
+</listitem><listitem><para>Update deployment status</para>
+</listitem><listitem><para>Archive build artifacts</para>
+</listitem></itemizedlist>
+</para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md48">
+<title>Status Badges</title>
+<para>The system can generate status badges for:<itemizedlist>
+<listitem><para><bold>Documentation Build:</bold> <image type="html" name="https://img.shields.io/badge/docs-passing-green" alt="Docs" inline="yes"></image>
+</para>
+</listitem><listitem><para><bold>Coverage:</bold> <image type="html" name="https://img.shields.io/badge/coverage-85%25-yellow" alt="Coverage" inline="yes"></image>
+</para>
+</listitem><listitem><para><bold>Quality:</bold> <image type="html" name="https://img.shields.io/badge/warnings-2-orange" alt="Quality" inline="yes"></image>
+</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md49">
+<title>🔄 Maintenance</title>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md50">
+<title>Regular Tasks</title>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md51">
+<title>Monthly</title>
+<para><itemizedlist>
+<listitem><para>Review documentation coverage metrics</para>
+</listitem><listitem><para>Update Doxygen configuration for new features</para>
+</listitem><listitem><para>Check for broken links and references</para>
+</listitem><listitem><para>Update styling for consistency</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md52">
+<title>Per Release</title>
+<para><itemizedlist>
+<listitem><para>Update version numbers in Doxyfile</para>
+</listitem><listitem><para>Regenerate full documentation</para>
+</listitem><listitem><para>Verify all examples and code snippets</para>
+</listitem><listitem><para>Update README and getting started guides</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+<sect3 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md53">
+<title>As Needed</title>
+<para><itemizedlist>
+<listitem><para>Fix Doxygen warnings</para>
+</listitem><listitem><para>Add missing API documentation</para>
+</listitem><listitem><para>Update custom CSS for new components</para>
+</listitem><listitem><para>Optimize build performance</para>
+</listitem></itemizedlist>
+</para>
+</sect3>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md54">
+<title>Version Management</title>
+<para>Documentation versioning follows the library version:<itemizedlist>
+<listitem><para><bold>Major Releases:</bold> Full documentation rebuild</para>
+</listitem><listitem><para><bold>Minor Releases:</bold> Incremental updates</para>
+</listitem><listitem><para><bold>Patch Releases:</bold> Bug fixes and corrections</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md55">
+<title>📝 Contributing</title>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md56">
+<title>Adding Documentation</title>
+<para><orderedlist>
+<listitem><para><bold>Source Comments:</bold> Use Doxygen-style comments <programlisting filename=".cpp"><codeline></codeline>
+<codeline></codeline>
+</programlisting></para>
+</listitem><listitem><para><bold>File Headers:</bold> Document file purpose and usage <programlisting filename=".cpp"><codeline></codeline>
+</programlisting></para>
+</listitem><listitem><para><bold>Examples:</bold> Include usage examples <programlisting filename=".cpp"><codeline></codeline>
+<codeline></codeline>
+</programlisting></para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md57">
+<title>Modifying Styling</title>
+<para><orderedlist>
+<listitem><para><bold>CSS Changes:</bold> Edit <computeroutput>docs/assets/css/doxygen-custom.css</computeroutput></para>
+</listitem><listitem><para><bold>Layout Changes:</bold> Edit <computeroutput>docs/assets/DoxygenLayout.xml</computeroutput></para>
+</listitem><listitem><para><bold>Configuration:</bold> Edit <computeroutput>Doxyfile</computeroutput> for structural changes</para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md58">
+<title>Testing Changes</title>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Test<sp/>locally<sp/>before<sp/>committing</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset=conan-debug<sp/>--target<sp/>docs</highlight></codeline>
+<codeline><highlight class="normal">open<sp/>docs/api/html/index.html</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Check<sp/>for<sp/>warnings</highlight></codeline>
+<codeline><highlight class="normal">grep<sp/>-i<sp/>&quot;warning\|error&quot;<sp/>doxygen.log</highlight></codeline>
+</programlisting></para>
+</sect2>
+</sect1>
+<sect1 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md59">
+<title>🎯 Future Enhancements</title>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md60">
+<title>Planned Features</title>
+<para><itemizedlist>
+<listitem><para><bold>Interactive Examples:</bold> Live code examples with syntax highlighting</para>
+</listitem><listitem><para><bold>API Diff Reports:</bold> Compare API changes between versions <linebreak/>
+</para>
+</listitem><listitem><para><bold>Integration Tests:</bold> Validate documentation examples</para>
+</listitem><listitem><para><bold>Multi-language Support:</bold> Internationalization for documentation</para>
+</listitem><listitem><para><bold>Advanced Search:</bold> Full-text search with filters and facets</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM_1autotoc_md61">
+<title>Integration Opportunities</title>
+<para><itemizedlist>
+<listitem><para><bold>IDE Integration:</bold> VSCode extension for documentation preview</para>
+</listitem><listitem><para><bold>Package Managers:</bold> Integration with Conan and vcpkg documentation</para>
+</listitem><listitem><para><bold>Testing Frameworks:</bold> Link test cases to documented functionality</para>
+</listitem><listitem><para><bold>Performance Monitoring:</bold> Link benchmarks to API documentation</para>
+</listitem></itemizedlist>
+</para>
+<para><hruler/>
+</para>
+<para>For questions or issues with the documentation system, please <ulink url="https://github.com/wsollers/utf_strings/issues">open an issue</ulink> on GitHub. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="docs/DOCUMENTATION_SYSTEM.md"/>
+  </compounddef>
+</doxygen>

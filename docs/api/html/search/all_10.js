@@ -1,11 +1,16 @@
 var searchData=
 [
-  ['readme_2emd_0',['readme.md',['../d8/ddb/docs_2dev_2bench_2README_8md.html',1,'(Global Namespace)'],['../d2/da2/docs_2performance_2README_8md.html',1,'(Global Namespace)'],['../d4/d84/docs_2README_8md.html',1,'(Global Namespace)'],['../da/ddd/README_8md.html',1,'(Global Namespace)']]],
-  ['recommended_1',['Automated Setup (Recommended)',['../index.html#autotoc_md2',1,'']]],
-  ['reference_2',['reference',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#ad74b399a76356be7d6e283aa61d743dc',1,'utf::string::CodePointIterator']]],
-  ['reserve_3',['reserve',['../d5/d60/classutf_1_1string_1_1SmallStringBuffer.html#a4fcb5d2c828503d3714186e2362b9c0b',1,'utf::string::SmallStringBuffer']]],
-  ['review_20standards_20strong_4',['&lt;strong&gt;Review Standards&lt;/strong&gt;',['../index.html#autotoc_md11',1,'']]],
-  ['reviews_5',['Code Quality &amp; Reviews',['../index.html#autotoc_md9',1,'']]],
-  ['reviews_20strong_6',['&lt;strong&gt;Mandatory Code Reviews&lt;/strong&gt;',['../index.html#autotoc_md10',1,'']]],
-  ['rune_7',['rune',['../d8/d8b/namespaceutf.html#ab5f6346dd885cb3f2210bd1a95da710e',1,'utf']]]
+  ['online_20access_20github_20pages_0',['Online Access (GitHub Pages)',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md30',1,'']]],
+  ['operator_20uint32_5ft_1',['operator uint32_t',['../dd/dbd/structutf_1_1UnicodeScalar.html#a6d1e1ecdc9a69479e0f0c01260bd5242',1,'utf::UnicodeScalar']]],
+  ['operator_21_3d_2',['operator!=',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#a124e740f9f6b51519263629bf432b442',1,'utf::string::CodePointIterator']]],
+  ['operator_2a_3',['operator*',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#aee49ae3178ede86abf1da598b3fbc0c6',1,'utf::string::CodePointIterator']]],
+  ['operator_2b_4',['operator+',['../d9/df7/namespaceutf_1_1string.html#af2b2568e031a673713da3da4e3e40f36',1,'utf::string::operator+(const String&lt; UtfType, E &gt; &amp;lhs, const String&lt; UtfType, E &gt; &amp;rhs)'],['../d9/df7/namespaceutf_1_1string.html#a4a3224725411acbe64a9d8cd09cdd228',1,'utf::string::operator+(const CodePoint&lt; UtfType, E &gt; &amp;lhs, const String&lt; UtfType, E &gt; &amp;rhs)'],['../d9/df7/namespaceutf_1_1string.html#a1938e89ba7c483179678b19a8185738b',1,'utf::string::operator+(const String&lt; UtfType, E &gt; &amp;lhs, const CodePoint&lt; UtfType, E &gt; &amp;rhs)'],['../d9/df7/namespaceutf_1_1string.html#ab3a5e93edc5c13edc15103578d1d6eaf',1,'utf::string::operator+(StringView&lt; UtfType, E &gt; lhs, const String&lt; UtfType, E &gt; &amp;rhs)'],['../d9/df7/namespaceutf_1_1string.html#a4e55b5b22fd6afffb5a6e6578010781a',1,'utf::string::operator+(const String&lt; UtfType, E &gt; &amp;lhs, StringView&lt; UtfType, E &gt; rhs)']]],
+  ['operator_2b_2b_5',['operator++',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#a03fe4bba5475ed5a503d2df624e468d6',1,'utf::string::CodePointIterator::operator++(int)'],['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#abfad6fd66c384e89ddd8a9b4abac4213',1,'utf::string::CodePointIterator::operator++()']]],
+  ['operator_2d_3e_6',['operator-&gt;',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#a6aaca0cc376822350f1cbfc783bb273c',1,'utf::string::CodePointIterator']]],
+  ['operator_3c_3d_3e_7',['operator&lt;=&gt;',['../dd/d60/classutf_1_1string_1_1StringView.html#abcb9cdd1b8792a614db33585d94a58b2',1,'utf::string::StringView::operator&lt;=&gt;()'],['../d8/d8b/namespaceutf.html#a41a280ade2cad67fec985cd88c48b999',1,'utf::operator&lt;=&gt;()']]],
+  ['operator_3d_8',['operator=',['../d5/d60/classutf_1_1string_1_1SmallStringBuffer.html#a34316d638216c43a60c7fabc51429ab9',1,'utf::string::SmallStringBuffer::operator=(SmallStringBuffer &amp;&amp;other)'],['../d5/d60/classutf_1_1string_1_1SmallStringBuffer.html#a0a6979f2735c22e2b0e64a2608035ae4',1,'utf::string::SmallStringBuffer::operator=(const SmallStringBuffer &amp;other)']]],
+  ['operator_3d_3d_9',['operator==',['../d8/dda/classutf_1_1string_1_1CodePointIterator.html#a906f7ff07c970f1066974f0507f7ae1a',1,'utf::string::CodePointIterator::operator==()'],['../dd/d60/classutf_1_1string_1_1StringView.html#a5c7d148a801984cb973a84d7273a2f04',1,'utf::string::StringView::operator==()'],['../d8/d8b/namespaceutf.html#a99a039e686a0d85322126de3e52c6af4',1,'utf::operator==()']]],
+  ['opportunities_10',['Integration Opportunities',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md61',1,'']]],
+  ['out_5fof_5frange_11',['out_of_range',['../d8/d8b/namespaceutf.html#a54ef1028d44d0a398aab503ce1fb6e83a4fb901c70a0fdc05b55d95985f3300b0',1,'utf']]],
+  ['overlong_5fencoding_12',['overlong_encoding',['../d8/d8b/namespaceutf.html#a54ef1028d44d0a398aab503ce1fb6e83a6a0e0bbe71573653a91e08488f6d7e60',1,'utf']]]
 ];

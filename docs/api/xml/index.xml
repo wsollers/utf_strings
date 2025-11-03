@@ -244,6 +244,8 @@
     <member refid="d9/df7/namespaceutf_1_1string_1a05ce4690031119b8739fe196b78d9332" kind="function"><name>utf32_le_string_from_bytes</name></member>
     <member refid="d9/df7/namespaceutf_1_1string_1afcfe11d3b0fe8ccc1cc24a0cb70f8b58" kind="function"><name>utf32_le_string_from_bytes</name></member>
   </compound>
+  <compound refid="d2/db2/DOCUMENTATION__SYSTEM_8md" kind="file"><name>DOCUMENTATION_SYSTEM.md</name>
+  </compound>
   <compound refid="da/d1c/utf_8hpp" kind="file"><name>utf.hpp</name>
     <member refid="da/d1c/utf_8hpp_1a224ca60d7f407afa8338e7c42559da5c" kind="define"><name>UTF_HPP</name></member>
     <member refid="da/d1c/utf_8hpp_1ac178b08488d350461cf90ee0fabdc86f" kind="define"><name>UTF_VERSION_MAJOR</name></member>
@@ -287,6 +289,8 @@
   <compound refid="d6/d19/utf__codepoints_8cpp" kind="file"><name>utf_codepoints.cpp</name>
   </compound>
   <compound refid="d1/d73/utf__strings_8cpp" kind="file"><name>utf_strings.cpp</name>
+  </compound>
+  <compound refid="d2/dc8/md_docs_2DOCUMENTATION__SYSTEM" kind="page"><name>md_docs_2DOCUMENTATION__SYSTEM</name>
   </compound>
   <compound refid="dir_076f77d8849e8d5e4f487dd0dad2c82c" kind="dir"><name>docs/dev/bench</name>
   </compound>
