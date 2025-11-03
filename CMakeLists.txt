@@ -446,7 +446,7 @@ endif()
 if(UTF_STRINGS_BUILD_BENCHMARKS)
   find_package(benchmark CONFIG REQUIRED)
 
-  add_executable(utf_strings-bench benchmarks/utf8_bench.cpp)
+  add_executable(utf_strings-bench benchmarks/utf8_bench.cpp benchmarks/utf_strings_bench.cpp)
   target_link_libraries(utf_strings-bench PRIVATE utf_strings_static benchmark::benchmark)
   target_compile_features(utf_strings-bench PRIVATE cxx_std_23)
   
@@ -575,6 +575,33 @@ if(UTF_STRINGS_BUILD_FUZZ_TESTS)
     target_link_options(fuzz_utf32_le PRIVATE ${FUZZ_LINK_FLAGS})
   endif()
 
+  # UTF-8 String fuzz target
+  add_executable(fuzz_utf8_string fuzz/fuzz_utf8_string.cpp)
+  target_link_libraries(fuzz_utf8_string PRIVATE utf_strings_static)
+  target_compile_features(fuzz_utf8_string PRIVATE cxx_std_23)
+  target_compile_options(fuzz_utf8_string PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf8_string PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
+
+  # UTF-16 BE String fuzz target
+  add_executable(fuzz_utf16_be_string fuzz/fuzz_utf16_be_string.cpp)
+  target_link_libraries(fuzz_utf16_be_string PRIVATE utf_strings_static)
+  target_compile_features(fuzz_utf16_be_string PRIVATE cxx_std_23)
+  target_compile_options(fuzz_utf16_be_string PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf16_be_string PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
+
+  # UTF StringView fuzz target
+  add_executable(fuzz_string_view fuzz/fuzz_string_view.cpp)
+  target_link_libraries(fuzz_string_view PRIVATE utf_strings_static)
+  target_compile_features(fuzz_string_view PRIVATE cxx_std_23)
+  target_compile_options(fuzz_string_view PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_string_view PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
+
   # Note: Fuzz targets don't use apply_build_flags() since they have their own specific flags
 
   # Custom targets for running fuzz tests
@@ -613,9 +640,31 @@ if(UTF_STRINGS_BUILD_FUZZ_TESTS)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   )
 
+  add_custom_target(run_fuzz_utf8_string
+    COMMAND $<TARGET_FILE:fuzz_utf8_string> -max_total_time=30 -print_final_stats=1
+    DEPENDS fuzz_utf8_string
+    COMMENT "Running UTF-8 String fuzz test for 30 seconds"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
+  add_custom_target(run_fuzz_utf16_be_string
+    COMMAND $<TARGET_FILE:fuzz_utf16_be_string> -max_total_time=30 -print_final_stats=1
+    DEPENDS fuzz_utf16_be_string
+    COMMENT "Running UTF-16 BE String fuzz test for 30 seconds"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
+  add_custom_target(run_fuzz_string_view
+    COMMAND $<TARGET_FILE:fuzz_string_view> -max_total_time=30 -print_final_stats=1
+    DEPENDS fuzz_string_view
+    COMMENT "Running UTF StringView fuzz test for 30 seconds"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
   # Meta target to run all fuzz tests
   add_custom_target(run_all_fuzz_tests
-    DEPENDS run_fuzz_utf8 run_fuzz_utf16_be run_fuzz_utf16_le run_fuzz_utf32_be run_fuzz_utf32_le
+    DEPENDS run_fuzz_utf8 run_fuzz_utf16_be run_fuzz_utf16_le run_fuzz_utf32_be run_fuzz_utf32_le 
+            run_fuzz_utf8_string run_fuzz_utf16_be_string run_fuzz_string_view
     COMMENT "Running all fuzz tests"
   )
 
