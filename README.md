@@ -156,3 +156,28 @@ When working with AI assistants on this project:
 ```
 
 The AI context files ensure consistent, project-appropriate assistance across all AI platforms! 🚀
+
+## Code Quality & Reviews
+
+This project maintains high standards for production-ready C++ code:
+
+### **Mandatory Code Reviews**
+- 📋 **[Code Review Guidelines](CODE_REVIEW_GUIDELINES.md)** - Comprehensive review parameters for all code changes
+- ⚡ **Performance Analysis** - Efficiency, algorithmic complexity, optimization opportunities  
+- 🔒 **Security Analysis** - Memory safety, undefined behavior, vulnerability assessment
+- 🐛 **Correctness Validation** - Edge cases, error handling, logic verification
+- 🚀 **Modern C++23 Standards** - Best practices, proper feature usage, API design
+
+### **Review Standards**
+Every change must meet:
+- 🔴 **Zero Critical Issues** - No security vulnerabilities, undefined behavior, or crashes
+- 🟡 **Address Important Issues** - Performance and correctness concerns resolved  
+- ✅ **Production Ready** - Code must be deployable to production environments
+
+### **Development Workflow**
+1. **Pre-Push Review** - Complete comprehensive review using [guidelines](CODE_REVIEW_GUIDELINES.md)
+2. **CI Validation** - All automated tests, security scans, and quality checks pass
+3. **Peer Review** - Team review focusing on design and maintainability
+4. **Integration** - Merge only after all standards are met
+
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for complete development guidelines.

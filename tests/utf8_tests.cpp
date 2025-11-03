@@ -26,7 +26,7 @@
 
 #include <gtest/gtest.h>
 
-#include "utf/utf_strings.hpp"
+#include <utf.hpp>
 
 using namespace utf;
 

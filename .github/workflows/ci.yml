@@ -8,6 +8,14 @@ on:
   release:
     types: [published]
 
+# Global permissions for the entire workflow
+permissions:
+  contents: read
+  issues: write
+  checks: write
+  pull-requests: write
+  actions: read
+
 env:
   CONAN_USER_HOME: "${{ github.workspace }}/conan-cache"
 
@@ -436,6 +444,337 @@ jobs:
             build/build/benchmark_results_clang.json
 
   # ============================================================================
+  # Linux x64 - Clang Debug with Code Coverage
+  # ============================================================================
+
+  linux-clang-coverage:
+    name: "Linux Clang Code Coverage (x64)"
+    runs-on: ubuntu-24.04
+    needs: [yaml-validation]
+    if: always() && (needs.yaml-validation.result == 'success' || needs.yaml-validation.result == 'skipped')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        timeout-minutes: 15
+        run: |
+          set -e  # Exit on any error
+
+          # Update package list first
+          sudo apt update
+
+          # Install basic dependencies first (these are fast and reliable)
+          sudo apt install -y cmake python3-pip git wget curl bc
+
+          # Install Clang 18 with timeout and retry logic
+          echo "Installing Clang 18..."
+          for i in {1..3}; do
+            if timeout 10m bash -c "
+              wget -q https://apt.llvm.org/llvm.sh &&
+              chmod +x llvm.sh &&
+              sudo ./llvm.sh 18
+            "; then
+              echo "LLVM installation successful on attempt $i"
+              break
+            else
+              echo "LLVM installation attempt $i failed, retrying..."
+              rm -f llvm.sh
+              if [ $i -eq 3 ]; then
+                echo "All LLVM installation attempts failed"
+                exit 1
+              fi
+              sleep 30
+            fi
+          done
+
+          # Install code coverage tools
+          sudo apt install -y llvm-18 llvm-18-dev clang-format-18 || {
+            echo "Some LLVM tools not available, trying alternatives..."
+            sudo apt install -y llvm llvm-dev clang-format || echo "Some tools installation failed"
+          }
+
+          # Set up symlinks
+          sudo ln -sf /usr/bin/clang-18 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+          sudo ln -sf /usr/bin/llvm-profdata-18 /usr/bin/llvm-profdata || sudo ln -sf /usr/bin/llvm-profdata /usr/bin/llvm-profdata
+          sudo ln -sf /usr/bin/llvm-cov-18 /usr/bin/llvm-cov || sudo ln -sf /usr/bin/llvm-cov /usr/bin/llvm-cov
+          if command -v clang-format-18 >/dev/null 2>&1; then
+            sudo ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format
+          fi
+
+          # Verify installation
+          clang --version
+          clang++ --version
+          llvm-profdata-18 --version || echo "llvm-profdata not available"
+          llvm-cov-18 --version || echo "llvm-cov not available"
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Conan
+        run: |
+          pip3 install --user conan
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
+          # Use static profile for Clang 18 with C++23 (code coverage)
+          sed -i 's/compiler=.*/compiler=clang/' ~/.conan2/profiles/default
+          sed -i 's/compiler.version=.*/compiler.version=18/' ~/.conan2/profiles/default
+          sed -i 's/compiler.libcxx=.*/compiler.libcxx=libstdc++11/' ~/.conan2/profiles/default
+          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
+          sed -i 's/os=.*/os=Linux/' ~/.conan2/profiles/default
+          sed -i 's/arch=.*/arch=x86_64/' ~/.conan2/profiles/default
+          echo "=== Conan Profile ==="
+          conan profile show --profile:host=default
+
+      - name: Cache Conan packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.conan2
+          key: conan-linux-clang-coverage-${{ hashFiles('conanfile.py') }}
+          restore-keys: |
+            conan-linux-clang-coverage-
+            conan-linux-clang-
+
+      - name: Install dependencies
+        run: |
+          export CC=clang
+          export CXX=clang++
+          conan install . -s os=Linux -s build_type=Debug --output-folder=build --build=missing -o with_gperftools=True
+
+      - name: Configure CMake with Coverage
+        run: |
+          export CC=clang
+          export CXX=clang++
+          cmake -S . -B build/Coverage \
+            -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DCMAKE_C_COMPILER=clang \
+            -DCOMPILER_TYPE=CLANG \
+            -DUSE_LTO=OFF \
+            -DUSE_NATIVE_ARCH=OFF \
+            -DENABLE_SHARED_LIBRARY=ON \
+            -DUTF_STRINGS_BUILD_TESTS=ON \
+            -DUTF_STRINGS_BUILD_BENCHMARKS=OFF \
+            -DUTF_STRINGS_BUILD_FUZZ_TESTS=OFF \
+            -DUTF_STRINGS_WITH_GPERFTOOLS=OFF \
+            -DCMAKE_CXX_FLAGS="--coverage -fprofile-instr-generate -fcoverage-mapping" \
+            -DCMAKE_C_FLAGS="--coverage -fprofile-instr-generate -fcoverage-mapping" \
+            -DCMAKE_EXE_LINKER_FLAGS="--coverage"
+
+      - name: Build with Coverage
+        run: cmake --build build/Coverage --parallel
+
+      - name: Run Tests with Coverage
+        run: |
+          cd build/Coverage
+          # Set up coverage data collection
+          export LLVM_PROFILE_FILE="utf_strings_coverage.profraw"
+
+          # Run the tests
+          ./utf_strings-tests --gtest_output=xml:test_results_coverage.xml
+
+          # Verify coverage data was generated
+          ls -la *.profraw || echo "No .profraw files found"
+
+      - name: Process Coverage Data
+        run: |
+          cd build/Coverage
+
+          # Convert raw profile data to indexed format
+          if [ -f "utf_strings_coverage.profraw" ]; then
+            echo "Converting coverage data..."
+            # Try versioned commands first, fall back to unversioned
+            if command -v llvm-profdata-18 >/dev/null 2>&1; then
+              LLVM_PROFDATA=llvm-profdata-18
+              LLVM_COV=llvm-cov-18
+            else
+              LLVM_PROFDATA=llvm-profdata
+              LLVM_COV=llvm-cov
+            fi
+            
+            $LLVM_PROFDATA merge -sparse utf_strings_coverage.profraw -o utf_strings_coverage.profdata
+            
+            # Generate coverage report in text format
+            echo "Generating text coverage report..."
+            $LLVM_COV report ./utf_strings-tests \
+              -instr-profile=utf_strings_coverage.profdata \
+              -ignore-filename-regex="(test|gtest|benchmark|conan|build)" \
+              > coverage_report.txt
+            
+            # Generate detailed coverage report in HTML format
+            echo "Generating HTML coverage report..."
+            $LLVM_COV show ./utf_strings-tests \
+              -instr-profile=utf_strings_coverage.profdata \
+              -format=html \
+              -output-dir=coverage_html \
+              -ignore-filename-regex="(test|gtest|benchmark|conan|build)" \
+              -show-line-counts-or-regions \
+              -show-instantiations
+            
+            # Generate coverage summary in JSON format
+            echo "Generating JSON coverage summary..."
+            $LLVM_COV export ./utf_strings-tests \
+              -instr-profile=utf_strings_coverage.profdata \
+              -format=text \
+              -ignore-filename-regex="(test|gtest|benchmark|conan|build)" \
+              > coverage_summary.json
+            
+            # Display coverage summary
+            echo "=== Coverage Summary ==="
+            cat coverage_report.txt
+            echo "========================"
+            
+          else
+            echo "❌ No coverage data found!"
+            echo "Available files:"
+            ls -la
+            exit 1
+          fi
+
+      - name: Generate Coverage Badge Data
+        run: |
+          cd build/Coverage
+          if [ -f "coverage_summary.json" ]; then
+            # Extract coverage percentage from JSON report
+            COVERAGE=$(python3 -c "
+          import json
+          import sys
+          try:
+              with open('coverage_summary.json', 'r') as f:
+                  data = json.load(f)
+              
+              # Extract totals from llvm-cov JSON format
+              totals = data['data'][0]['totals']
+              lines = totals['lines']
+              covered = lines['covered']
+              count = lines['count']
+              
+              if count > 0:
+                  percentage = round((covered / count) * 100, 1)
+                  print(f'{percentage}')
+              else:
+                  print('0.0')
+          except Exception as e:
+              print(f'Error: {e}', file=sys.stderr)
+              print('0.0')
+          ")
+            
+            echo "COVERAGE_PERCENTAGE=$COVERAGE" >> $GITHUB_ENV
+            echo "Coverage: $COVERAGE%"
+            
+            # Create badge color based on coverage percentage
+            if (( $(echo "$COVERAGE >= 90" | bc -l) )); then
+              BADGE_COLOR="brightgreen"
+            elif (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+              BADGE_COLOR="green"  
+            elif (( $(echo "$COVERAGE >= 70" | bc -l) )); then
+              BADGE_COLOR="yellowgreen"
+            elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then
+              BADGE_COLOR="yellow"
+            elif (( $(echo "$COVERAGE >= 50" | bc -l) )); then
+              BADGE_COLOR="orange"
+            else
+              BADGE_COLOR="red"
+            fi
+            
+            echo "BADGE_COLOR=$BADGE_COLOR" >> $GITHUB_ENV
+            
+            # Create a simple coverage summary for artifact
+            cat > coverage_summary.txt << EOF
+          UTF Strings Library - Code Coverage Report
+          ==========================================
+          Generated: $(date)
+          Build: Clang Debug with Coverage
+          Test Suite: All unit tests
+
+          Coverage: $COVERAGE%
+          Badge Color: $BADGE_COLOR
+
+          Detailed reports available in coverage_html/ directory
+          EOF
+            
+          else
+            echo "COVERAGE_PERCENTAGE=0.0" >> $GITHUB_ENV
+            echo "BADGE_COLOR=red" >> $GITHUB_ENV
+          fi
+
+      - name: Upload Coverage Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports-linux-clang
+          path: |
+            build/Coverage/coverage_report.txt
+            build/Coverage/coverage_summary.json
+            build/Coverage/coverage_summary.txt
+            build/Coverage/coverage_html/
+            build/Coverage/test_results_coverage.xml
+          retention-days: 30
+
+      - name: Upload Coverage to Codecov (Optional)
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          files: build/Coverage/coverage_summary.json
+          flags: unittests
+          name: utf-strings-coverage
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Comment Coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const coverage = process.env.COVERAGE_PERCENTAGE;
+            const badgeColor = process.env.BADGE_COLOR;
+
+            const comment = `## 📊 Code Coverage Report
+
+            **Coverage:** ${coverage}%
+
+            ![Coverage Badge](https://img.shields.io/badge/coverage-${coverage}%25-${badgeColor})
+
+            <details>
+            <summary>📋 Coverage Details</summary>
+
+            - **Build:** Clang Debug with Coverage Instrumentation
+            - **Test Suite:** All unit tests (65 tests across 22 test suites)
+            - **Generated:** ${new Date().toISOString()}
+
+            📁 **Artifacts Generated:**
+            - 📄 Text report: \`coverage_report.txt\`
+            - 🌐 HTML report: \`coverage_html/index.html\` 
+            - 📊 JSON summary: \`coverage_summary.json\`
+            - ✅ Test results: \`test_results_coverage.xml\`
+
+            </details>
+
+            > 💡 **Tip:** Download the coverage artifacts to view detailed line-by-line coverage reports.`;
+
+            try {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+              console.log('✅ Coverage comment posted successfully');
+            } catch (error) {
+              console.log('❌ Failed to post coverage comment:', error.message);
+              console.log('This is likely due to insufficient permissions or the PR being from a fork');
+            }
+
+  # ============================================================================
   # Linux x64 - Clang with Fuzz Testing
   # ============================================================================
 
@@ -814,7 +1153,8 @@ jobs:
             $preset = if ("${{ matrix.build_type }}" -eq "Debug") { "conan-debug" } else { "conan-release" }
           }
           # Override generator for Windows builds to ensure Visual Studio generator is used
-          cmake --preset $preset -G "Visual Studio 17 2022" -A x64 ${{ matrix.cmake_args }}
+          # Force C++23 standard for MSVC
+          cmake --preset $preset -G "Visual Studio 17 2022" -A x64 -DCMAKE_CXX_STANDARD=23 -DCMAKE_CXX_FLAGS="/std:c++latest /Zc:__cplusplus" ${{ matrix.cmake_args }}
 
       - name: Build
         run: |
@@ -929,7 +1269,8 @@ jobs:
           # (annotate_string/annotate_vector mismatch between ASAN and non-ASAN builds)
           # AddressSanitizer testing is comprehensively covered by Linux CI jobs
           # Override generator for Windows builds to ensure Visual Studio generator is used
-          cmake --preset conan-default -G "Visual Studio 17 2022" -A x64
+          # Force C++23 standard for MSVC
+          cmake --preset conan-default -G "Visual Studio 17 2022" -A x64 -DCMAKE_CXX_STANDARD=23 -DCMAKE_CXX_FLAGS="/std:c++latest /Zc:__cplusplus"
 
       - name: Build Debug
         run: cmake --build --preset conan-debug --config Debug --parallel
@@ -957,6 +1298,7 @@ jobs:
       [
         linux-gcc,
         linux-clang,
+        linux-clang-coverage,
         windows-msvc,
         linux-sanitizers,
         windows-msvc-debug,

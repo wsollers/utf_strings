@@ -1,0 +1,481 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  release:
+    types: [published]
+
+# Global permissions for the entire workflow
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # ============================================================================
+  # Build Documentation
+  # ============================================================================
+
+  build-docs:
+    name: "Build API Documentation"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y doxygen graphviz plantuml
+
+      - name: Validate Doxygen configuration
+        run: |
+          echo "🔍 Validating Doxygen configuration..."
+
+          if [ ! -f "Doxyfile" ]; then
+            echo "❌ Doxyfile not found!"
+            exit 1
+          fi
+
+          # Check if required directories exist
+          if [ ! -d "include" ]; then
+            echo "❌ include/ directory not found!"
+            exit 1
+          fi
+
+          if [ ! -d "src" ]; then
+            echo "❌ src/ directory not found!"
+            exit 1
+          fi
+
+          # Validate Doxygen syntax
+          doxygen -s -g /tmp/test.doxyfile > /dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            echo "❌ Doxygen installation issue"
+            exit 1
+          fi
+
+          echo "✅ Doxygen configuration validation passed"
+
+      - name: Count documentable items
+        run: |
+          echo "📊 Analyzing codebase for documentation..."
+
+          # Count header files
+          HEADER_FILES=$(find include/ -name "*.hpp" -o -name "*.h" | wc -l)
+          echo "Header files: $HEADER_FILES"
+
+          # Count source files  
+          SOURCE_FILES=$(find src/ -name "*.cpp" -o -name "*.c" 2>/dev/null | wc -l)
+          echo "Source files: $SOURCE_FILES"
+
+          # Count classes/structs (rough estimate)
+          CLASSES=$(grep -r "^class\|^struct" include/ src/ 2>/dev/null | wc -l)
+          echo "Classes/Structs: $CLASSES"
+
+          # Count functions (rough estimate)
+          FUNCTIONS=$(grep -r "^\s*\w\+.*(" include/ src/ 2>/dev/null | grep -v "//" | wc -l)
+          echo "Functions: $FUNCTIONS"
+
+          echo "HEADER_FILES=$HEADER_FILES" >> $GITHUB_ENV
+          echo "SOURCE_FILES=$SOURCE_FILES" >> $GITHUB_ENV
+          echo "CLASSES=$CLASSES" >> $GITHUB_ENV
+          echo "FUNCTIONS=$FUNCTIONS" >> $GITHUB_ENV
+
+      - name: Generate Doxygen documentation
+        run: |
+          echo "📚 Generating API documentation with Doxygen..."
+
+          # Create output directory
+          mkdir -p docs/api
+
+          # Generate documentation
+          doxygen Doxyfile 2>&1 | tee doxygen.log
+
+          # Check if documentation was generated successfully
+          if [ ! -d "docs/api/html" ]; then
+            echo "❌ Documentation generation failed!"
+            echo "Doxygen log:"
+            cat doxygen.log
+            exit 1
+          fi
+
+          echo "✅ Documentation generated successfully"
+
+          # Count generated files
+          HTML_FILES=$(find docs/api/html -name "*.html" | wc -l)
+          echo "Generated HTML files: $HTML_FILES"
+          echo "HTML_FILES=$HTML_FILES" >> $GITHUB_ENV
+
+      - name: Analyze documentation quality
+        run: |
+          echo "🔍 Analyzing documentation quality..."
+
+          # Check for warnings in Doxygen log
+          WARNINGS=$(grep -i "warning" doxygen.log | wc -l)
+          ERRORS=$(grep -i "error" doxygen.log | wc -l)
+
+          echo "Doxygen warnings: $WARNINGS"
+          echo "Doxygen errors: $ERRORS"
+
+          echo "DOXYGEN_WARNINGS=$WARNINGS" >> $GITHUB_ENV
+          echo "DOXYGEN_ERRORS=$ERRORS" >> $GITHUB_ENV
+
+          # Generate quality report
+          cat > docs/api/quality_report.md << EOF
+          # Documentation Quality Report
+
+          Generated: $(date)
+          Commit: ${{ github.sha }}
+          Branch: ${{ github.ref_name }}
+
+          ## Statistics
+          - **Header Files**: $HEADER_FILES
+          - **Source Files**: $SOURCE_FILES  
+          - **Classes/Structs**: $CLASSES
+          - **Functions**: $FUNCTIONS
+          - **Generated HTML Files**: $HTML_FILES
+
+          ## Quality Metrics
+          - **Doxygen Warnings**: $WARNINGS
+          - **Doxygen Errors**: $ERRORS
+
+          ## Coverage
+          - **Files Documented**: $HTML_FILES files generated
+          - **Build Status**: $([ $ERRORS -eq 0 ] && echo "✅ Success" || echo "❌ Failed")
+
+          EOF
+
+      - name: Create documentation index
+        run: |
+          echo "📄 Creating documentation index..."
+
+          # Create a landing page that integrates with existing docs
+          cat > docs/api/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>UTF Strings Library - API Documentation</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 2rem;
+                line-height: 1.6;
+              }
+              .header {
+                text-align: center;
+                padding: 2rem 0;
+                border-bottom: 1px solid #e1e4e8;
+                margin-bottom: 2rem;
+              }
+              .nav-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+                margin: 2rem 0;
+              }
+              .nav-card {
+                border: 1px solid #e1e4e8;
+                border-radius: 8px;
+                padding: 1.5rem;
+                text-align: center;
+                text-decoration: none;
+                color: inherit;
+                transition: all 0.2s ease;
+                background: #f6f8fa;
+              }
+              .nav-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                text-decoration: none;
+              }
+              .nav-card h3 {
+                margin: 0 0 0.5rem 0;
+                color: #0366d6;
+              }
+              .back-link {
+                display: inline-block;
+                margin-bottom: 1rem;
+                color: #0366d6;
+                text-decoration: none;
+              }
+              .back-link:hover {
+                text-decoration: underline;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>UTF Strings Library</h1>
+              <p>High-Performance UTF String Processing for C++23</p>
+              <p><strong>API Documentation</strong></p>
+            </div>
+
+            <a href="../" class="back-link">← Back to Main Documentation</a>
+
+            <div class="nav-grid">
+              <a href="html/index.html" class="nav-card">
+                <h3>📚 Full API Reference</h3>
+                <p>Complete Doxygen-generated API documentation with class diagrams and detailed function descriptions.</p>
+              </a>
+              
+              <a href="html/annotated.html" class="nav-card">
+                <h3>🏗️ Class List</h3>
+                <p>Browse all classes, structs, and interfaces in the UTF Strings library.</p>
+              </a>
+              
+              <a href="html/namespaces.html" class="nav-card">
+                <h3>📦 Namespaces</h3>
+                <p>Explore the namespace hierarchy and organization of the library.</p>
+              </a>
+              
+              <a href="html/files.html" class="nav-card">
+                <h3>📄 File Reference</h3>
+                <p>Browse source files and headers with their documentation.</p>
+              </a>
+              
+              <a href="html/hierarchy.html" class="nav-card">
+                <h3>🌳 Class Hierarchy</h3>
+                <p>Visual representation of class inheritance relationships.</p>
+              </a>
+              
+              <a href="quality_report.html" class="nav-card">
+                <h3>📊 Quality Report</h3>
+                <p>Documentation coverage and quality metrics for this build.</p>
+              </a>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 1.5rem; background: #f6f8fa; border-radius: 8px;">
+              <h3>🚀 Quick Start</h3>
+              <p>New to the UTF Strings library? Check out the <a href="../">main documentation</a> for getting started guides, tutorials, and examples.</p>
+              
+              <h3>💡 Need Help?</h3>
+              <ul>
+                <li><a href="https://github.com/wsollers/utf_strings">GitHub Repository</a></li>
+                <li><a href="https://github.com/wsollers/utf_strings/issues">Report Issues</a></li>
+                <li><a href="../performance/">Performance Benchmarks</a></li>
+              </ul>
+            </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Convert quality report to HTML
+        run: |
+          echo "🔄 Converting quality report to HTML..."
+
+          # Simple Markdown to HTML conversion for the quality report
+          cat > docs/api/quality_report.html << EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Documentation Quality Report - UTF Strings Library</title>
+            <style>
+              body { 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                max-width: 800px; 
+                margin: 0 auto; 
+                padding: 2rem; 
+                line-height: 1.6; 
+              }
+              .metric { 
+                display: inline-block; 
+                background: #f6f8fa; 
+                padding: 0.5rem 1rem; 
+                border-radius: 6px; 
+                margin: 0.25rem; 
+                border: 1px solid #e1e4e8; 
+              }
+              .success { background: #d4edda; border-color: #c3e6cb; }
+              .warning { background: #fff3cd; border-color: #ffeaa7; }
+              .error { background: #f8d7da; border-color: #f5c6cb; }
+              .back-link { 
+                display: inline-block; 
+                margin-bottom: 1rem; 
+                color: #0366d6; 
+                text-decoration: none; 
+              }
+              .back-link:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <a href="index.html" class="back-link">← Back to API Documentation</a>
+            
+            <h1>Documentation Quality Report</h1>
+            
+            <p><strong>Generated:</strong> $(date)<br>
+            <strong>Commit:</strong> ${{ github.sha }}<br>
+            <strong>Branch:</strong> ${{ github.ref_name }}</p>
+            
+            <h2>Statistics</h2>
+            <div class="metric">Header Files: $HEADER_FILES</div>
+            <div class="metric">Source Files: $SOURCE_FILES</div>
+            <div class="metric">Classes/Structs: $CLASSES</div>
+            <div class="metric">Functions: $FUNCTIONS</div>
+            <div class="metric">Generated HTML Files: $HTML_FILES</div>
+            
+            <h2>Quality Metrics</h2>
+            <div class="metric $([ $DOXYGEN_WARNINGS -eq 0 ] && echo 'success' || echo 'warning')">
+              Doxygen Warnings: $DOXYGEN_WARNINGS
+            </div>
+            <div class="metric $([ $DOXYGEN_ERRORS -eq 0 ] && echo 'success' || echo 'error')">
+              Doxygen Errors: $DOXYGEN_ERRORS
+            </div>
+            
+            <h2>Coverage</h2>
+            <div class="metric">Files Documented: $HTML_FILES files generated</div>
+            <div class="metric $([ $DOXYGEN_ERRORS -eq 0 ] && echo 'success' || echo 'error')">
+              Build Status: $([ $DOXYGEN_ERRORS -eq 0 ] && echo "✅ Success" || echo "❌ Failed")
+            </div>
+            
+            <h2>Doxygen Log</h2>
+            <pre style="background: #f6f8fa; padding: 1rem; border-radius: 6px; overflow-x: auto;">$(cat doxygen.log)</pre>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-documentation
+          path: |
+            docs/api/
+            doxygen.log
+          retention-days: 30
+
+      - name: Comment documentation status on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const warnings = process.env.DOXYGEN_WARNINGS;
+            const errors = process.env.DOXYGEN_ERRORS;
+            const htmlFiles = process.env.HTML_FILES;
+            const headerFiles = process.env.HEADER_FILES;
+            const sourceFiles = process.env.SOURCE_FILES;
+            const classes = process.env.CLASSES;
+
+            const status = errors === '0' ? '✅ Success' : '❌ Failed';
+            const warningsBadge = warnings === '0' ? '🟢' : warnings < '5' ? '🟡' : '🔴';
+
+            const comment = `## 📚 API Documentation Build Report
+
+            **Status:** ${status}
+
+            ### 📊 Statistics
+            - **Header Files:** ${headerFiles}
+            - **Source Files:** ${sourceFiles}
+            - **Classes/Structs:** ${classes}
+            - **Generated Pages:** ${htmlFiles}
+
+            ### 🔍 Quality Metrics
+            - **Doxygen Warnings:** ${warningsBadge} ${warnings}
+            - **Doxygen Errors:** ${errors === '0' ? '✅' : '❌'} ${errors}
+
+            <details>
+            <summary>📋 Documentation Details</summary>
+
+            The API documentation includes:
+            - 🏗️ **Class Reference** - Detailed class and struct documentation
+            - 🔧 **Function Reference** - All public and documented functions
+            - 📦 **Namespace Organization** - Library structure and organization
+            - 🌳 **Class Hierarchies** - Inheritance diagrams and relationships
+            - 📄 **File Documentation** - Header and source file references
+
+            </details>
+
+            > 💡 **Download the \`api-documentation\` artifact** to preview the generated documentation locally.`;
+
+            try {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+              console.log('✅ Documentation comment posted successfully');
+            } catch (error) {
+              console.log('❌ Failed to post documentation comment:', error.message);
+            }
+
+  # ============================================================================
+  # Deploy to GitHub Pages (only on main branch)
+  # ============================================================================
+
+  deploy-pages:
+    name: "Deploy to GitHub Pages"
+    runs-on: ubuntu-latest
+    needs: build-docs
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download documentation artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: api-documentation
+          path: docs/api/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Prepare docs for deployment
+        run: |
+          echo "🔧 Preparing documentation for GitHub Pages deployment..."
+
+          # Ensure proper file permissions
+          find docs/ -type f -exec chmod 644 {} \;
+          find docs/ -type d -exec chmod 755 {} \;
+
+          # Create .nojekyll to prevent Jekyll processing of certain files
+          touch docs/.nojekyll
+
+          # Update main docs index to include API documentation link
+          if [ -f "docs/index.html" ]; then
+            # Check if API link already exists
+            if ! grep -q "api/" docs/index.html; then
+              echo "Adding API documentation link to main docs"
+              # This would need to be customized based on your docs/index.html structure
+            fi
+          fi
+
+          echo "📁 Final documentation structure:"
+          find docs/ -type f | head -20
+          echo "..."
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Update deployment status
+        run: |
+          echo "🚀 Documentation deployed successfully!"
+          echo "📍 Available at: ${{ steps.deployment.outputs.page_url }}"
+          echo "🔗 API Docs: ${{ steps.deployment.outputs.page_url }}api/"

@@ -1,0 +1,943 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d9/df7/namespaceutf_1_1string" kind="namespace" language="C++">
+    <compoundname>utf::string</compoundname>
+    <innerclass refid="d8/dda/classutf_1_1string_1_1CodePointIterator" prot="public">utf::string::CodePointIterator</innerclass>
+    <innerclass refid="d5/d60/classutf_1_1string_1_1SmallStringBuffer" prot="public">utf::string::SmallStringBuffer</innerclass>
+    <innerclass refid="d0/d1b/classutf_1_1string_1_1String" prot="public">utf::string::String</innerclass>
+    <innerclass refid="dd/d60/classutf_1_1string_1_1StringView" prot="public">utf::string::StringView</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a1a9f9e20ae02a1cf4b3449863dc04baa" prot="public" static="no">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a92065af0f64383ab6e668b2f00100b1e" kindref="member">Utf8</ref>, Endian::None &gt;</type>
+        <definition>using utf::string::Utf8StringView = typedef StringView&lt;Utf8, Endian::None&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf8StringView</name>
+        <qualifiedname>utf::string::Utf8StringView</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="971" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="971" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a95c6de6281ac0ea7dd3ff7a0aad0e717" prot="public" static="no">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" kindref="member">Utf16</ref>, Endian::BE &gt;</type>
+        <definition>using utf::string::Utf16BEStringView = typedef StringView&lt;Utf16, Endian::BE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf16BEStringView</name>
+        <qualifiedname>utf::string::Utf16BEStringView</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="972" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="972" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1ab1cee47ce6ba8c0a3ce70ec8b997993c" prot="public" static="no">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" kindref="member">Utf16</ref>, Endian::LE &gt;</type>
+        <definition>using utf::string::Utf16LEStringView = typedef StringView&lt;Utf16, Endian::LE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf16LEStringView</name>
+        <qualifiedname>utf::string::Utf16LEStringView</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="973" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="973" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a010cc659f3cd084f6844c48dfcb3db5c" prot="public" static="no">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" kindref="member">Utf32</ref>, Endian::BE &gt;</type>
+        <definition>using utf::string::Utf32BEStringView = typedef StringView&lt;Utf32, Endian::BE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf32BEStringView</name>
+        <qualifiedname>utf::string::Utf32BEStringView</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="974" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="974" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a612d674202c4c56aa2a3f9f41a78748f" prot="public" static="no">
+        <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" kindref="member">Utf32</ref>, Endian::LE &gt;</type>
+        <definition>using utf::string::Utf32LEStringView = typedef StringView&lt;Utf32, Endian::LE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf32LEStringView</name>
+        <qualifiedname>utf::string::Utf32LEStringView</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="975" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="975" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a4dd5e59a86cfc4022b92eaea56f6a283" prot="public" static="no">
+        <type><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a92065af0f64383ab6e668b2f00100b1e" kindref="member">Utf8</ref>, Endian::None &gt;</type>
+        <definition>using utf::string::Utf8String = typedef String&lt;Utf8, Endian::None&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf8String</name>
+        <qualifiedname>utf::string::Utf8String</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="978" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="978" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a1b62f31390ff491cd9c5bda565008321" prot="public" static="no">
+        <type><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" kindref="member">Utf16</ref>, Endian::BE &gt;</type>
+        <definition>using utf::string::Utf16BEString = typedef String&lt;Utf16, Endian::BE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf16BEString</name>
+        <qualifiedname>utf::string::Utf16BEString</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="979" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="979" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a0e56dbb5aad21e45882c71acfe959f81" prot="public" static="no">
+        <type><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1abbc16ea16a89a2e60ac3b66d708a4904" kindref="member">Utf16</ref>, Endian::LE &gt;</type>
+        <definition>using utf::string::Utf16LEString = typedef String&lt;Utf16, Endian::LE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf16LEString</name>
+        <qualifiedname>utf::string::Utf16LEString</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="980" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="980" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a19e9f924db806e13949e4863381d1c42" prot="public" static="no">
+        <type><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" kindref="member">Utf32</ref>, Endian::BE &gt;</type>
+        <definition>using utf::string::Utf32BEString = typedef String&lt;Utf32, Endian::BE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf32BEString</name>
+        <qualifiedname>utf::string::Utf32BEString</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="981" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="981" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d9/df7/namespaceutf_1_1string_1a0a3787863d8e07c261c82e8498125f79" prot="public" static="no">
+        <type><ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1a273841b0d9e30a74baab5735ac445560" kindref="member">Utf32</ref>, Endian::LE &gt;</type>
+        <definition>using utf::string::Utf32LEString = typedef String&lt;Utf32, Endian::LE&gt;</definition>
+        <argsstring></argsstring>
+        <name>Utf32LEString</name>
+        <qualifiedname>utf::string::Utf32LEString</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="982" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="982" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1af2b2568e031a673713da3da4e3e40f36" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>E</declname>
+            <defname>E</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" kindref="member">ValidEndianness</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>ValidEndianness&lt; UtfType, E &gt; String&lt; UtfType, E &gt; utf::string::operator+</definition>
+        <argsstring>(const String&lt; UtfType, E &gt; &amp;lhs, const String&lt; UtfType, E &gt; &amp;rhs)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>utf::string::operator+</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>Concatenate two strings of the same encoding. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="911" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="911" bodyend="918"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a4e55b5b22fd6afffb5a6e6578010781a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>E</declname>
+            <defname>E</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" kindref="member">ValidEndianness</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>ValidEndianness&lt; UtfType, E &gt; String&lt; UtfType, E &gt; utf::string::operator+</definition>
+        <argsstring>(const String&lt; UtfType, E &gt; &amp;lhs, StringView&lt; UtfType, E &gt; rhs)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>utf::string::operator+</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>Concatenate string with string view. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="923" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="923" bodyend="930"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1ab3a5e93edc5c13edc15103578d1d6eaf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>E</declname>
+            <defname>E</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" kindref="member">ValidEndianness</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>ValidEndianness&lt; UtfType, E &gt; String&lt; UtfType, E &gt; utf::string::operator+</definition>
+        <argsstring>(StringView&lt; UtfType, E &gt; lhs, const String&lt; UtfType, E &gt; &amp;rhs)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>utf::string::operator+</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>Concatenate string view with string. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="935" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="935" bodyend="942"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a1938e89ba7c483179678b19a8185738b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>E</declname>
+            <defname>E</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" kindref="member">ValidEndianness</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>ValidEndianness&lt; UtfType, E &gt; String&lt; UtfType, E &gt; utf::string::operator+</definition>
+        <argsstring>(const String&lt; UtfType, E &gt; &amp;lhs, const CodePoint&lt; UtfType, E &gt; &amp;rhs)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>utf::string::operator+</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>Concatenate string with code point. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="947" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="947" bodyend="952"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a4a3224725411acbe64a9d8cd09cdd228" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename UtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>E</declname>
+            <defname>E</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" kindref="member">ValidEndianness</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>ValidEndianness&lt; UtfType, E &gt; String&lt; UtfType, E &gt; utf::string::operator+</definition>
+        <argsstring>(const CodePoint&lt; UtfType, E &gt; &amp;lhs, const String&lt; UtfType, E &gt; &amp;rhs)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>utf::string::operator+</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d0/d1b/classutf_1_1string_1_1String" kindref="compound">String</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt; &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+<para>Concatenate code point with string. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="957" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="957" bodyend="964"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a7554dc8b41bf88f75421c55b9e5c3128" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename DestString</type>
+          </param>
+          <param>
+            <type>typename SrcUtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>SrcEndian</declname>
+            <defname>SrcEndian</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" kindref="member">ValidEndianness</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt; std::optional&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">DestString</ref> &gt;</type>
+        <definition>ValidEndianness&lt; SrcUtfType, SrcEndian &gt; std::optional&lt; DestString &gt; utf::string::convert_string</definition>
+        <argsstring>(StringView&lt; SrcUtfType, SrcEndian &gt; source)</argsstring>
+        <name>convert_string</name>
+        <qualifiedname>utf::string::convert_string</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+<para>Convert a UTF string to a different encoding. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>DestString</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The destination string type </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>SrcUtfType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source UTF encoding type </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>SrcEndian</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source endianness </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>source</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The source string view </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The converted string, or std::nullopt if any code point is invalid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="996" column="16" bodyfile="include/utf/utf_strings.hpp" bodystart="996" bodyend="1009"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1ab77cebf1bcbb83a6facf0edf5c542c2c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename DestString</type>
+          </param>
+          <param>
+            <type>typename SrcUtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>SrcEndian</declname>
+            <defname>SrcEndian</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="d8/d8b/namespaceutf_1a7bc7b8e1bc69f817ca3755777069a82c" kindref="member">ValidEndianness</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">DestString</ref></type>
+        <definition>ValidEndianness&lt; SrcUtfType, SrcEndian &gt; DestString utf::string::convert_string_unchecked</definition>
+        <argsstring>(StringView&lt; SrcUtfType, SrcEndian &gt; source)</argsstring>
+        <name>convert_string_unchecked</name>
+        <qualifiedname>utf::string::convert_string_unchecked</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+<para>Convert a UTF string without validation (fast path) </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="warning"><para>All code points in source must be valid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1015" column="13" bodyfile="include/utf/utf_strings.hpp" bodystart="1015" bodyend="1025"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1ac5da0a829cd782220101ecdc94efc79f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcUtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>SrcEndian</declname>
+            <defname>SrcEndian</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a4dd5e59a86cfc4022b92eaea56f6a283" kindref="member">Utf8String</ref> &gt;</type>
+        <definition>std::optional&lt; Utf8String &gt; utf::string::to_utf8_string</definition>
+        <argsstring>(StringView&lt; SrcUtfType, SrcEndian &gt; source)</argsstring>
+        <name>to_utf8_string</name>
+        <qualifiedname>utf::string::to_utf8_string</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+<para>Convert any UTF string to UTF-8. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1033" column="16" bodyfile="include/utf/utf_strings.hpp" bodystart="1033" bodyend="1035"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1abd70587cae75730669332ccd63b7f9c6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcUtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>SrcEndian</declname>
+            <defname>SrcEndian</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a1b62f31390ff491cd9c5bda565008321" kindref="member">Utf16BEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf16BEString &gt; utf::string::to_utf16_be_string</definition>
+        <argsstring>(StringView&lt; SrcUtfType, SrcEndian &gt; source)</argsstring>
+        <name>to_utf16_be_string</name>
+        <qualifiedname>utf::string::to_utf16_be_string</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+<para>Convert any UTF string to UTF-16 BE. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1039" column="16" bodyfile="include/utf/utf_strings.hpp" bodystart="1039" bodyend="1042"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a3dd6addd70ba3f9aba011a39b76e2506" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcUtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>SrcEndian</declname>
+            <defname>SrcEndian</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a0e56dbb5aad21e45882c71acfe959f81" kindref="member">Utf16LEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf16LEString &gt; utf::string::to_utf16_le_string</definition>
+        <argsstring>(StringView&lt; SrcUtfType, SrcEndian &gt; source)</argsstring>
+        <name>to_utf16_le_string</name>
+        <qualifiedname>utf::string::to_utf16_le_string</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+<para>Convert any UTF string to UTF-16 LE. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1046" column="16" bodyfile="include/utf/utf_strings.hpp" bodystart="1046" bodyend="1049"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a43da3da37a357816136f8c02e48efcb2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcUtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>SrcEndian</declname>
+            <defname>SrcEndian</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a19e9f924db806e13949e4863381d1c42" kindref="member">Utf32BEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf32BEString &gt; utf::string::to_utf32_be_string</definition>
+        <argsstring>(StringView&lt; SrcUtfType, SrcEndian &gt; source)</argsstring>
+        <name>to_utf32_be_string</name>
+        <qualifiedname>utf::string::to_utf32_be_string</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+<para>Convert any UTF string to UTF-32 BE. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1053" column="16" bodyfile="include/utf/utf_strings.hpp" bodystart="1053" bodyend="1056"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1ab5ee0999dd634c684a9d38b682d766fa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename SrcUtfType</type>
+          </param>
+          <param>
+            <type>Endian</type>
+            <declname>SrcEndian</declname>
+            <defname>SrcEndian</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a0a3787863d8e07c261c82e8498125f79" kindref="member">Utf32LEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf32LEString &gt; utf::string::to_utf32_le_string</definition>
+        <argsstring>(StringView&lt; SrcUtfType, SrcEndian &gt; source)</argsstring>
+        <name>to_utf32_le_string</name>
+        <qualifiedname>utf::string::to_utf32_le_string</qualifiedname>
+        <param>
+          <type><ref refid="dd/d60/classutf_1_1string_1_1StringView" kindref="compound">StringView</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">SrcUtfType</ref>, SrcEndian &gt;</type>
+          <declname>source</declname>
+        </param>
+        <briefdescription>
+<para>Convert any UTF string to UTF-32 LE. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1060" column="16" bodyfile="include/utf/utf_strings.hpp" bodystart="1060" bodyend="1063"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1af435e8de2525da68f92caebab9a4b067" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a4dd5e59a86cfc4022b92eaea56f6a283" kindref="member">Utf8String</ref> &gt;</type>
+        <definition>std::optional&lt; Utf8String &gt; utf::string::utf8_string_from_bytes</definition>
+        <argsstring>(const uint8_t *bytes, size_t byte_count)</argsstring>
+        <name>utf8_string_from_bytes</name>
+        <qualifiedname>utf::string::utf8_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> *</type>
+          <declname>bytes</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">size_t</ref></type>
+          <declname>byte_count</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-8 string from byte array. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to UTF-8 encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>byte_count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-8 string, or nullopt if invalid UTF-8 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1073" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1073" bodyend="1076"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a63b3fccdd313ee4b5e8111505fae0980" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a4dd5e59a86cfc4022b92eaea56f6a283" kindref="member">Utf8String</ref> &gt;</type>
+        <definition>std::optional&lt; Utf8String &gt; utf::string::utf8_string_from_bytes</definition>
+        <argsstring>(const std::vector&lt; uint8_t &gt; &amp;bytes)</argsstring>
+        <name>utf8_string_from_bytes</name>
+        <qualifiedname>utf::string::utf8_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> std::vector&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> &gt; &amp;</type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-8 string from byte vector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector containing UTF-8 encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-8 string, or nullopt if invalid UTF-8 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1081" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1081" bodyend="1084"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a27a39dc4d6cbe4e6a5797bfa05c9919b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a1b62f31390ff491cd9c5bda565008321" kindref="member">Utf16BEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf16BEString &gt; utf::string::utf16_be_string_from_bytes</definition>
+        <argsstring>(const uint8_t *bytes, size_t byte_count)</argsstring>
+        <name>utf16_be_string_from_bytes</name>
+        <qualifiedname>utf::string::utf16_be_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> *</type>
+          <declname>bytes</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">size_t</ref></type>
+          <declname>byte_count</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-16 BE string from byte array. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to UTF-16 BE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>byte_count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes (must be even) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-16 BE string, or nullopt if invalid UTF-16 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1090" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1090" bodyend="1093"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1af5f573359a982032dfe3afce57de13a9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a1b62f31390ff491cd9c5bda565008321" kindref="member">Utf16BEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf16BEString &gt; utf::string::utf16_be_string_from_bytes</definition>
+        <argsstring>(const std::vector&lt; uint8_t &gt; &amp;bytes)</argsstring>
+        <name>utf16_be_string_from_bytes</name>
+        <qualifiedname>utf::string::utf16_be_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> std::vector&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> &gt; &amp;</type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-16 BE string from byte vector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector containing UTF-16 BE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-16 BE string, or nullopt if invalid UTF-16 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1098" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1098" bodyend="1101"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1ae027fd2b4742f823f7aadf43a08ee7f3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a0e56dbb5aad21e45882c71acfe959f81" kindref="member">Utf16LEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf16LEString &gt; utf::string::utf16_le_string_from_bytes</definition>
+        <argsstring>(const uint8_t *bytes, size_t byte_count)</argsstring>
+        <name>utf16_le_string_from_bytes</name>
+        <qualifiedname>utf::string::utf16_le_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> *</type>
+          <declname>bytes</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">size_t</ref></type>
+          <declname>byte_count</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-16 LE string from byte array. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to UTF-16 LE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>byte_count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes (must be even) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-16 LE string, or nullopt if invalid UTF-16 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1107" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1107" bodyend="1110"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a20efc9453050c98845710ca9e17750c2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a0e56dbb5aad21e45882c71acfe959f81" kindref="member">Utf16LEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf16LEString &gt; utf::string::utf16_le_string_from_bytes</definition>
+        <argsstring>(const std::vector&lt; uint8_t &gt; &amp;bytes)</argsstring>
+        <name>utf16_le_string_from_bytes</name>
+        <qualifiedname>utf::string::utf16_le_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> std::vector&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> &gt; &amp;</type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-16 LE string from byte vector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector containing UTF-16 LE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-16 LE string, or nullopt if invalid UTF-16 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1115" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1115" bodyend="1118"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a83e261c370864f6f8d55b2938ad148a9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a19e9f924db806e13949e4863381d1c42" kindref="member">Utf32BEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf32BEString &gt; utf::string::utf32_be_string_from_bytes</definition>
+        <argsstring>(const uint8_t *bytes, size_t byte_count)</argsstring>
+        <name>utf32_be_string_from_bytes</name>
+        <qualifiedname>utf::string::utf32_be_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> *</type>
+          <declname>bytes</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">size_t</ref></type>
+          <declname>byte_count</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-32 BE string from byte array. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to UTF-32 BE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>byte_count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes (must be multiple of 4) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-32 BE string, or nullopt if invalid UTF-32 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1124" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1124" bodyend="1127"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1aa309ddbac015002f345cecce7b6d0fcc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a19e9f924db806e13949e4863381d1c42" kindref="member">Utf32BEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf32BEString &gt; utf::string::utf32_be_string_from_bytes</definition>
+        <argsstring>(const std::vector&lt; uint8_t &gt; &amp;bytes)</argsstring>
+        <name>utf32_be_string_from_bytes</name>
+        <qualifiedname>utf::string::utf32_be_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> std::vector&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> &gt; &amp;</type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-32 BE string from byte vector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector containing UTF-32 BE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-32 BE string, or nullopt if invalid UTF-32 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1132" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1132" bodyend="1135"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1a05ce4690031119b8739fe196b78d9332" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a0a3787863d8e07c261c82e8498125f79" kindref="member">Utf32LEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf32LEString &gt; utf::string::utf32_le_string_from_bytes</definition>
+        <argsstring>(const uint8_t *bytes, size_t byte_count)</argsstring>
+        <name>utf32_le_string_from_bytes</name>
+        <qualifiedname>utf::string::utf32_le_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> *</type>
+          <declname>bytes</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">size_t</ref></type>
+          <declname>byte_count</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-32 LE string from byte array. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to UTF-32 LE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>byte_count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes (must be multiple of 4) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-32 LE string, or nullopt if invalid UTF-32 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1141" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1141" bodyend="1144"/>
+      </memberdef>
+      <memberdef kind="function" id="d9/df7/namespaceutf_1_1string_1afcfe11d3b0fe8ccc1cc24a0cb70f8b58" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="d9/df7/namespaceutf_1_1string_1a0a3787863d8e07c261c82e8498125f79" kindref="member">Utf32LEString</ref> &gt;</type>
+        <definition>std::optional&lt; Utf32LEString &gt; utf::string::utf32_le_string_from_bytes</definition>
+        <argsstring>(const std::vector&lt; uint8_t &gt; &amp;bytes)</argsstring>
+        <name>utf32_le_string_from_bytes</name>
+        <qualifiedname>utf::string::utf32_le_string_from_bytes</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> std::vector&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref> &gt; &amp;</type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Create UTF-32 LE string from byte vector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector containing UTF-32 LE encoded bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Optional UTF-32 LE string, or nullopt if invalid UTF-32 sequences found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="1149" column="23" bodyfile="include/utf/utf_strings.hpp" bodystart="1149" bodyend="1152"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/utf/utf_strings.hpp" line="68" column="1"/>
+  </compounddef>
+</doxygen>

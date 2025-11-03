@@ -80,9 +80,9 @@ cd build/build && ./utf_strings-bench
 ### Key Files to Understand
 - `CMakeLists.txt`: Main build configuration
 - `conanfile.py`: Dependency management
-- `include/utf/utf_strings.hpp`: Main library header
+- `include/utf/utf_codepoints.hpp`: Main library header
 - `include/utf/version.hpp`: Version information
-- `src/utf_strings.cpp`: Core implementation
+- `src/utf_codepoints.cpp`: Core implementation
 
 ### Common Tasks
 1. **Adding new UTF conversion functions**: Update both header and implementation
@@ -99,6 +99,79 @@ cd build/build && ./utf_strings-bench
 ### Platform Support
 - **Linux**: GCC 13+, Clang 18+ (primary development)
 - **Windows**: MSVC 2022, Clang-CL (CI tested)
+
+### 🚨 MANDATORY CODE REVIEW REQUIREMENTS
+
+**CRITICAL**: All code must undergo comprehensive review before every push to origin using these parameters:
+
+#### **Code Review Parameters**
+
+1. **🔒 Security Analysis** (HIGHEST PRIORITY)
+   - [ ] Check for undefined behavior (UB) - memory safety violations
+   - [ ] Validate memory safety - no dangling pointers, use-after-free
+   - [ ] Look for buffer overflows and underflows
+   - [ ] Check for integer overflows/underflows
+   - [ ] Assess input validation (bounds checking, null checks)
+   - [ ] Verify proper error handling for security-critical paths
+
+2. **⚡ Performance Analysis**
+   - [ ] Evaluate algorithmic complexity (Big-O analysis)
+   - [ ] Check for unnecessary allocations and copies
+   - [ ] Identify performance bottlenecks
+   - [ ] Verify move semantics used appropriately
+   - [ ] Check for redundant temporary objects
+
+3. **🐛 Correctness Issues**
+   - [ ] Identify bugs and logic errors
+   - [ ] Check edge cases (empty inputs, max values, boundary conditions)
+   - [ ] Validate error handling (exceptions, optional returns)
+   - [ ] Ensure proper initialization of all variables
+   - [ ] Check const correctness and immutability
+
+4. **🚀 C++ Core Guidelines & Modern C++23**
+   - [ ] Validate RAII usage (Resource Acquisition Is Initialization)
+   - [ ] Check exception safety (basic/strong/no-throw guarantee)
+   - [ ] Verify proper use of `[[nodiscard]]`, `noexcept` attributes
+   - [ ] Check for appropriate use of `std::optional`, `std::variant`
+   - [ ] Assess template metaprogramming best practices
+
+5. **🏗️ Design Issues**
+   - [ ] Evaluate API design consistency
+   - [ ] Check naming conventions consistency
+   - [ ] Assess abstraction levels and encapsulation
+   - [ ] Review for unnecessary complexity or over-engineering
+   - [ ] Verify dependency management
+
+6. **📚 Documentation & Testing**
+   - [ ] Check for adequate inline comments
+   - [ ] Verify API documentation completeness
+   - [ ] Ensure comprehensive unit test coverage
+   - [ ] Check for edge case testing
+   - [ ] Validate error path testing
+
+#### **Review Output Requirements**
+
+**Categorize ALL findings by severity:**
+- 🔴 **Critical** - Must fix before production (security, UB, crashes)
+- 🟡 **Important** - Should fix (performance, correctness, maintainability)  
+- 🟢 **Nice to have** - Optional improvements (style, minor optimizations)
+
+**Provide Score Card:**
+Rate each category (A+ to F) with overall grade and production readiness assessment.
+
+**For Critical Issues:**
+- Provide exact code fixes
+- Explain the issue clearly
+- Show before/after code examples
+
+#### **Key Focus Areas for UTF Strings Library:**
+- **Production readiness** - Code must be deployable
+- **Security** - Especially UB, overflow, memory safety in UTF processing
+- **Performance optimization** - UTF processing efficiency is critical
+- **Modern C++23 practices** - Leverage language features appropriately
+- **Cross-platform compatibility** - Must work on Linux/Windows/macOS
+
+**Standard**: Every change must have ZERO 🔴 Critical issues before merging.
 - **Architectures**: x64 (primary), others untested
 
 ### Performance Considerations

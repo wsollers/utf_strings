@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_5179a46a04c00f26153add2c2c09d3cf" kind="dir">
+    <compoundname>docs/dev</compoundname>
+    <innerdir refid="dir_076f77d8849e8d5e4f487dd0dad2c82c">docs/dev/bench</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="docs/dev/"/>
+  </compounddef>
+</doxygen>

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2025 William Sollers
  *
@@ -26,9 +25,9 @@
 
 #include "../include/utf/utf_strings.hpp"
 
-// Template-heavy library; most implementation lives in the header.
-// This file exists primarily to ensure we have something to compile for the static library.
+namespace utf::string {
 
-namespace utf {
-// Future: Add any explicit template instantiations or non-template functions here if needed
-}
+// Implementation placeholder - actual string methods will be implemented here
+// This file currently serves as a placeholder for future UTF string functionality
+
+}  // namespace utf::string

@@ -27,9 +27,8 @@
 #include <benchmark/benchmark.h>
 
 #include <string>
+#include <utf.hpp>
 #include <vector>
-
-#include "utf/utf_strings.hpp"
 
 #ifdef HAVE_GPERFTOOLS
 #include <gperftools/profiler.h>

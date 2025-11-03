@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="da/ddd/README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>UTF<sp/>Strings<sp/>-<sp/>Cross-Platform<sp/>C++23<sp/>Library</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![CI/CD<sp/>Pipeline](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml)</highlight></codeline>
+<codeline><highlight class="normal">[![SAST<sp/>Security<sp/>Scanning](https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml)</highlight></codeline>
+<codeline><highlight class="normal">[![CodeQL<sp/>Security<sp/>Analysis](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml)</highlight></codeline>
+<codeline><highlight class="normal">[![Extended<sp/>Fuzz<sp/>Testing](https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml)</highlight></codeline>
+<codeline><highlight class="normal">[![Release<sp/>Validation](https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml/badge.svg)](https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg?style=flat&amp;logo=c%2B%2B)](https://en.cppreference.com/w/cpp/23)</highlight></codeline>
+<codeline><highlight class="normal">[![CMake](https://img.shields.io/badge/CMake-3.25+-064F8C.svg?style=flat&amp;logo=cmake)](https://cmake.org/)</highlight></codeline>
+<codeline><highlight class="normal">[![Conan](https://img.shields.io/badge/Conan-2.0+-6699CB.svg?style=flat&amp;logo=conan)](https://conan.io/)</highlight></codeline>
+<codeline><highlight class="normal">[![License](https://img.shields.io/github/license/wsollers/utf_strings.svg?style=flat)](./LICENSE)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Linux](https://img.shields.io/badge/Linux-GCC%2013%20%7C%20Clang%2018-FCC624.svg?style=flat&amp;logo=linux&amp;logoColor=black)](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml)</highlight></codeline>
+<codeline><highlight class="normal">[![Windows](https://img.shields.io/badge/Windows-MSVC%202022%20%7C%20Clang--CL-0078D4.svg?style=flat&amp;logo=windows&amp;logoColor=white)](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml)</highlight></codeline>
+<codeline><highlight class="normal">[![macOS](https://img.shields.io/badge/macOS-Clang%2016+-000000.svg?style=flat&amp;logo=apple&amp;logoColor=white)](https://github.com/wsollers/utf_strings/actions/workflows/ci.yml)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">[![Performance](https://img.shields.io/badge/Performance-Benchmarks-orange.svg?style=flat&amp;logo=speedtest)](https://wsollers.github.io/utf_strings/performance/)</highlight></codeline>
+<codeline><highlight class="normal">[![Security](https://img.shields.io/badge/Security-Hardened-green.svg?style=flat&amp;logo=security)](https://github.com/wsollers/utf_strings/security)</highlight></codeline>
+<codeline><highlight class="normal">[![Quality](https://img.shields.io/badge/Code%20Quality-clang--format-brightgreen.svg?style=flat&amp;logo=llvm)](https://clang.llvm.org/docs/ClangFormat.html)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Modern<sp/>C++23<sp/>UTF<sp/>utilities<sp/>(UTF-8/16/32)<sp/>with<sp/>explicit<sp/>endianness<sp/>policy<sp/>and<sp/>comprehensive<sp/>testing.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Cross-Platform<sp/>Support:**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Linux**:<sp/>GCC<sp/>13+<sp/>or<sp/>Clang<sp/>18+<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Windows**:<sp/>MSVC<sp/>2022<sp/>or<sp/>Clang-CL<sp/>16+</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**macOS**:<sp/>Clang<sp/>16+<sp/>(Apple<sp/>Clang<sp/>or<sp/>LLVM)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Key<sp/>Features:**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🚀<sp/>**Single<sp/>Bootstrap<sp/>Configuration**<sp/>-<sp/>One<sp/>command<sp/>for<sp/>complete<sp/>setup</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🔒<sp/>**Security<sp/>Hardened**<sp/>-<sp/>Stack<sp/>protection,<sp/>ASLR,<sp/>DEP,<sp/>Control<sp/>Flow<sp/>Integrity</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>⚡<sp/>**Performance<sp/>Optimized**<sp/>-<sp/>LTO,<sp/>native<sp/>CPU<sp/>optimization,<sp/>vectorization</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🧪<sp/>**Comprehensive<sp/>Testing**<sp/>-<sp/>Unit<sp/>tests,<sp/>fuzz<sp/>testing,<sp/>sanitizers,<sp/>benchmarks</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🎯<sp/>**Code<sp/>Quality**<sp/>-<sp/>clang-format<sp/>integration,<sp/>extensive<sp/>warnings,<sp/>static<sp/>analysis</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Integrated<sp/>Security<sp/>Scanning:**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🛡️<sp/>**SAST<sp/>Scanning**<sp/>-<sp/>Trivy,<sp/>Checkov,<sp/>Gitleaks,<sp/>Cppcheck,<sp/>Semgrep<sp/>(all-in-one<sp/>workflow)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🔍<sp/>**CodeQL<sp/>Analysis**<sp/>-<sp/>Advanced<sp/>semantic<sp/>security<sp/>analysis</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🚨<sp/>**Automated<sp/>Security<sp/>Reports**<sp/>-<sp/>All<sp/>findings<sp/>uploaded<sp/>to<sp/>GitHub<sp/>Security<sp/>tab</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>📊<sp/>**Configurable<sp/>Intensity**<sp/>-<sp/>Basic/Comprehensive/Deep<sp/>security<sp/>scanning<sp/>levels</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Quick<sp/>Start</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Automated<sp/>Setup<sp/>(Recommended)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Linux/macOS:**</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">./bootstrap_cmake.sh<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>Auto-detect<sp/>compiler<sp/>and<sp/>full<sp/>setup</highlight></codeline>
+<codeline><highlight class="normal">./bootstrap_cmake.sh<sp/>--compiler<sp/>gcc<sp/><sp/>#<sp/>Force<sp/>GCC<sp/></highlight></codeline>
+<codeline><highlight class="normal">./bootstrap_cmake.sh<sp/>--compiler<sp/>clang<sp/>#<sp/>Force<sp/>Clang</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Windows<sp/>(cmd/PowerShell):**</highlight></codeline>
+<codeline><highlight class="normal">```cmd</highlight></codeline>
+<codeline><highlight class="normal">bootstrap_cmake.bat<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>Auto-detect<sp/>and<sp/>full<sp/>setup</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">That&apos;s<sp/>it!<sp/>The<sp/>bootstrap<sp/>script<sp/>will:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>✅<sp/>Detect<sp/>your<sp/>platform<sp/>and<sp/>available<sp/>compilers</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>✅<sp/>Install<sp/>missing<sp/>tools<sp/>(CMake,<sp/>Conan,<sp/>clang-format)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>✅<sp/>Configure<sp/>optimized<sp/>builds<sp/>(Debug<sp/>+<sp/>Release)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>✅<sp/>Run<sp/>comprehensive<sp/>tests<sp/>and<sp/>benchmarks</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>✅<sp/>Set<sp/>up<sp/>development<sp/>environment</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Manual<sp/>Setup<sp/>(Advanced)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>prefer<sp/>manual<sp/>control:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Install<sp/>dependencies</highlight></codeline>
+<codeline><highlight class="normal">conan<sp/>install<sp/>.<sp/>-s<sp/>build_type=Debug<sp/><sp/><sp/>--output-folder=build<sp/>--build=missing</highlight></codeline>
+<codeline><highlight class="normal">conan<sp/>install<sp/>.<sp/>-s<sp/>build_type=Release<sp/>--output-folder=build<sp/>--build=missing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Configure<sp/>(using<sp/>presets)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-debug<sp/><sp/><sp/><sp/>#<sp/>Debug<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-release<sp/><sp/>#<sp/>Release<sp/>build</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Build</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset<sp/>conan-debug<sp/>--parallel</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset<sp/>conan-release<sp/>--parallel</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Test</highlight></codeline>
+<codeline><highlight class="normal">build/Debug/utf_strings-tests<sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>Linux/macOS</highlight></codeline>
+<codeline><highlight class="normal">build\Debug\utf_strings-tests.exe<sp/><sp/>#<sp/>Windows</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Benchmark<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">build/build/utf_strings-bench<sp/>--benchmark_min_time=0.1s</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Advanced<sp/>Compiler<sp/>Configuration</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>build<sp/>system<sp/>supports<sp/>fine-grained<sp/>compiler<sp/>control<sp/>through<sp/>external<sp/>flags:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Standard<sp/>optimized<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-release<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DCOMPILER_TYPE=GCC<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LTO=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_NATIVE_ARCH=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DENABLE_SHARED_LIBRARY=ON</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Maximum<sp/>performance<sp/>build<sp/>(Clang<sp/>with<sp/>libc++)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-release<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DCOMPILER_TYPE=CLANG<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LTO=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_NATIVE_ARCH=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LIBC_PLUS_PLUS=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DENABLE_SHARED_LIBRARY=ON</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Debug-friendly<sp/>build<sp/>(no<sp/>aggressive<sp/>optimizations)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-debug<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DCOMPILER_TYPE=CLANG<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LTO=OFF<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_NATIVE_ARCH=OFF<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DENABLE_SHARED_LIBRARY=OFF</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**Available<sp/>Configuration<sp/>Flags:**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`COMPILER_TYPE`:<sp/>`GCC|CLANG|MSVC`<sp/>-<sp/>Explicit<sp/>compiler<sp/>identification</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`USE_LTO`:<sp/>`ON|OFF`<sp/>-<sp/>Link<sp/>Time<sp/>Optimization</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`USE_NATIVE_ARCH`:<sp/>`ON|OFF`<sp/>-<sp/>Native<sp/>CPU<sp/>optimization<sp/>(`-march=native`)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`USE_MSVC_LTO`:<sp/>`ON|OFF`<sp/>-<sp/>MSVC-specific<sp/>LTO<sp/>flags<sp/>(`/LTCG`,<sp/>`/GL`)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`USE_LIBC_PLUS_PLUS`:<sp/>`ON|OFF`<sp/>-<sp/>Use<sp/>libc++<sp/>instead<sp/>of<sp/>libstdc++<sp/>(Clang<sp/>only)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`ENABLE_SHARED_LIBRARY`:<sp/>`ON|OFF`<sp/>-<sp/>Build<sp/>shared<sp/>libraries</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🤖<sp/>AI<sp/>Assistant<sp/>Integration</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>project<sp/>includes<sp/>comprehensive<sp/>context<sp/>files<sp/>to<sp/>help<sp/>AI<sp/>assistants<sp/>(ChatGPT,<sp/>Claude,<sp/>GitHub<sp/>Copilot)<sp/>provide<sp/>accurate<sp/>assistance:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Context<sp/>Files</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**`.ai-context`**<sp/>-<sp/>Complete<sp/>project<sp/>overview,<sp/>standards,<sp/>and<sp/>guidelines</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**`.copilot-instructions.md`**<sp/>-<sp/>GitHub<sp/>Copilot-specific<sp/>coding<sp/>patterns<sp/>and<sp/>conventions</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>For<sp/>Best<sp/>AI<sp/>Assistance</highlight></codeline>
+<codeline><highlight class="normal">When<sp/>working<sp/>with<sp/>AI<sp/>assistants<sp/>on<sp/>this<sp/>project:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>**Reference<sp/>the<sp/>context**:<sp/>&quot;Use<sp/>the<sp/>project<sp/>context<sp/>from<sp/>.ai-context&quot;</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>**Specify<sp/>the<sp/>domain**:<sp/>&quot;This<sp/>is<sp/>for<sp/>the<sp/>UTF<sp/>Strings<sp/>C++23<sp/>library&quot;<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>**Mention<sp/>requirements**:<sp/>&quot;Follow<sp/>the<sp/>project&apos;s<sp/>C++23<sp/>standards<sp/>and<sp/>UTF<sp/>handling<sp/>patterns&quot;</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>**Ask<sp/>for<sp/>tests**:<sp/>&quot;Include<sp/>appropriate<sp/>unit<sp/>tests<sp/>and<sp/>consider<sp/>fuzz<sp/>testing&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Common<sp/>AI<sp/>Prompts</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>For<sp/>code<sp/>generation</highlight></codeline>
+<codeline><highlight class="normal">&quot;Generate<sp/>a<sp/>UTF-8<sp/>to<sp/>UTF-16<sp/>converter<sp/>following<sp/>the<sp/>UTF<sp/>Strings<sp/>project<sp/>patterns<sp/>in<sp/>.ai-context&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>For<sp/>debugging<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">&quot;Help<sp/>debug<sp/>this<sp/>UTF<sp/>conversion<sp/>issue,<sp/>considering<sp/>the<sp/>project<sp/>context<sp/>and<sp/>C++23<sp/>standards&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>For<sp/>optimization</highlight></codeline>
+<codeline><highlight class="normal">&quot;Optimize<sp/>this<sp/>UTF<sp/>processing<sp/>code<sp/>for<sp/>performance,<sp/>following<sp/>the<sp/>project&apos;s<sp/>benchmarking<sp/>approach&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>For<sp/>testing</highlight></codeline>
+<codeline><highlight class="normal">&quot;Create<sp/>comprehensive<sp/>tests<sp/>for<sp/>this<sp/>UTF<sp/>function,<sp/>including<sp/>edge<sp/>cases<sp/>and<sp/>fuzz<sp/>targets&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>AI<sp/>context<sp/>files<sp/>ensure<sp/>consistent,<sp/>project-appropriate<sp/>assistance<sp/>across<sp/>all<sp/>AI<sp/>platforms!<sp/>🚀</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Code<sp/>Quality<sp/>&amp;<sp/>Reviews</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>project<sp/>maintains<sp/>high<sp/>standards<sp/>for<sp/>production-ready<sp/>C++<sp/>code:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Mandatory<sp/>Code<sp/>Reviews**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>📋<sp/>**[Code<sp/>Review<sp/>Guidelines](CODE_REVIEW_GUIDELINES.md)**<sp/>-<sp/>Comprehensive<sp/>review<sp/>parameters<sp/>for<sp/>all<sp/>code<sp/>changes</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>⚡<sp/>**Performance<sp/>Analysis**<sp/>-<sp/>Efficiency,<sp/>algorithmic<sp/>complexity,<sp/>optimization<sp/>opportunities<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🔒<sp/>**Security<sp/>Analysis**<sp/>-<sp/>Memory<sp/>safety,<sp/>undefined<sp/>behavior,<sp/>vulnerability<sp/>assessment</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🐛<sp/>**Correctness<sp/>Validation**<sp/>-<sp/>Edge<sp/>cases,<sp/>error<sp/>handling,<sp/>logic<sp/>verification</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🚀<sp/>**Modern<sp/>C++23<sp/>Standards**<sp/>-<sp/>Best<sp/>practices,<sp/>proper<sp/>feature<sp/>usage,<sp/>API<sp/>design</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Review<sp/>Standards**</highlight></codeline>
+<codeline><highlight class="normal">Every<sp/>change<sp/>must<sp/>meet:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🔴<sp/>**Zero<sp/>Critical<sp/>Issues**<sp/>-<sp/>No<sp/>security<sp/>vulnerabilities,<sp/>undefined<sp/>behavior,<sp/>or<sp/>crashes</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>🟡<sp/>**Address<sp/>Important<sp/>Issues**<sp/>-<sp/>Performance<sp/>and<sp/>correctness<sp/>concerns<sp/>resolved<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">-<sp/>✅<sp/>**Production<sp/>Ready**<sp/>-<sp/>Code<sp/>must<sp/>be<sp/>deployable<sp/>to<sp/>production<sp/>environments</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>**Development<sp/>Workflow**</highlight></codeline>
+<codeline><highlight class="normal">1.<sp/>**Pre-Push<sp/>Review**<sp/>-<sp/>Complete<sp/>comprehensive<sp/>review<sp/>using<sp/>[guidelines](CODE_REVIEW_GUIDELINES.md)</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>**CI<sp/>Validation**<sp/>-<sp/>All<sp/>automated<sp/>tests,<sp/>security<sp/>scans,<sp/>and<sp/>quality<sp/>checks<sp/>pass</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>**Peer<sp/>Review**<sp/>-<sp/>Team<sp/>review<sp/>focusing<sp/>on<sp/>design<sp/>and<sp/>maintainability</highlight></codeline>
+<codeline><highlight class="normal">4.<sp/>**Integration**<sp/>-<sp/>Merge<sp/>only<sp/>after<sp/>all<sp/>standards<sp/>are<sp/>met</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>**[CONTRIBUTING.md](CONTRIBUTING.md)**<sp/>for<sp/>complete<sp/>development<sp/>guidelines.</highlight></codeline>
+    </programlisting>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="indexpage" kind="page">
+    <compoundname>index</compoundname>
+    <title>UTF Strings - Cross-Platform C++23 Library</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="index_1md_README"/> <ulink url="https://github.com/wsollers/utf_strings/actions/workflows/ci.yml"><image type="html" name="https://github.com/wsollers/utf_strings/actions/workflows/ci.yml/badge.svg" alt="CI/CD Pipeline" inline="yes"></image>
+</ulink> <ulink url="https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml"><image type="html" name="https://github.com/wsollers/utf_strings/actions/workflows/sast-scanning.yml/badge.svg" alt="SAST Security Scanning" inline="yes"></image>
+</ulink> <ulink url="https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml"><image type="html" name="https://github.com/wsollers/utf_strings/actions/workflows/codeql.yml/badge.svg" alt="CodeQL Security Analysis" inline="yes"></image>
+</ulink> <ulink url="https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml"><image type="html" name="https://github.com/wsollers/utf_strings/actions/workflows/extended-fuzz.yml/badge.svg" alt="Extended Fuzz Testing" inline="yes"></image>
+</ulink> <ulink url="https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml"><image type="html" name="https://github.com/wsollers/utf_strings/actions/workflows/release-validation.yml/badge.svg" alt="Release Validation" inline="yes"></image>
+</ulink></para>
+<para><ulink url="https://en.cppreference.com/w/cpp/23"><image type="html" name="https://img.shields.io/badge/C%2B%2B-23-blue.svg?style=flat&amp;logo=c%2B%2B" alt="C++23" inline="yes"></image>
+</ulink> <ulink url="https://cmake.org/"><image type="html" name="https://img.shields.io/badge/CMake-3.25+-064F8C.svg?style=flat&amp;logo=cmake" alt="CMake" inline="yes"></image>
+</ulink> <ulink url="https://conan.io/"><image type="html" name="https://img.shields.io/badge/Conan-2.0+-6699CB.svg?style=flat&amp;logo=conan" alt="Conan" inline="yes"></image>
+</ulink> <ulink url="./LICENSE"><image type="html" name="https://img.shields.io/github/license/wsollers/utf_strings.svg?style=flat" alt="License" inline="yes"></image>
+</ulink></para>
+<para><ulink url="https://github.com/wsollers/utf_strings/actions/workflows/ci.yml"><image type="html" name="https://img.shields.io/badge/Linux-GCC%2013%20%7C%20Clang%2018-FCC624.svg?style=flat&amp;logo=linux&amp;logoColor=black" alt="Linux" inline="yes"></image>
+</ulink> <ulink url="https://github.com/wsollers/utf_strings/actions/workflows/ci.yml"><image type="html" name="https://img.shields.io/badge/Windows-MSVC%202022%20%7C%20Clang--CL-0078D4.svg?style=flat&amp;logo=windows&amp;logoColor=white" alt="Windows" inline="yes"></image>
+</ulink> <ulink url="https://github.com/wsollers/utf_strings/actions/workflows/ci.yml"><image type="html" name="https://img.shields.io/badge/macOS-Clang%2016+-000000.svg?style=flat&amp;logo=apple&amp;logoColor=white" alt="macOS" inline="yes"></image>
+</ulink></para>
+<para><ulink url="https://wsollers.github.io/utf_strings/performance/"><image type="html" name="https://img.shields.io/badge/Performance-Benchmarks-orange.svg?style=flat&amp;logo=speedtest" alt="Performance" inline="yes"></image>
+</ulink> <ulink url="https://github.com/wsollers/utf_strings/security"><image type="html" name="https://img.shields.io/badge/Security-Hardened-green.svg?style=flat&amp;logo=security" alt="Security" inline="yes"></image>
+</ulink> <ulink url="https://clang.llvm.org/docs/ClangFormat.html"><image type="html" name="https://img.shields.io/badge/Code%20Quality-clang--format-brightgreen.svg?style=flat&amp;logo=llvm" alt="Quality" inline="yes"></image>
+</ulink></para>
+<para>Modern C++23 UTF utilities (UTF-8/16/32) with explicit endianness policy and comprehensive testing.</para>
+<para><bold>Cross-Platform Support:</bold><itemizedlist>
+<listitem><para><bold>Linux</bold>: GCC 13+ or Clang 18+ <linebreak/>
+</para>
+</listitem><listitem><para><bold>Windows</bold>: MSVC 2022 or Clang-CL 16+</para>
+</listitem><listitem><para><bold>macOS</bold>: Clang 16+ (Apple Clang or LLVM)</para>
+</listitem></itemizedlist>
+</para>
+<para><bold>Key Features:</bold><itemizedlist>
+<listitem><para>🚀 <bold>Single Bootstrap Configuration</bold> - One command for complete setup</para>
+</listitem><listitem><para>🔒 <bold>Security Hardened</bold> - Stack protection, ASLR, DEP, Control Flow Integrity</para>
+</listitem><listitem><para>⚡ <bold>Performance Optimized</bold> - LTO, native CPU optimization, vectorization</para>
+</listitem><listitem><para>🧪 <bold>Comprehensive Testing</bold> - Unit tests, fuzz testing, sanitizers, benchmarks</para>
+</listitem><listitem><para>🎯 <bold>Code Quality</bold> - clang-format integration, extensive warnings, static analysis</para>
+</listitem></itemizedlist>
+</para>
+<para><bold>Integrated Security Scanning:</bold><itemizedlist>
+<listitem><para>🛡️ <bold>SAST Scanning</bold> - Trivy, Checkov, Gitleaks, Cppcheck, Semgrep (all-in-one workflow)</para>
+</listitem><listitem><para>🔍 <bold>CodeQL Analysis</bold> - Advanced semantic security analysis</para>
+</listitem><listitem><para>🚨 <bold>Automated Security Reports</bold> - All findings uploaded to GitHub Security tab</para>
+</listitem><listitem><para>📊 <bold>Configurable Intensity</bold> - Basic/Comprehensive/Deep security scanning levels</para>
+</listitem></itemizedlist>
+</para>
+<sect1 id="index_1autotoc_md1">
+<title>Quick Start</title>
+<sect2 id="index_1autotoc_md2">
+<title>Automated Setup (Recommended)</title>
+<para><bold>Linux/macOS:</bold> <programlisting filename=".bash"><codeline><highlight class="normal">./bootstrap_cmake.sh<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>Auto-detect<sp/>compiler<sp/>and<sp/>full<sp/>setup</highlight></codeline>
+<codeline><highlight class="normal">./bootstrap_cmake.sh<sp/>--compiler<sp/>gcc<sp/><sp/>#<sp/>Force<sp/>GCC<sp/></highlight></codeline>
+<codeline><highlight class="normal">./bootstrap_cmake.sh<sp/>--compiler<sp/>clang<sp/>#<sp/>Force<sp/>Clang</highlight></codeline>
+</programlisting></para>
+<para><bold>Windows (cmd/PowerShell):</bold> <programlisting filename=".cmd"><codeline><highlight class="normal">bootstrap_cmake.bat<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>Auto-detect<sp/>and<sp/>full<sp/>setup</highlight></codeline>
+</programlisting></para>
+<para>That&apos;s it! The bootstrap script will:<itemizedlist>
+<listitem><para>✅ Detect your platform and available compilers</para>
+</listitem><listitem><para>✅ Install missing tools (CMake, Conan, clang-format)</para>
+</listitem><listitem><para>✅ Configure optimized builds (Debug + Release)</para>
+</listitem><listitem><para>✅ Run comprehensive tests and benchmarks</para>
+</listitem><listitem><para>✅ Set up development environment</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="index_1autotoc_md3">
+<title>Manual Setup (Advanced)</title>
+<para>If you prefer manual control:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Install<sp/>dependencies</highlight></codeline>
+<codeline><highlight class="normal">conan<sp/>install<sp/>.<sp/>-s<sp/>build_type=Debug<sp/><sp/><sp/>--output-folder=build<sp/>--build=missing</highlight></codeline>
+<codeline><highlight class="normal">conan<sp/>install<sp/>.<sp/>-s<sp/>build_type=Release<sp/>--output-folder=build<sp/>--build=missing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Configure<sp/>(using<sp/>presets)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-debug<sp/><sp/><sp/><sp/>#<sp/>Debug<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-release<sp/><sp/>#<sp/>Release<sp/>build</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Build</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset<sp/>conan-debug<sp/>--parallel</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset<sp/>conan-release<sp/>--parallel</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Test</highlight></codeline>
+<codeline><highlight class="normal">build/Debug/utf_strings-tests<sp/><sp/><sp/><sp/><sp/><sp/>#<sp/>Linux/macOS</highlight></codeline>
+<codeline><highlight class="normal">build\Debug\utf_strings-tests.exe<sp/><sp/>#<sp/>Windows</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Benchmark<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">build/build/utf_strings-bench<sp/>--benchmark_min_time=0.1s</highlight></codeline>
+</programlisting></para>
+</sect2>
+<sect2 id="index_1autotoc_md4">
+<title>Advanced Compiler Configuration</title>
+<para>The build system supports fine-grained compiler control through external flags:</para>
+<para><programlisting filename=".bash"><codeline><highlight class="normal">#<sp/>Standard<sp/>optimized<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-release<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DCOMPILER_TYPE=GCC<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LTO=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_NATIVE_ARCH=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DENABLE_SHARED_LIBRARY=ON</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Maximum<sp/>performance<sp/>build<sp/>(Clang<sp/>with<sp/>libc++)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-release<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DCOMPILER_TYPE=CLANG<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LTO=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_NATIVE_ARCH=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LIBC_PLUS_PLUS=ON<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DENABLE_SHARED_LIBRARY=ON</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Debug-friendly<sp/>build<sp/>(no<sp/>aggressive<sp/>optimizations)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--preset<sp/>conan-debug<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DCOMPILER_TYPE=CLANG<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_LTO=OFF<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DUSE_NATIVE_ARCH=OFF<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-DENABLE_SHARED_LIBRARY=OFF</highlight></codeline>
+</programlisting></para>
+<para><bold>Available Configuration Flags:</bold><itemizedlist>
+<listitem><para><computeroutput>COMPILER_TYPE</computeroutput>: <computeroutput>GCC|CLANG|MSVC</computeroutput> - Explicit compiler identification</para>
+</listitem><listitem><para><computeroutput>USE_LTO</computeroutput>: <computeroutput>ON|OFF</computeroutput> - Link Time Optimization</para>
+</listitem><listitem><para><computeroutput>USE_NATIVE_ARCH</computeroutput>: <computeroutput>ON|OFF</computeroutput> - Native CPU optimization (<computeroutput>-march=native</computeroutput>)</para>
+</listitem><listitem><para><computeroutput>USE_MSVC_LTO</computeroutput>: <computeroutput>ON|OFF</computeroutput> - MSVC-specific LTO flags (<computeroutput>/LTCG</computeroutput>, <computeroutput>/GL</computeroutput>)</para>
+</listitem><listitem><para><computeroutput>USE_LIBC_PLUS_PLUS</computeroutput>: <computeroutput>ON|OFF</computeroutput> - Use libc++ instead of libstdc++ (Clang only)</para>
+</listitem><listitem><para><computeroutput>ENABLE_SHARED_LIBRARY</computeroutput>: <computeroutput>ON|OFF</computeroutput> - Build shared libraries</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+</sect1>
+<sect1 id="index_1autotoc_md5">
+<title>🤖 AI Assistant Integration</title>
+<para>This project includes comprehensive context files to help AI assistants (ChatGPT, Claude, GitHub Copilot) provide accurate assistance:</para>
+<sect2 id="index_1autotoc_md6">
+<title>Context Files</title>
+<para><itemizedlist>
+<listitem><para>**<computeroutput>.ai-context</computeroutput>** - Complete project overview, standards, and guidelines</para>
+</listitem><listitem><para>**<computeroutput>.copilot-instructions.md</computeroutput>** - GitHub Copilot-specific coding patterns and conventions</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="index_1autotoc_md7">
+<title>For Best AI Assistance</title>
+<para>When working with AI assistants on this project:</para>
+<para><orderedlist>
+<listitem><para><bold>Reference the context</bold>: &quot;Use the project context from .ai-context&quot;</para>
+</listitem><listitem><para><bold>Specify the domain</bold>: &quot;This is for the UTF Strings C++23 library&quot; <linebreak/>
+</para>
+</listitem><listitem><para><bold>Mention requirements</bold>: &quot;Follow the project&apos;s C++23 standards and UTF handling patterns&quot;</para>
+</listitem><listitem><para><bold>Ask for tests</bold>: &quot;Include appropriate unit tests and consider fuzz testing&quot;</para>
+</listitem></orderedlist>
+</para>
+</sect2>
+<sect2 id="index_1autotoc_md8">
+<title>Common AI Prompts</title>
+<para><programlisting><codeline><highlight class="normal">#<sp/>For<sp/>code<sp/>generation</highlight></codeline>
+<codeline><highlight class="normal">&quot;Generate<sp/>a<sp/>UTF-8<sp/>to<sp/>UTF-16<sp/>converter<sp/>following<sp/>the<sp/>UTF<sp/>Strings<sp/>project<sp/>patterns<sp/>in<sp/>.ai-context&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>For<sp/>debugging<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">&quot;Help<sp/>debug<sp/>this<sp/>UTF<sp/>conversion<sp/>issue,<sp/>considering<sp/>the<sp/>project<sp/>context<sp/>and<sp/>C++23<sp/>standards&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>For<sp/>optimization</highlight></codeline>
+<codeline><highlight class="normal">&quot;Optimize<sp/>this<sp/>UTF<sp/>processing<sp/>code<sp/>for<sp/>performance,<sp/>following<sp/>the<sp/>project&apos;s<sp/>benchmarking<sp/>approach&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>For<sp/>testing</highlight></codeline>
+<codeline><highlight class="normal">&quot;Create<sp/>comprehensive<sp/>tests<sp/>for<sp/>this<sp/>UTF<sp/>function,<sp/>including<sp/>edge<sp/>cases<sp/>and<sp/>fuzz<sp/>targets&quot;</highlight></codeline>
+</programlisting></para>
+<para>The AI context files ensure consistent, project-appropriate assistance across all AI platforms! 🚀</para>
+</sect2>
+</sect1>
+<sect1 id="index_1autotoc_md9">
+<title>Code Quality &amp; Reviews</title>
+<para>This project maintains high standards for production-ready C++ code:</para>
+<sect2 id="index_1autotoc_md10">
+<title>&lt;strong&gt;Mandatory Code Reviews&lt;/strong&gt;</title>
+<para><itemizedlist>
+<listitem><para>📋 <bold>Code Review Guidelines</bold> - Comprehensive review parameters for all code changes</para>
+</listitem><listitem><para>⚡ <bold>Performance Analysis</bold> - Efficiency, algorithmic complexity, optimization opportunities <linebreak/>
+</para>
+</listitem><listitem><para>🔒 <bold>Security Analysis</bold> - Memory safety, undefined behavior, vulnerability assessment</para>
+</listitem><listitem><para>🐛 <bold>Correctness Validation</bold> - Edge cases, error handling, logic verification</para>
+</listitem><listitem><para>🚀 <bold>Modern C++23 Standards</bold> - Best practices, proper feature usage, API design</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="index_1autotoc_md11">
+<title>&lt;strong&gt;Review Standards&lt;/strong&gt;</title>
+<para>Every change must meet:<itemizedlist>
+<listitem><para>🔴 <bold>Zero Critical Issues</bold> - No security vulnerabilities, undefined behavior, or crashes</para>
+</listitem><listitem><para>🟡 <bold>Address Important Issues</bold> - Performance and correctness concerns resolved <linebreak/>
+</para>
+</listitem><listitem><para>✅ <bold>Production Ready</bold> - Code must be deployable to production environments</para>
+</listitem></itemizedlist>
+</para>
+</sect2>
+<sect2 id="index_1autotoc_md12">
+<title>&lt;strong&gt;Development Workflow&lt;/strong&gt;</title>
+<para><orderedlist>
+<listitem><para><bold>Pre-Push Review</bold> - Complete comprehensive review using guidelines</para>
+</listitem><listitem><para><bold>CI Validation</bold> - All automated tests, security scans, and quality checks pass</para>
+</listitem><listitem><para><bold>Peer Review</bold> - Team review focusing on design and maintainability</para>
+</listitem><listitem><para><bold>Integration</bold> - Merge only after all standards are met</para>
+</listitem></orderedlist>
+</para>
+<para>See <bold>CONTRIBUTING.md</bold> for complete development guidelines. </para>
+</sect2>
+</sect1>
+    </detaileddescription>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>

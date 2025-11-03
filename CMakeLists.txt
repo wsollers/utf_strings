@@ -385,11 +385,14 @@ endfunction()
 # Sources
 # --------------------------------------------------------------------
 set(UTF_STRINGS_HEADERS
+    include/utf.hpp
+    include/utf/utf_codepoints.hpp
     include/utf/utf_strings.hpp
     include/utf/export.hpp
     include/utf/version.hpp
 )
 set(UTF_STRINGS_SOURCES
+    src/utf_codepoints.cpp
     src/utf_strings.cpp
 )
 
@@ -425,7 +428,7 @@ if(UTF_STRINGS_BUILD_TESTS)
 
   find_package(GTest CONFIG REQUIRED)
 
-  add_executable(utf_strings-tests tests/utf8_tests.cpp)
+  add_executable(utf_strings-tests tests/utf8_tests.cpp tests/utf_strings_tests.cpp)
   target_link_libraries(utf_strings-tests PRIVATE utf_strings_static GTest::gtest GTest::gtest_main)
   target_compile_features(utf_strings-tests PRIVATE cxx_std_23)
   
@@ -443,7 +446,7 @@ endif()
 if(UTF_STRINGS_BUILD_BENCHMARKS)
   find_package(benchmark CONFIG REQUIRED)
 
-  add_executable(utf_strings-bench benchmarks/utf8_bench.cpp)
+  add_executable(utf_strings-bench benchmarks/utf8_bench.cpp benchmarks/utf_strings_bench.cpp)
   target_link_libraries(utf_strings-bench PRIVATE utf_strings_static benchmark::benchmark)
   target_compile_features(utf_strings-bench PRIVATE cxx_std_23)
   
@@ -572,6 +575,33 @@ if(UTF_STRINGS_BUILD_FUZZ_TESTS)
     target_link_options(fuzz_utf32_le PRIVATE ${FUZZ_LINK_FLAGS})
   endif()
 
+  # UTF-8 String fuzz target
+  add_executable(fuzz_utf8_string fuzz/fuzz_utf8_string.cpp)
+  target_link_libraries(fuzz_utf8_string PRIVATE utf_strings_static)
+  target_compile_features(fuzz_utf8_string PRIVATE cxx_std_23)
+  target_compile_options(fuzz_utf8_string PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf8_string PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
+
+  # UTF-16 BE String fuzz target
+  add_executable(fuzz_utf16_be_string fuzz/fuzz_utf16_be_string.cpp)
+  target_link_libraries(fuzz_utf16_be_string PRIVATE utf_strings_static)
+  target_compile_features(fuzz_utf16_be_string PRIVATE cxx_std_23)
+  target_compile_options(fuzz_utf16_be_string PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_utf16_be_string PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
+
+  # UTF StringView fuzz target
+  add_executable(fuzz_string_view fuzz/fuzz_string_view.cpp)
+  target_link_libraries(fuzz_string_view PRIVATE utf_strings_static)
+  target_compile_features(fuzz_string_view PRIVATE cxx_std_23)
+  target_compile_options(fuzz_string_view PRIVATE ${FUZZ_FLAGS})
+  if(FUZZ_LINK_FLAGS)
+    target_link_options(fuzz_string_view PRIVATE ${FUZZ_LINK_FLAGS})
+  endif()
+
   # Note: Fuzz targets don't use apply_build_flags() since they have their own specific flags
 
   # Custom targets for running fuzz tests
@@ -610,15 +640,79 @@ if(UTF_STRINGS_BUILD_FUZZ_TESTS)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   )
 
+  add_custom_target(run_fuzz_utf8_string
+    COMMAND $<TARGET_FILE:fuzz_utf8_string> -max_total_time=30 -print_final_stats=1
+    DEPENDS fuzz_utf8_string
+    COMMENT "Running UTF-8 String fuzz test for 30 seconds"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
+  add_custom_target(run_fuzz_utf16_be_string
+    COMMAND $<TARGET_FILE:fuzz_utf16_be_string> -max_total_time=30 -print_final_stats=1
+    DEPENDS fuzz_utf16_be_string
+    COMMENT "Running UTF-16 BE String fuzz test for 30 seconds"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
+  add_custom_target(run_fuzz_string_view
+    COMMAND $<TARGET_FILE:fuzz_string_view> -max_total_time=30 -print_final_stats=1
+    DEPENDS fuzz_string_view
+    COMMENT "Running UTF StringView fuzz test for 30 seconds"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
   # Meta target to run all fuzz tests
   add_custom_target(run_all_fuzz_tests
-    DEPENDS run_fuzz_utf8 run_fuzz_utf16_be run_fuzz_utf16_le run_fuzz_utf32_be run_fuzz_utf32_le
+    DEPENDS run_fuzz_utf8 run_fuzz_utf16_be run_fuzz_utf16_le run_fuzz_utf32_be run_fuzz_utf32_le 
+            run_fuzz_utf8_string run_fuzz_utf16_be_string run_fuzz_string_view
     COMMENT "Running all fuzz tests"
   )
 
   message(STATUS "Fuzz testing enabled with AddressSanitizer and UndefinedBehaviorSanitizer")
   message(STATUS "Use 'make run_all_fuzz_tests' to run all fuzz tests")
   message(STATUS "Use 'make run_fuzz_<encoding>' to run specific fuzz tests")
+endif()
+
+# --------------------------------------------------------------------
+# Documentation (Doxygen)
+# --------------------------------------------------------------------
+find_package(Doxygen OPTIONAL_COMPONENTS dot)
+
+if(DOXYGEN_FOUND)
+    # Set Doxygen configuration variables
+    set(DOXYGEN_INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src")
+    set(DOXYGEN_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/docs/api")
+    set(DOXYGEN_PROJECT_NAME "UTF Strings Library")
+    set(DOXYGEN_PROJECT_VERSION "${PROJECT_VERSION}")
+    
+    # Create documentation target
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+    
+    # Create clean-docs target
+    add_custom_target(clean-docs
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${DOXYGEN_OUTPUT_DIR}
+        COMMENT "Cleaning generated documentation"
+        VERBATIM
+    )
+    
+    message(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE}")
+    if(DOXYGEN_DOT_FOUND)
+        message(STATUS "Graphviz dot found: ${DOXYGEN_DOT_EXECUTABLE}")
+        message(STATUS "Documentation will include dependency graphs and diagrams")
+    else()
+        message(STATUS "Graphviz dot not found. Install graphviz for enhanced documentation with diagrams")
+    endif()
+    message(STATUS "Available targets:")
+    message(STATUS "  docs       - Generate API documentation")
+    message(STATUS "  clean-docs - Remove generated documentation")
+else()
+    message(STATUS "Doxygen not found. Documentation generation not available.")
+    message(STATUS "Install with: sudo apt install doxygen graphviz")
 endif()
 
 # --------------------------------------------------------------------
@@ -693,6 +787,7 @@ message(STATUS "  UTF_STRINGS_BUILD_FUZZ_TESTS: ${UTF_STRINGS_BUILD_FUZZ_TESTS}"
 message(STATUS "  UTF_STRINGS_ENABLE_SANITIZERS: ${UTF_STRINGS_ENABLE_SANITIZERS}")
 message(STATUS "  UTF_STRINGS_ENABLE_THREAD_SANITIZER: ${UTF_STRINGS_ENABLE_THREAD_SANITIZER}")
 message(STATUS "  UTF_STRINGS_WITH_GPERFTOOLS: ${UTF_STRINGS_WITH_GPERFTOOLS}")
+message(STATUS "  DOXYGEN_FOUND: ${DOXYGEN_FOUND}")
 message(STATUS "")
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "Release build optimizations enabled:")

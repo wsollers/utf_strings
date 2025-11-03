@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dd/dbd/structutf_1_1UnicodeScalar" kind="struct" language="C++" prot="public">
+    <compoundname>utf::UnicodeScalar</compoundname>
+    <includes refid="d9/d34/utf__codepoints_8hpp" local="no">utf_codepoints.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="dd/dbd/structutf_1_1UnicodeScalar_1ae545bd27a2d735cdf3499c2c3409e156" prot="public" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::UnicodeScalar::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>utf::UnicodeScalar::value</qualifiedname>
+        <briefdescription>
+<para>The Unicode scalar value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="180" column="12" bodyfile="include/utf/utf_codepoints.hpp" bodystart="180" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="dd/dbd/structutf_1_1UnicodeScalar_1ae82789a816cc4319dc1af9846f80a21a" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::UnicodeScalar::UnicodeScalar</definition>
+        <argsstring>(uint32_t v)</argsstring>
+        <name>UnicodeScalar</name>
+        <qualifiedname>utf::UnicodeScalar::UnicodeScalar</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+<para>Construct from a raw integer value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="183" column="13" bodyfile="include/utf/utf_codepoints.hpp" bodystart="183" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/dbd/structutf_1_1UnicodeScalar_1a21037ac5c6267088034274c8689e20d1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::UnicodeScalar::is_valid</definition>
+        <argsstring>() const</argsstring>
+        <name>is_valid</name>
+        <qualifiedname>utf::UnicodeScalar::is_valid</qualifiedname>
+        <briefdescription>
+<para>Check if this represents a valid Unicode scalar value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>true if the value is in the valid Unicode range and not a surrogate </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="187" column="10" bodyfile="include/utf/utf_codepoints.hpp" bodystart="187" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="dd/dbd/structutf_1_1UnicodeScalar_1a6d1e1ecdc9a69479e0f0c01260bd5242" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::UnicodeScalar::operator uint32_t</definition>
+        <argsstring>() const</argsstring>
+        <name>operator uint32_t</name>
+        <qualifiedname>utf::UnicodeScalar::operator uint32_t</qualifiedname>
+        <briefdescription>
+<para>Implicit conversion to uint32_t. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="193" column="4" bodyfile="include/utf/utf_codepoints.hpp" bodystart="193" bodyend="193"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Strong type wrapper for Unicode scalar values. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Provides type safety to distinguish Unicode scalars from raw integers </para>
+    </detaileddescription>
+    <location file="include/utf/utf_codepoints.hpp" line="179" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="179" bodyend="194"/>
+    <listofallmembers>
+      <member refid="dd/dbd/structutf_1_1UnicodeScalar_1a21037ac5c6267088034274c8689e20d1" prot="public" virt="non-virtual"><scope>utf::UnicodeScalar</scope><name>is_valid</name></member>
+      <member refid="dd/dbd/structutf_1_1UnicodeScalar_1a6d1e1ecdc9a69479e0f0c01260bd5242" prot="public" virt="non-virtual"><scope>utf::UnicodeScalar</scope><name>operator uint32_t</name></member>
+      <member refid="dd/dbd/structutf_1_1UnicodeScalar_1ae82789a816cc4319dc1af9846f80a21a" prot="public" virt="non-virtual"><scope>utf::UnicodeScalar</scope><name>UnicodeScalar</name></member>
+      <member refid="dd/dbd/structutf_1_1UnicodeScalar_1ae545bd27a2d735cdf3499c2c3409e156" prot="public" virt="non-virtual"><scope>utf::UnicodeScalar</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

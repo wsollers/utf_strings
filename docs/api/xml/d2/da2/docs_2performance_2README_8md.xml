@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d2/da2/docs_2performance_2README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Performance<sp/>Data</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>directory<sp/>contains<sp/>performance<sp/>benchmark<sp/>results<sp/>and<sp/>analysis<sp/>files<sp/>generated<sp/>by<sp/>the<sp/>CI/CD<sp/>pipeline.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Available<sp/>Files</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>`detailed_benchmark.json`<sp/>-<sp/>Detailed<sp/>benchmark<sp/>results<sp/>in<sp/>JSON<sp/>format</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`benchmark_results.csv`<sp/>-<sp/>Benchmark<sp/>results<sp/>in<sp/>CSV<sp/>format<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`benchmark_console.txt`<sp/>-<sp/>Full<sp/>benchmark<sp/>console<sp/>output</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`system_info.txt`<sp/>-<sp/>Hardware<sp/>and<sp/>build<sp/>environment<sp/>details</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`flamegraph.svg`<sp/>-<sp/>Interactive<sp/>performance<sp/>flame<sp/>graph<sp/>(when<sp/>available)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>`perf.script`<sp/>-<sp/>Raw<sp/>performance<sp/>profiling<sp/>data<sp/>(when<sp/>available)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Generation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">These<sp/>files<sp/>are<sp/>automatically<sp/>generated<sp/>during<sp/>CI<sp/>builds<sp/>with<sp/>the<sp/>Performance<sp/>Baseline<sp/>workflow.<sp/>Local<sp/>builds<sp/>do<sp/>not<sp/>generate<sp/>these<sp/>files.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Performance<sp/>data<sp/>is<sp/>collected<sp/>using:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Google<sp/>Benchmark<sp/>for<sp/>microbenchmarks</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Linux<sp/>`perf`<sp/>tools<sp/>for<sp/>profiling<sp/>(when<sp/>available)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Flame<sp/>graph<sp/>generation<sp/>using<sp/>FlameGraph<sp/>tools</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Access</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Files<sp/>are<sp/>available<sp/>at:<sp/>https://wsollers.github.io/utf_strings/performance/</highlight></codeline>
+    </programlisting>
+    <location file="docs/performance/README.md"/>
+  </compounddef>
+</doxygen>

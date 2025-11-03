@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d6/de3/structutf_1_1encodings_1_1Utf8" kind="struct" language="C++" prot="public">
+    <compoundname>utf::encodings::Utf8</compoundname>
+    <includes refid="d9/d34/utf__codepoints_8hpp" local="no">utf_codepoints.hpp</includes>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="d6/de3/structutf_1_1encodings_1_1Utf8_1a9ebc8c2051e063ffb8e13cba265e4398" prot="public" static="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint8_t</ref></type>
+        <definition>using utf::encodings::Utf8::storage_type =  uint8_t</definition>
+        <argsstring></argsstring>
+        <name>storage_type</name>
+        <qualifiedname>utf::encodings::Utf8::storage_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="148" column="3" bodyfile="include/utf/utf_codepoints.hpp" bodystart="148" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="d6/de3/structutf_1_1encodings_1_1Utf8_1a963636f74fecce8a64e3585582bf6b54" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::encodings::Utf8::unit_size</definition>
+        <argsstring></argsstring>
+        <name>unit_size</name>
+        <qualifiedname>utf::encodings::Utf8::unit_size</qualifiedname>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="149" column="23" bodyfile="include/utf/utf_codepoints.hpp" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/de3/structutf_1_1encodings_1_1Utf8_1acad3902590433724f0215764ed371836" prot="public" static="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t utf::encodings::Utf8::max_units</definition>
+        <argsstring></argsstring>
+        <name>max_units</name>
+        <qualifiedname>utf::encodings::Utf8::max_units</qualifiedname>
+        <initializer>= 4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="150" column="23" bodyfile="include/utf/utf_codepoints.hpp" bodystart="150" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>UTF-8 encoding specification. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/utf/utf_codepoints.hpp" line="147" column="1" bodyfile="include/utf/utf_codepoints.hpp" bodystart="147" bodyend="151"/>
+    <listofallmembers>
+      <member refid="d6/de3/structutf_1_1encodings_1_1Utf8_1acad3902590433724f0215764ed371836" prot="public" virt="non-virtual"><scope>utf::encodings::Utf8</scope><name>max_units</name></member>
+      <member refid="d6/de3/structutf_1_1encodings_1_1Utf8_1a9ebc8c2051e063ffb8e13cba265e4398" prot="public" virt="non-virtual"><scope>utf::encodings::Utf8</scope><name>storage_type</name></member>
+      <member refid="d6/de3/structutf_1_1encodings_1_1Utf8_1a963636f74fecce8a64e3585582bf6b54" prot="public" virt="non-virtual"><scope>utf::encodings::Utf8</scope><name>unit_size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

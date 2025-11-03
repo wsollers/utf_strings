@@ -1,0 +1,380 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d8/dda/classutf_1_1string_1_1CodePointIterator" kind="class" language="C++" prot="public">
+    <compoundname>utf::string::CodePointIterator</compoundname>
+    <includes refid="d5/d1a/utf__strings_8hpp" local="no">utf_strings.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref></type>
+      </param>
+      <param>
+        <type><ref refid="d4/db8/namespaceutf_1_1endianness_1a628af25869a3e1120e9867711365e62d" kindref="member">Endian</ref></type>
+        <declname>E</declname>
+        <defname>E</defname>
+      </param>
+    </templateparamlist>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a1d0c15f9cee6c4ff25b27e3a0a5c9e3a" prot="public" static="no">
+        <type>std::forward_iterator_tag</type>
+        <definition>using utf::string::CodePointIterator&lt; UtfType, E &gt;::iterator_category =  std::forward_iterator_tag</definition>
+        <argsstring></argsstring>
+        <name>iterator_category</name>
+        <qualifiedname>utf::string::CodePointIterator::iterator_category</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="93" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a6d49161c8e1641e326740ee0b2f667dd" prot="public" static="no">
+        <type><ref refid="d4/d7c/structutf_1_1CodePoint" kindref="compound">CodePoint</ref>&lt; <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">UtfType</ref>, <ref refid="d8/d8b/namespaceutf_1a3d519bf56ed823ae9353d21e45c78fc0" kindref="member">E</ref> &gt;</type>
+        <definition>using utf::string::CodePointIterator&lt; UtfType, E &gt;::value_type =  CodePoint&lt;UtfType, E&gt;</definition>
+        <argsstring></argsstring>
+        <name>value_type</name>
+        <qualifiedname>utf::string::CodePointIterator::value_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="94" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a4eb0dc4eec1f7d7d4e235fdd3165aa04" prot="public" static="no">
+        <type>std::ptrdiff_t</type>
+        <definition>using utf::string::CodePointIterator&lt; UtfType, E &gt;::difference_type =  std::ptrdiff_t</definition>
+        <argsstring></argsstring>
+        <name>difference_type</name>
+        <qualifiedname>utf::string::CodePointIterator::difference_type</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="95" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1adf4526ea3c2e166b41b834c8bf7fb9d1" prot="public" static="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a6d49161c8e1641e326740ee0b2f667dd" kindref="member">value_type</ref> *</type>
+        <definition>using utf::string::CodePointIterator&lt; UtfType, E &gt;::pointer =  const value_type*</definition>
+        <argsstring></argsstring>
+        <name>pointer</name>
+        <qualifiedname>utf::string::CodePointIterator::pointer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="96" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1ad74b399a76356be7d6e283aa61d743dc" prot="public" static="no">
+        <type><ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a6d49161c8e1641e326740ee0b2f667dd" kindref="member">value_type</ref></type>
+        <definition>using utf::string::CodePointIterator&lt; UtfType, E &gt;::reference =  value_type</definition>
+        <argsstring></argsstring>
+        <name>reference</name>
+        <qualifiedname>utf::string::CodePointIterator::reference</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="97" column="3" bodyfile="include/utf/utf_strings.hpp" bodystart="97" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a467ea312ecfa698ccec9ea3ecf6c1f3d" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> UtfType::storage_type *</type>
+        <definition>const UtfType::storage_type* utf::string::CodePointIterator&lt; UtfType, E &gt;::current_</definition>
+        <argsstring></argsstring>
+        <name>current_</name>
+        <qualifiedname>utf::string::CodePointIterator::current_</qualifiedname>
+        <initializer>{<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">nullptr</ref>}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="138" column="40" bodyfile="include/utf/utf_strings.hpp" bodystart="138" bodyend="138"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a0c248cfb0604d9bee986173f290d2c29" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> UtfType::storage_type *</type>
+        <definition>const UtfType::storage_type* utf::string::CodePointIterator&lt; UtfType, E &gt;::end_</definition>
+        <argsstring></argsstring>
+        <name>end_</name>
+        <qualifiedname>utf::string::CodePointIterator::end_</qualifiedname>
+        <initializer>{<ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">nullptr</ref>}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="139" column="40" bodyfile="include/utf/utf_strings.hpp" bodystart="139" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a8f631bc3dbc667cdf9328038bcf01277" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a6d49161c8e1641e326740ee0b2f667dd" kindref="member">value_type</ref></type>
+        <definition>value_type utf::string::CodePointIterator&lt; UtfType, E &gt;::current_code_point_</definition>
+        <argsstring></argsstring>
+        <name>current_code_point_</name>
+        <qualifiedname>utf::string::CodePointIterator::current_code_point_</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="140" column="14" bodyfile="include/utf/utf_strings.hpp" bodystart="140" bodyend="140"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1af9668a7ea0b8211ba22946c9fc791028" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::CodePointIterator&lt; UtfType, E &gt;::CodePointIterator</definition>
+        <argsstring>()=default</argsstring>
+        <name>CodePointIterator</name>
+        <qualifiedname>utf::string::CodePointIterator::CodePointIterator</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="99" column="4"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1aa167f167f2c6c1dc9f4a05dc4d60da1d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>utf::string::CodePointIterator&lt; UtfType, E &gt;::CodePointIterator</definition>
+        <argsstring>(const typename UtfType::storage_type *ptr, const typename UtfType::storage_type *end)</argsstring>
+        <name>CodePointIterator</name>
+        <qualifiedname>utf::string::CodePointIterator::CodePointIterator</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> UtfType::storage_type *</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> UtfType::storage_type *</type>
+          <declname>end</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="101" column="4" bodyfile="include/utf/utf_strings.hpp" bodystart="101" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1aee49ae3178ede86abf1da598b3fbc0c6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1ad74b399a76356be7d6e283aa61d743dc" kindref="member">reference</ref></type>
+        <definition>reference utf::string::CodePointIterator&lt; UtfType, E &gt;::operator*</definition>
+        <argsstring>() const</argsstring>
+        <name>operator*</name>
+        <qualifiedname>utf::string::CodePointIterator::operator*</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="109" column="15" bodyfile="include/utf/utf_strings.hpp" bodystart="109" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a6aaca0cc376822350f1cbfc783bb273c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1adf4526ea3c2e166b41b834c8bf7fb9d1" kindref="member">pointer</ref></type>
+        <definition>pointer utf::string::CodePointIterator&lt; UtfType, E &gt;::operator-&gt;</definition>
+        <argsstring>() const</argsstring>
+        <name>operator-&gt;</name>
+        <qualifiedname>utf::string::CodePointIterator::operator-&gt;</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="111" column="13" bodyfile="include/utf/utf_strings.hpp" bodystart="111" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1abfad6fd66c384e89ddd8a9b4abac4213" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator" kindref="compound">CodePointIterator</ref> &amp;</type>
+        <definition>CodePointIterator &amp; utf::string::CodePointIterator&lt; UtfType, E &gt;::operator++</definition>
+        <argsstring>()</argsstring>
+        <name>operator++</name>
+        <qualifiedname>utf::string::CodePointIterator::operator++</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="113" column="22" bodyfile="include/utf/utf_strings.hpp" bodystart="113" bodyend="116"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a03fe4bba5475ed5a503d2df624e468d6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator" kindref="compound">CodePointIterator</ref></type>
+        <definition>CodePointIterator utf::string::CodePointIterator&lt; UtfType, E &gt;::operator++</definition>
+        <argsstring>(int)</argsstring>
+        <name>operator++</name>
+        <qualifiedname>utf::string::CodePointIterator::operator++</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">int</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="118" column="22" bodyfile="include/utf/utf_strings.hpp" bodystart="118" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a906f7ff07c970f1066974f0507f7ae1a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::string::CodePointIterator&lt; UtfType, E &gt;::operator==</definition>
+        <argsstring>(const CodePointIterator &amp;other) const</argsstring>
+        <name>operator==</name>
+        <qualifiedname>utf::string::CodePointIterator::operator==</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator" kindref="compound">CodePointIterator</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="124" column="10" bodyfile="include/utf/utf_strings.hpp" bodystart="124" bodyend="126"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a124e740f9f6b51519263629bf432b442" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">bool</ref></type>
+        <definition>bool utf::string::CodePointIterator&lt; UtfType, E &gt;::operator!=</definition>
+        <argsstring>(const CodePointIterator &amp;other) const</argsstring>
+        <name>operator!=</name>
+        <qualifiedname>utf::string::CodePointIterator::operator!=</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> <ref refid="d8/dda/classutf_1_1string_1_1CodePointIterator" kindref="compound">CodePointIterator</ref> &amp;</type>
+          <declname>other</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="128" column="10" bodyfile="include/utf/utf_strings.hpp" bodystart="128" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a763d2694ca6a4c8897d1f9a1704cf26e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">const</ref> UtfType::storage_type *</type>
+        <definition>const UtfType::storage_type * utf::string::CodePointIterator&lt; UtfType, E &gt;::position</definition>
+        <argsstring>() const</argsstring>
+        <name>position</name>
+        <qualifiedname>utf::string::CodePointIterator::position</qualifiedname>
+        <briefdescription>
+<para>Get the current position in the underlying buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="133" column="42" bodyfile="include/utf/utf_strings.hpp" bodystart="133" bodyend="135"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a079d56f1c956e3b1911f78fefc799ee7" prot="private" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>UtfType::storage_type</type>
+        <definition>static UtfType::storage_type utf::string::CodePointIterator&lt; UtfType, E &gt;::to_native_endian</definition>
+        <argsstring>(typename UtfType::storage_type v)</argsstring>
+        <name>to_native_endian</name>
+        <qualifiedname>utf::string::CodePointIterator::to_native_endian</qualifiedname>
+        <param>
+          <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">typename</ref> UtfType::storage_type</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="143" column="42" bodyfile="include/utf/utf_strings.hpp" bodystart="143" bodyend="156"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1ad1033ddad16843a560ca1e32db46dc7d" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void utf::string::CodePointIterator&lt; UtfType, E &gt;::read_current</definition>
+        <argsstring>()</argsstring>
+        <name>read_current</name>
+        <qualifiedname>utf::string::CodePointIterator::read_current</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="158" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="158" bodyend="226"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/dda/classutf_1_1string_1_1CodePointIterator_1a1646a3ef8f63690b2bc332c476737ee5" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">void</ref></type>
+        <definition>void utf::string::CodePointIterator&lt; UtfType, E &gt;::advance</definition>
+        <argsstring>()</argsstring>
+        <name>advance</name>
+        <qualifiedname>utf::string::CodePointIterator::advance</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_strings.hpp" line="228" column="9" bodyfile="include/utf/utf_strings.hpp" bodystart="228" bodyend="239"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Iterator for traversing UTF-encoded strings as code points. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>UtfType</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The UTF encoding type (Utf8, Utf16, or Utf32) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>E</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The endianness (Endian::None for UTF-8, BE or LE for UTF-16/32) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+    </detaileddescription>
+    <location file="include/utf/utf_strings.hpp" line="91" column="1" bodyfile="include/utf/utf_strings.hpp" bodystart="91" bodyend="240"/>
+    <listofallmembers>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a1646a3ef8f63690b2bc332c476737ee5" prot="private" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>advance</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1af9668a7ea0b8211ba22946c9fc791028" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>CodePointIterator</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1aa167f167f2c6c1dc9f4a05dc4d60da1d" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>CodePointIterator</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a467ea312ecfa698ccec9ea3ecf6c1f3d" prot="private" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>current_</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a8f631bc3dbc667cdf9328038bcf01277" prot="private" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>current_code_point_</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a4eb0dc4eec1f7d7d4e235fdd3165aa04" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>difference_type</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a0c248cfb0604d9bee986173f290d2c29" prot="private" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>end_</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a1d0c15f9cee6c4ff25b27e3a0a5c9e3a" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>iterator_category</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a124e740f9f6b51519263629bf432b442" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>operator!=</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1aee49ae3178ede86abf1da598b3fbc0c6" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>operator*</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1abfad6fd66c384e89ddd8a9b4abac4213" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>operator++</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a03fe4bba5475ed5a503d2df624e468d6" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>operator++</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a6aaca0cc376822350f1cbfc783bb273c" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>operator-&gt;</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a906f7ff07c970f1066974f0507f7ae1a" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>operator==</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1adf4526ea3c2e166b41b834c8bf7fb9d1" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>pointer</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a763d2694ca6a4c8897d1f9a1704cf26e" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>position</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1ad1033ddad16843a560ca1e32db46dc7d" prot="private" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>read_current</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1ad74b399a76356be7d6e283aa61d743dc" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>reference</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a079d56f1c956e3b1911f78fefc799ee7" prot="private" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>to_native_endian</name></member>
+      <member refid="d8/dda/classutf_1_1string_1_1CodePointIterator_1a6d49161c8e1641e326740ee0b2f667dd" prot="public" virt="non-virtual"><scope>utf::string::CodePointIterator</scope><name>value_type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

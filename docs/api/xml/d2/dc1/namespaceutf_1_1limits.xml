@@ -1,0 +1,235 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d2/dc1/namespaceutf_1_1limits" kind="namespace" language="C++">
+    <compoundname>utf::limits</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1a72a203d3b9eb20590ede96f9cb71b96b" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::max_code_point</definition>
+        <argsstring></argsstring>
+        <name>max_code_point</name>
+        <qualifiedname>utf::limits::max_code_point</qualifiedname>
+        <initializer>= 0x10FFFF</initializer>
+        <briefdescription>
+<para>Maximum valid Unicode code point (U+10FFFF) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="62" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1aff34856e2be0a9f362d12417df877223" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::invalid_scalar</definition>
+        <argsstring></argsstring>
+        <name>invalid_scalar</name>
+        <qualifiedname>utf::limits::invalid_scalar</qualifiedname>
+        <initializer>= 0xFFFFFFFF</initializer>
+        <briefdescription>
+<para>Sentinel value indicating an invalid Unicode scalar. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="65" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1a4e06505a53122ba39eeac9953f2642dd" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::surrogate_min</definition>
+        <argsstring></argsstring>
+        <name>surrogate_min</name>
+        <qualifiedname>utf::limits::surrogate_min</qualifiedname>
+        <initializer>= 0xD800</initializer>
+        <briefdescription>
+<para>Start of Unicode surrogate pair range (invalid as scalar values) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="68" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1a8e48af3174499dc737f75ca827240185" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::surrogate_max</definition>
+        <argsstring></argsstring>
+        <name>surrogate_max</name>
+        <qualifiedname>utf::limits::surrogate_max</qualifiedname>
+        <initializer>= 0xDFFF</initializer>
+        <briefdescription>
+<para>End of Unicode surrogate pair range (invalid as scalar values) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="71" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1a2f272aa973b69cc2d14efdf2184eec8a" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t utf::limits::high_surrogate_min</definition>
+        <argsstring></argsstring>
+        <name>high_surrogate_min</name>
+        <qualifiedname>utf::limits::high_surrogate_min</qualifiedname>
+        <initializer>= 0xD800</initializer>
+        <briefdescription>
+<para>Start of UTF-16 high surrogate range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="74" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1aa8355954d373fc487db527c29dfe7425" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t utf::limits::high_surrogate_max</definition>
+        <argsstring></argsstring>
+        <name>high_surrogate_max</name>
+        <qualifiedname>utf::limits::high_surrogate_max</qualifiedname>
+        <initializer>= 0xDBFF</initializer>
+        <briefdescription>
+<para>End of UTF-16 high surrogate range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="77" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1ae58984c0edbec38ba1de18c62c243f98" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t utf::limits::low_surrogate_min</definition>
+        <argsstring></argsstring>
+        <name>low_surrogate_min</name>
+        <qualifiedname>utf::limits::low_surrogate_min</qualifiedname>
+        <initializer>= 0xDC00</initializer>
+        <briefdescription>
+<para>Start of UTF-16 low surrogate range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="80" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1a03c3b83169b2163258e6e96a7a2adaba" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t utf::limits::low_surrogate_max</definition>
+        <argsstring></argsstring>
+        <name>low_surrogate_max</name>
+        <qualifiedname>utf::limits::low_surrogate_max</qualifiedname>
+        <initializer>= 0xDFFF</initializer>
+        <briefdescription>
+<para>End of UTF-16 low surrogate range. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="83" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1ae1d09e044d2a1497aca2a7985e4eb5ba" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::surrogate_offset</definition>
+        <argsstring></argsstring>
+        <name>surrogate_offset</name>
+        <qualifiedname>utf::limits::surrogate_offset</qualifiedname>
+        <initializer>= 0x10000</initializer>
+        <briefdescription>
+<para>Offset used in UTF-16 surrogate pair calculation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="86" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1acab5e8d1de89e1c71bf44e3fb3f49550" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::utf8_1byte_max</definition>
+        <argsstring></argsstring>
+        <name>utf8_1byte_max</name>
+        <qualifiedname>utf::limits::utf8_1byte_max</qualifiedname>
+        <initializer>= 0x7F</initializer>
+        <briefdescription>
+<para>UTF-8 boundaries. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="89" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1abb6e5feeee1416b6d425c33003be91ee" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::utf8_2byte_max</definition>
+        <argsstring></argsstring>
+        <name>utf8_2byte_max</name>
+        <qualifiedname>utf::limits::utf8_2byte_max</qualifiedname>
+        <initializer>= 0x7FF</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="90" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1a1df7381d50b0d701dd2963ba61e4bc08" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::utf8_3byte_max</definition>
+        <argsstring></argsstring>
+        <name>utf8_3byte_max</name>
+        <qualifiedname>utf::limits::utf8_3byte_max</qualifiedname>
+        <initializer>= 0xFFFF</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="91" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1adece0483d8902840d48a094ce769b142" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::utf8_4byte_max</definition>
+        <argsstring></argsstring>
+        <name>utf8_4byte_max</name>
+        <qualifiedname>utf::limits::utf8_4byte_max</qualifiedname>
+        <initializer>= 0x10FFFF</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="92" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/dc1/namespaceutf_1_1limits_1afa403247df4c0afa135722d21bd49c60" prot="private" static="no" mutable="no">
+        <type><ref refid="d8/d8b/namespaceutf_1af46a13c34941916347df580d8a387c35" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t utf::limits::bmp_max</definition>
+        <argsstring></argsstring>
+        <name>bmp_max</name>
+        <qualifiedname>utf::limits::bmp_max</qualifiedname>
+        <initializer>= 0xFFFF</initializer>
+        <briefdescription>
+<para>Maximum code point in the Basic Multilingual Plane (BMP) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/utf/utf_codepoints.hpp" line="95" column="11" bodyfile="include/utf/utf_codepoints.hpp" bodystart="95" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Unicode-related constants and limits. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/utf/utf_codepoints.hpp" line="60" column="1"/>
+  </compounddef>
+</doxygen>

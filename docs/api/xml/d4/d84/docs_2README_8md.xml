@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d4/d84/docs_2README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>UTF<sp/>Strings<sp/>Documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>directory<sp/>contains<sp/>documentation<sp/>and<sp/>automated<sp/>performance<sp/>benchmark<sp/>results<sp/>for<sp/>the<sp/>UTF<sp/>Strings<sp/>library.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Performance<sp/>Benchmarks</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>[Performance<sp/>Benchmarks](dev/bench/)<sp/>-<sp/>Automated<sp/>performance<sp/>tracking<sp/>and<sp/>historical<sp/>data</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Library<sp/>Documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>UTF<sp/>Strings<sp/>library<sp/>provides<sp/>cross-platform<sp/>UTF-8,<sp/>UTF-16,<sp/>and<sp/>UTF-32<sp/>string<sp/>processing<sp/>with:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">-<sp/>Unicode<sp/>validation<sp/>and<sp/>processing</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Endianness<sp/>handling<sp/>(big-endian,<sp/>little-endian,<sp/>native)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Length<sp/>calculation<sp/>and<sp/>conversion<sp/>between<sp/>encodings</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>High-performance<sp/>implementations<sp/>with<sp/>SIMD<sp/>optimizations</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Cross-platform<sp/>compatibility<sp/>(Linux,<sp/>Windows,<sp/>macOS)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>API<sp/>documentation<sp/>and<sp/>usage<sp/>examples,<sp/>see<sp/>the<sp/>main<sp/>[README](../README.md).</highlight></codeline>
+    </programlisting>
+    <location file="docs/README.md"/>
+  </compounddef>
+</doxygen>

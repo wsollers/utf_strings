@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['utf_5fcodepoint_5fhpp_0',['UTF_CODEPOINT_HPP',['../d9/d34/utf__codepoints_8hpp.html#ac5efa6da8ee3c8661a1f2f8825392471',1,'utf_codepoints.hpp']]],
+  ['utf_5fcodepoint_5fversion_5fmajor_1',['UTF_CODEPOINT_VERSION_MAJOR',['../d9/d34/utf__codepoints_8hpp.html#a093ff3038cab6cc4d5a7da135f798262',1,'utf_codepoints.hpp']]],
+  ['utf_5fcodepoint_5fversion_5fminor_2',['UTF_CODEPOINT_VERSION_MINOR',['../d9/d34/utf__codepoints_8hpp.html#a7f8c1b8c6713a0fe41c69ae41c191df1',1,'utf_codepoints.hpp']]],
+  ['utf_5fcodepoint_5fversion_5fpatch_3',['UTF_CODEPOINT_VERSION_PATCH',['../d9/d34/utf__codepoints_8hpp.html#af8246a97161807667b268d3d9eb5fd6d',1,'utf_codepoints.hpp']]],
+  ['utf_5fhpp_4',['UTF_HPP',['../da/d1c/utf_8hpp.html#a224ca60d7f407afa8338e7c42559da5c',1,'utf.hpp']]],
+  ['utf_5fstring_5fhpp_5',['UTF_STRING_HPP',['../d5/d1a/utf__strings_8hpp.html#a308400b7b7d5484e6b51f7599beea85c',1,'utf_strings.hpp']]],
+  ['utf_5fstring_5fversion_5fmajor_6',['UTF_STRING_VERSION_MAJOR',['../d5/d1a/utf__strings_8hpp.html#ab894cc63f1d47ac61b02b3cdc6001223',1,'utf_strings.hpp']]],
+  ['utf_5fstring_5fversion_5fminor_7',['UTF_STRING_VERSION_MINOR',['../d5/d1a/utf__strings_8hpp.html#a58c9fe25e37372e68852896e1c926e5d',1,'utf_strings.hpp']]],
+  ['utf_5fstring_5fversion_5fpatch_8',['UTF_STRING_VERSION_PATCH',['../d5/d1a/utf__strings_8hpp.html#a84a44950b40aa43a279aae5ef899ea06',1,'utf_strings.hpp']]],
+  ['utf_5fstrings_5fapi_9',['UTF_STRINGS_API',['../d4/d5b/export_8hpp.html#add91edda84f8031d55b9e852ee3f8626',1,'export.hpp']]],
+  ['utf_5fstrings_5fversion_5fhpp_10',['UTF_STRINGS_VERSION_HPP',['../d7/dad/version_8hpp.html#ac838448a75e8f3b12a22af1cf559e839',1,'version.hpp']]],
+  ['utf_5fstrings_5fversion_5fmajor_11',['UTF_STRINGS_VERSION_MAJOR',['../d7/dad/version_8hpp.html#a753a0b3720c192cbc90d8e8dea830087',1,'version.hpp']]],
+  ['utf_5fstrings_5fversion_5fminor_12',['UTF_STRINGS_VERSION_MINOR',['../d7/dad/version_8hpp.html#aadbf313cac2180a4231631b1e459feaf',1,'version.hpp']]],
+  ['utf_5fstrings_5fversion_5fnumber_13',['UTF_STRINGS_VERSION_NUMBER',['../d7/dad/version_8hpp.html#ab6728d5717fd5eda01675d858af61916',1,'version.hpp']]],
+  ['utf_5fstrings_5fversion_5fpatch_14',['UTF_STRINGS_VERSION_PATCH',['../d7/dad/version_8hpp.html#a39c533d9d87694b91738fda0a6edb3af',1,'version.hpp']]],
+  ['utf_5fstrings_5fversion_5fstring_15',['UTF_STRINGS_VERSION_STRING',['../d7/dad/version_8hpp.html#a45af8c5687dd950bd3e8fa4bdf2e72c7',1,'version.hpp']]],
+  ['utf_5fversion_5fat_5fleast_16',['UTF_VERSION_AT_LEAST',['../da/d1c/utf_8hpp.html#a0b5d7a6389fa464660952448f9ea63ff',1,'utf.hpp']]],
+  ['utf_5fversion_5fmajor_17',['UTF_VERSION_MAJOR',['../da/d1c/utf_8hpp.html#ac178b08488d350461cf90ee0fabdc86f',1,'utf.hpp']]],
+  ['utf_5fversion_5fminor_18',['UTF_VERSION_MINOR',['../da/d1c/utf_8hpp.html#ae2d98a20bef1399c1fae070c45c06ff4',1,'utf.hpp']]],
+  ['utf_5fversion_5fnumber_19',['UTF_VERSION_NUMBER',['../da/d1c/utf_8hpp.html#a5aa9f69f6f1f7461cf30acd58afaf6e2',1,'utf.hpp']]],
+  ['utf_5fversion_5fpatch_20',['UTF_VERSION_PATCH',['../da/d1c/utf_8hpp.html#aba4636fbffc5cc15169a65a5b5b46697',1,'utf.hpp']]],
+  ['utf_5fversion_5fstring_21',['UTF_VERSION_STRING',['../da/d1c/utf_8hpp.html#ab6aa1a9c9c430e3bd8781cca83f515bd',1,'utf.hpp']]]
+];

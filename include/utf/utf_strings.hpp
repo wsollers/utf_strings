@@ -1,831 +1,1156 @@
-
-/*
- * Copyright (c) 2025 William Sollers
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #pragma once
 
-// utf_codepoint.hpp - Modern C++23 UTF Code Point Library
+// utf_string.hpp - Modern C++23 UTF String Library
 //
 // A type-safe, constexpr-enabled library for handling UTF-8, UTF-16, and UTF-32
-// code points with explicit endianness control.
+// strings with explicit endianness control. Built on top of utf_codepoint.hpp.
 //
 // Features:
-// - UTF-8/16/32 encoding and decoding
-// - Explicit endianness control (Big Endian / Little Endian)
-// - Compile-time validation via concepts
+// - UTF-8/16/32 string views and containers
+// - Small String Optimization (SSO) - strings <= 32 bytes stored on stack
+// - Iterator support for code point traversal
+// - String conversion between encodings (explicit constructors and assignment)
+// - String concatenation operators
+// - Validation and sanitization
 // - constexpr and noexcept throughout for zero runtime overhead
-// - Safe construction via factory functions returning std::optional
-// - Full validation including overlong encoding detection
+// - Range-based operations
 //
 // Requirements:
 // - C++23 or later
-// - Standard library support for: <bit>, <span>, <concepts>, <optional>
+// - utf_codepoint.hpp (included automatically)
+// - Standard library support for: <string>, <string_view>, <ranges>
 //
 // Example Usage:
-//   // Create UTF-8 code point from Unicode scalar
-//   auto cp = utf::Utf8CodePoint::from_scalar(0x1F4A9);  // 💩
-//   if (cp) {
-//       // Convert to UTF-16 Little Endian
-//       auto u16 = utf::convert<utf::Utf16LECodePoint>(*cp);
-//       if (u16) {
-//           // Use the code point
-//           auto scalar = u16->to_scalar();
+//   // Create UTF-8 string view
+//   utf::string::Utf8StringView sv{u8"Hello 世界 💩"};
+//
+//   // Iterate over code points
+//   for (auto cp : sv) {
+//       // cp is utf::Utf8CodePoint
+//       if (cp.is_valid()) {
+//           auto scalar = cp.to_scalar();
+//           // ...
 //       }
 //   }
 //
-//   // Fast path when input is known to be valid
-//   utf::Utf8CodePoint valid_cp{0x41};  // 'A'
-//   auto u32 = utf::convert_unchecked<utf::Utf32BECodePoint>(valid_cp);
+//   // Convert between encodings (now with direct assignment!)
+//   utf::string::Utf32BEString u32{0x1F4A9};
+//   utf::string::Utf8String u8{u32};  // Converting constructor
+//   u8 = u32;                         // Converting assignment
 //
-// SPDX-License-Identifier: BSD-2-Clause
+//   // String concatenation
+//   auto combined = u8 + u8;
+//   u8 += utf::Utf8CodePoint{0x21};  // Append '!'
+//
+// SPDX-License-Identifier: MIT
 
-#ifndef UTF_CODEPOINT_HPP
-#define UTF_CODEPOINT_HPP
+#ifndef UTF_STRING_HPP
+#define UTF_STRING_HPP
 
-#define UTF_CODEPOINT_VERSION_MAJOR 0
-#define UTF_CODEPOINT_VERSION_MINOR 0
-#define UTF_CODEPOINT_VERSION_PATCH 2
+#define UTF_STRING_VERSION_MAJOR 1
+#define UTF_STRING_VERSION_MINOR 3
+#define UTF_STRING_VERSION_PATCH 0
 
-// Require C++23 (accept both partial and full implementations)
+#include <algorithm>
+#include <compare>
+#include <cstring>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <ranges>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include <array>
-#include <bit>
-#include <concepts>
-#include <cstdint>
-#include <optional>
-#include <span>
-#include <version>
+#include "utf_codepoints.hpp"
 
-namespace utf {
-
-// ============================================================================
-// Unicode Limits and Constants
-// ============================================================================
-
-/// @brief Unicode-related constants and limits
-namespace limits {
-/// Maximum valid Unicode code point (U+10FFFF)
-constexpr uint32_t max_code_point = 0x10FFFF;
-
-/// Sentinel value indicating an invalid Unicode scalar
-constexpr uint32_t invalid_scalar = 0xFFFFFFFF;
-
-/// Start of Unicode surrogate pair range (invalid as scalar values)
-constexpr uint32_t surrogate_min = 0xD800;
-
-/// End of Unicode surrogate pair range (invalid as scalar values)
-constexpr uint32_t surrogate_max = 0xDFFF;
-
-/// Start of UTF-16 high surrogate range
-constexpr uint16_t high_surrogate_min = 0xD800;
-
-/// End of UTF-16 high surrogate range
-constexpr uint16_t high_surrogate_max = 0xDBFF;
-
-/// Start of UTF-16 low surrogate range
-constexpr uint16_t low_surrogate_min = 0xDC00;
-
-/// End of UTF-16 low surrogate range
-constexpr uint16_t low_surrogate_max = 0xDFFF;
-
-/// Offset used in UTF-16 surrogate pair calculation
-constexpr uint32_t surrogate_offset = 0x10000;
-
-/// Maximum code point representable in 1 UTF-8 byte
-constexpr uint32_t utf8_1byte_max = 0x7F;
-
-/// Maximum code point representable in 2 UTF-8 bytes
-constexpr uint32_t utf8_2byte_max = 0x7FF;
-
-/// Maximum code point representable in 3 UTF-8 bytes
-constexpr uint32_t utf8_3byte_max = 0xFFFF;
-
-/// Maximum code point representable in 4 UTF-8 bytes
-constexpr uint32_t utf8_4byte_max = 0x10FFFF;
-
-/// Maximum code point in the Basic Multilingual Plane (BMP)
-constexpr uint32_t bmp_max = 0xFFFF;
-}  // namespace limits
+namespace utf::string {
 
 // ============================================================================
-// Error Codes
+// Forward Declarations
 // ============================================================================
 
-/// @brief Error codes for UTF operations
-enum class ErrorCode {
-  invalid_scalar,     ///< Unicode scalar value is invalid
-  overlong_encoding,  ///< UTF-8 overlong encoding detected (security issue)
-  invalid_surrogate,  ///< Invalid surrogate pair or unpaired surrogate
-  out_of_range,       ///< Code point exceeds valid Unicode range
-  truncated_sequence  ///< Incomplete UTF sequence
-};
-
-// ============================================================================
-// Endianness
-// ============================================================================
-
-/// @brief Endianness-related types and constants
-namespace endianness {
-/// @brief Byte order specification
-enum class Type {
-  None,  ///< Byte-oriented encoding (no endianness applies, e.g., UTF-8)
-  BE,    ///< Big Endian (network byte order)
-  LE     ///< Little Endian
-};
-
-/// Convenience alias for byte-oriented encoding
-inline constexpr Type none = Type::None;
-
-/// Convenience alias for big endian
-inline constexpr Type big_endian = Type::BE;
-
-/// Convenience alias for little endian
-inline constexpr Type little_endian = Type::LE;
-
-/// Convenience alias for network byte order (same as big endian)
-inline constexpr Type network_byte_order = Type::BE;
-}  // namespace endianness
-
-// Import endianness type into utf namespace for convenience
-using Endian = endianness::Type;
-
-// ============================================================================
-// UTF Encodings
-// ============================================================================
-
-/// @brief UTF encoding type definitions
-namespace encodings {
-/// @brief UTF-8 encoding specification
-struct Utf8 {
-  using storage_type = uint8_t;
-  static constexpr std::size_t unit_size = 1;
-  static constexpr std::size_t max_units = 4;
-};
-
-/// @brief UTF-16 encoding specification
-struct Utf16 {
-  using storage_type = uint16_t;
-  static constexpr std::size_t unit_size = 2;
-  static constexpr std::size_t max_units = 2;
-};
-
-/// @brief UTF-32 encoding specification
-struct Utf32 {
-  using storage_type = uint32_t;
-  static constexpr std::size_t unit_size = 4;
-  static constexpr std::size_t max_units = 1;
-};
-}  // namespace encodings
-
-// Import encoding types into utf namespace for convenience
-using Utf8 = encodings::Utf8;
-using Utf16 = encodings::Utf16;
-using Utf32 = encodings::Utf32;
-
-// ============================================================================
-// Strong Type for Unicode Scalar
-// ============================================================================
-
-/// @brief Strong type wrapper for Unicode scalar values
-/// @details Provides type safety to distinguish Unicode scalars from raw integers
-struct UnicodeScalar {
-  uint32_t value;  ///< The Unicode scalar value
-
-  /// @brief Construct from a raw integer value
-  constexpr explicit UnicodeScalar(uint32_t v) noexcept : value(v) {}
-
-  /// @brief Check if this represents a valid Unicode scalar value
-  /// @return true if the value is in the valid Unicode range and not a surrogate
-  [[nodiscard]] constexpr bool is_valid() const noexcept {
-    using namespace limits;
-    return value <= max_code_point && !(value >= surrogate_min && value <= surrogate_max);
-  }
-
-  /// @brief Implicit conversion to uint32_t
-  constexpr operator uint32_t() const noexcept { return value; }
-};
-
-// ============================================================================
-// Concepts
-// ============================================================================
-
-/// @brief Concept for byte-oriented UTF encodings (UTF-8)
-template <typename UtfType>
-concept ByteOriented = std::same_as<UtfType, Utf8>;
-
-/// @brief Concept for multi-byte UTF encodings (UTF-16, UTF-32)
-template <typename UtfType>
-concept MultiByteOriented = std::same_as<UtfType, Utf16> || std::same_as<UtfType, Utf32>;
-
-/// @brief Concept validating endianness for a given encoding
-/// @details UTF-8 must use Endian::None, UTF-16/32 must use BE or LE
-template <typename UtfType, Endian E>
-concept ValidEndianness = (ByteOriented<UtfType> && E == Endian::None) ||
-                          (MultiByteOriented<UtfType> && E != Endian::None);
-
-// Forward declaration
 template <typename UtfType, Endian E = Endian::BE>
   requires ValidEndianness<UtfType, E>
-struct CodePoint;
+class StringView;
 
-/// @brief Concept to check if a type is a valid CodePoint instantiation
-template <typename T>
-concept IsCodePoint = requires {
-  typename T::encoding_type;
-  { T::endianness } -> std::convertible_to<Endian>;
-};
+template <typename UtfType, Endian E = Endian::BE>
+  requires ValidEndianness<UtfType, E>
+class String;
 
 // ============================================================================
-// UTF-8 CodePoint Specialization
+// Iterator for UTF Strings
 // ============================================================================
 
-/// @brief UTF-8 code point representation
-/// @details Stores a single Unicode code point encoded as UTF-8 (1-4 bytes)
-///
-/// Memory layout is optimized with length before the data array for better packing.
-/// UTF-8 is byte-oriented so endianness does not apply.
-///
-/// @note Construction may create invalid code points. Always check is_valid()
-/// after construction, or use from_scalar() factory function for safe construction.
-template <Endian E>
-  requires(ByteOriented<Utf8> && E == Endian::None)
-struct CodePoint<Utf8, E> {
-  using encoding_type = Utf8;
-  static constexpr Endian endianness = E;
+/// @brief Iterator for traversing UTF-encoded strings as code points
+/// @tparam UtfType The UTF encoding type (Utf8, Utf16, or Utf32)
+/// @tparam E The endianness (Endian::None for UTF-8, BE or LE for UTF-16/32)
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+class CodePointIterator {
+ public:
+  using iterator_category = std::forward_iterator_tag;
+  using value_type = CodePoint<UtfType, E>;
+  using difference_type = std::ptrdiff_t;
+  using pointer = const value_type*;
+  using reference = value_type;
 
-  uint8_t length{0};              ///< Number of valid bytes (0-4, 0 indicates invalid)
-  std::array<uint8_t, 4> rune{};  ///< UTF-8 encoded bytes
+  constexpr CodePointIterator() noexcept = default;
 
-  /// @brief Default constructor creates an invalid code point
-  constexpr CodePoint() noexcept = default;
-
-  /// @brief Construct from a Unicode scalar value
-  /// @param unicode_scalar The Unicode code point to encode (U+0000 to U+10FFFF)
-  /// @note May create invalid CodePoint if scalar is out of range or a surrogate.
-  ///       Always check is_valid() after construction.
-  constexpr explicit CodePoint(uint32_t unicode_scalar) noexcept {
-    using namespace limits;
-
-    if (unicode_scalar <= utf8_1byte_max) {
-      // 1-byte sequence: 0xxxxxxx
-      rune[0] = static_cast<uint8_t>(unicode_scalar);
-      length = 1;
-    } else if (unicode_scalar <= utf8_2byte_max) {
-      // 2-byte sequence: 110xxxxx 10xxxxxx
-      rune[0] = static_cast<uint8_t>(0xC0 | (unicode_scalar >> 6));
-      rune[1] = static_cast<uint8_t>(0x80 | (unicode_scalar & 0x3F));
-      length = 2;
-    } else if (unicode_scalar <= utf8_3byte_max) {
-      // 3-byte sequence: 1110xxxx 10xxxxxx 10xxxxxx
-      // Check for surrogate range (invalid)
-      if (unicode_scalar >= surrogate_min && unicode_scalar <= surrogate_max) {
-        length = 0;  // Invalid
-        return;
-      }
-      rune[0] = static_cast<uint8_t>(0xE0 | (unicode_scalar >> 12));
-      rune[1] = static_cast<uint8_t>(0x80 | ((unicode_scalar >> 6) & 0x3F));
-      rune[2] = static_cast<uint8_t>(0x80 | (unicode_scalar & 0x3F));
-      length = 3;
-    } else if (unicode_scalar <= utf8_4byte_max) {
-      // 4-byte sequence: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-      rune[0] = static_cast<uint8_t>(0xF0 | (unicode_scalar >> 18));
-      rune[1] = static_cast<uint8_t>(0x80 | ((unicode_scalar >> 12) & 0x3F));
-      rune[2] = static_cast<uint8_t>(0x80 | ((unicode_scalar >> 6) & 0x3F));
-      rune[3] = static_cast<uint8_t>(0x80 | (unicode_scalar & 0x3F));
-      length = 4;
-    } else {
-      length = 0;  // Invalid Unicode scalar
+  constexpr CodePointIterator(const typename UtfType::storage_type* ptr,
+                              const typename UtfType::storage_type* end) noexcept
+      : current_(ptr), end_(end) {
+    if (current_ != end_) {
+      read_current();
     }
   }
 
-  /// @brief Factory function for safe construction
-  /// @param scalar The Unicode code point to encode
-  /// @return CodePoint if valid, std::nullopt if invalid
-  [[nodiscard]] static constexpr std::optional<CodePoint> from_scalar(uint32_t scalar) noexcept {
-    CodePoint cp{scalar};
-    return cp.is_valid() ? std::optional{cp} : std::nullopt;
+  [[nodiscard]] constexpr reference operator*() const noexcept { return current_code_point_; }
+
+  [[nodiscard]] constexpr pointer operator->() const noexcept { return &current_code_point_; }
+
+  constexpr CodePointIterator& operator++() noexcept {
+    advance();
+    return *this;
   }
 
-  /// @brief Get a span view of the valid UTF-8 bytes
-  /// @return Span covering only the valid bytes (length 1-4)
-  [[nodiscard]] constexpr std::span<const uint8_t> units() const noexcept {
-    return std::span{rune.data(), length};
+  constexpr CodePointIterator operator++(int) noexcept {
+    CodePointIterator tmp = *this;
+    advance();
+    return tmp;
   }
 
-  /// @brief Get direct pointer to the UTF-8 data
-  /// @return Pointer to the first byte of the encoded sequence
-  /// @note For performance-critical code. Use count() to determine valid length.
-  [[nodiscard]] constexpr const uint8_t* data() const noexcept { return rune.data(); }
+  [[nodiscard]] constexpr bool operator==(const CodePointIterator& other) const noexcept {
+    return current_ == other.current_;
+  }
 
-  /// @brief Decode to Unicode scalar value
-  /// @return The Unicode scalar value if valid, std::nullopt if invalid
-  [[nodiscard]] constexpr std::optional<uint32_t> to_scalar() const noexcept {
-    using namespace limits;
+  [[nodiscard]] constexpr bool operator!=(const CodePointIterator& other) const noexcept {
+    return current_ != other.current_;
+  }
 
-    if (length == 0) return std::nullopt;
+  /// @brief Get the current position in the underlying buffer
+  [[nodiscard]] constexpr const typename UtfType::storage_type* position() const noexcept {
+    return current_;
+  }
 
-    uint32_t result;
+ private:
+  const typename UtfType::storage_type* current_{nullptr};
+  const typename UtfType::storage_type* end_{nullptr};
+  value_type current_code_point_{};
 
-    if (length == 1) {
-      result = rune[0];
-    } else if (length == 2) {
-      result = ((rune[0] & 0x1F) << 6) | (rune[1] & 0x3F);
-    } else if (length == 3) {
-      result = ((rune[0] & 0x0F) << 12) | ((rune[1] & 0x3F) << 6) | (rune[2] & 0x3F);
-    } else if (length == 4) {
-      result = ((rune[0] & 0x07) << 18) | ((rune[1] & 0x3F) << 12) | ((rune[2] & 0x3F) << 6) |
-               (rune[3] & 0x3F);
+  // Helper function to do endian conversion - works around private access
+  static constexpr typename UtfType::storage_type to_native_endian(
+      typename UtfType::storage_type v) noexcept {
+    if constexpr (ByteOriented<UtfType>) {
+      return v;  // UTF-8 has no endianness
     } else {
+      // Use std::byteswap when needed
+      if constexpr ((E == Endian::LE && std::endian::native == std::endian::big) ||
+                    (E == Endian::BE && std::endian::native == std::endian::little)) {
+        return std::byteswap(v);
+      } else {
+        return v;
+      }
+    }
+  }
+
+  constexpr void read_current() noexcept {
+    if (current_ >= end_) {
+      return;
+    }
+
+    if constexpr (ByteOriented<UtfType>) {
+      // UTF-8: Read based on lead byte
+      std::size_t remaining = static_cast<std::size_t>(end_ - current_);
+      if (remaining == 0) return;
+
+      // Determine how many bytes needed
+      uint8_t lead = *current_;
+      std::size_t needed = 1;
+      if ((lead & 0x80) == 0x00)
+        needed = 1;
+      else if ((lead & 0xE0) == 0xC0)
+        needed = 2;
+      else if ((lead & 0xF0) == 0xE0)
+        needed = 3;
+      else if ((lead & 0xF8) == 0xF0)
+        needed = 4;
+      else {
+        // Invalid lead byte - create invalid code point
+        current_code_point_.rune[0] = 0xFF;
+        return;
+      }
+
+      if (needed > remaining) {
+        // Truncated sequence - mark as invalid
+        current_code_point_.rune[0] = 0xFF;
+        return;
+      }
+
+      // Copy bytes
+      for (std::size_t i = 0; i < needed && i < 4; ++i) {
+        current_code_point_.rune[i] = current_[i];
+      }
+
+    } else if constexpr (std::same_as<UtfType, Utf16>) {
+      // UTF-16: Read 1 or 2 units
+      std::size_t remaining = static_cast<std::size_t>(end_ - current_);
+      if (remaining == 0) return;
+
+      current_code_point_.rune[0] = *current_;
+
+      // Check if this is a high surrogate (needs second unit)
+      uint16_t first = to_native_endian(*current_);
+      if (first >= 0xD800 && first <= 0xDBFF) {
+        // High surrogate - need low surrogate
+        if (remaining >= 2) {
+          current_code_point_.rune[1] = current_[1];
+        } else {
+          // Truncated - mark as invalid (high surrogate + high surrogate)
+          typename UtfType::storage_type invalid_marker = 0xD800;
+          if constexpr ((E == Endian::LE && std::endian::native == std::endian::big) ||
+                        (E == Endian::BE && std::endian::native == std::endian::little)) {
+            invalid_marker = std::byteswap(invalid_marker);
+          }
+          current_code_point_.rune[0] = invalid_marker;
+          current_code_point_.rune[1] = invalid_marker;
+        }
+      } else {
+        current_code_point_.rune[1] = 0;
+      }
+
+    } else {  // UTF-32
+      current_code_point_.rune = *current_;
+    }
+  }
+
+  constexpr void advance() noexcept {
+    if (current_ >= end_) return;
+
+    std::size_t advance_by = current_code_point_.count();
+    if (advance_by == 0) advance_by = 1;  // Skip invalid byte/unit
+
+    current_ += advance_by;
+
+    if (current_ < end_) {
+      read_current();
+    }
+  }
+};
+
+// ============================================================================
+// UTF String View
+// ============================================================================
+
+/// @brief Non-owning view of a UTF-encoded string
+/// @tparam UtfType The UTF encoding type (Utf8, Utf16, or Utf32)
+/// @tparam E The endianness (Endian::None for UTF-8, BE or LE for UTF-16/32)
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+class StringView {
+ public:
+  using value_type = CodePoint<UtfType, E>;
+  using size_type = std::size_t;
+  using storage_type = typename UtfType::storage_type;
+  using iterator = CodePointIterator<UtfType, E>;
+  using const_iterator = iterator;
+  using string_type = String<UtfType, E>;
+
+  /// @brief Default constructor creates an empty view
+  constexpr StringView() noexcept = default;
+
+  /// @brief Construct from pointer and length (in storage units)
+  constexpr StringView(const storage_type* data, size_type length) noexcept
+      : data_(data), length_(length) {}
+
+  /// @brief Construct from null-terminated string
+  /// @note Computes length by scanning for null terminator
+  /// @warning String must be null-terminated
+  constexpr explicit StringView(const storage_type* data) noexcept
+      : data_(data), length_(compute_length(data)) {}
+
+  /// @brief Construct from std::basic_string
+  template <typename Traits, typename Allocator>
+  constexpr StringView(const std::basic_string<storage_type, Traits, Allocator>& str) noexcept
+      : data_(str.data()), length_(str.size()) {}
+
+  /// @brief Construct from std::basic_string_view
+  template <typename Traits>
+  constexpr StringView(std::basic_string_view<storage_type, Traits> sv) noexcept
+      : data_(sv.data()), length_(sv.size()) {}
+
+  /// @brief Get pointer to the underlying data
+  [[nodiscard]] constexpr const storage_type* data() const noexcept { return data_; }
+
+  /// @brief Get the length in storage units (not code points!)
+  [[nodiscard]] constexpr size_type length() const noexcept { return length_; }
+
+  /// @brief Get the size in storage units (alias for length())
+  [[nodiscard]] constexpr size_type size() const noexcept { return length_; }
+
+  /// @brief Get the size in bytes
+  [[nodiscard]] constexpr size_type size_bytes() const noexcept {
+    return length_ * sizeof(storage_type);
+  }
+
+  /// @brief Check if the view is empty
+  [[nodiscard]] constexpr bool empty() const noexcept { return length_ == 0; }
+
+  /// @brief Get iterator to the beginning
+  [[nodiscard]] constexpr iterator begin() const noexcept {
+    return iterator(data_, data_ + length_);
+  }
+
+  /// @brief Get iterator to the end
+  [[nodiscard]] constexpr iterator end() const noexcept {
+    return iterator(data_ + length_, data_ + length_);
+  }
+
+  /// @brief Count the number of code points in the string
+  /// @note This iterates through the string, O(n) complexity
+  [[nodiscard]] constexpr size_type count_code_points() const noexcept {
+    size_type count = 0;
+    for ([[maybe_unused]] auto cp : *this) {
+      ++count;
+    }
+    return count;
+  }
+
+  /// @brief Validate the entire string
+  /// @return true if all code points are valid
+  [[nodiscard]] constexpr bool is_valid() const noexcept {
+    for (auto cp : *this) {
+      if (!cp.is_valid()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// @brief Convert to std::basic_string_view
+  [[nodiscard]] constexpr std::basic_string_view<storage_type> to_std_string_view() const noexcept {
+    return std::basic_string_view<storage_type>(data_, length_);
+  }
+
+  /// @brief Create a substring view
+  [[nodiscard]] constexpr StringView substr(
+      size_type pos, size_type count = std::string_view::npos) const noexcept {
+    if (pos >= length_) {
+      return StringView();
+    }
+    size_type actual_count =
+        (count == std::string_view::npos) ? (length_ - pos) : std::min(count, length_ - pos);
+    return StringView(data_ + pos, actual_count);
+  }
+
+  /// @brief Equality comparison
+  [[nodiscard]] constexpr bool operator==(const StringView& other) const noexcept {
+    if (length_ != other.length_) return false;
+    return std::memcmp(data_, other.data_, length_ * sizeof(storage_type)) == 0;
+  }
+
+  /// @brief Three-way comparison
+  [[nodiscard]] constexpr std::strong_ordering operator<=>(const StringView& other) const noexcept {
+    size_type min_len = std::min(length_, other.length_);
+    int cmp = std::memcmp(data_, other.data_, min_len * sizeof(storage_type));
+    if (cmp != 0) return cmp <=> 0;
+    return length_ <=> other.length_;
+  }
+
+ private:
+  const storage_type* data_{nullptr};
+  size_type length_{0};
+
+  static constexpr size_type compute_length(const storage_type* str) noexcept {
+    if (!str) return 0;
+    size_type len = 0;
+    // Note: Assumes null-terminated string. Reading past end is UB.
+    while (str[len] != storage_type{0}) {
+      ++len;
+    }
+    return len;
+  }
+};
+
+// ============================================================================
+// Small String Buffer (SSO Implementation)
+// ============================================================================
+
+/// @brief Small buffer optimization for UTF strings
+/// @details Strings up to 32 bytes total (including metadata) are stored inline on the stack.
+///          Actual data capacity is 32 - 2*sizeof(size_t) bytes.
+/// @note StorageType must be trivially copyable (enforced by static_assert)
+template <typename StorageType>
+class SmallStringBuffer {
+  // Enforce trivially copyable requirement for memcpy safety
+  static_assert(std::is_trivially_copyable_v<StorageType>,
+                "StorageType must be trivially copyable for SSO");
+
+ public:
+  // Calculate capacity to keep total size at 32 bytes
+  // Layout: [size_t size] [size_t capacity] [bool is_inline] [union: inline_data or heap_data*]
+  static constexpr std::size_t total_size = 32;
+  static constexpr std::size_t metadata_size =
+      sizeof(std::size_t) + sizeof(std::size_t) + sizeof(bool);
+  static constexpr std::size_t inline_capacity = (total_size - metadata_size) / sizeof(StorageType);
+
+  // Constructor - properly initialize union
+  SmallStringBuffer() noexcept
+      : size_(0), capacity_(inline_capacity), is_inline_(true), inline_data_{} {}
+
+  // Destructor - clean up heap allocation if needed
+  ~SmallStringBuffer() noexcept {
+    if (!is_inline_ && heap_data_) {
+      delete[] heap_data_;
+    }
+  }
+
+  // Copy constructor
+  SmallStringBuffer(const SmallStringBuffer& other)
+      : size_(other.size_), capacity_(other.capacity_), is_inline_(other.is_inline_) {
+    if (is_inline_) {
+      std::memcpy(inline_data_, other.inline_data_, size_ * sizeof(StorageType));
+    } else {
+      heap_data_ = new StorageType[capacity_];
+      std::memcpy(heap_data_, other.heap_data_, size_ * sizeof(StorageType));
+    }
+  }
+
+  // Move constructor
+  SmallStringBuffer(SmallStringBuffer&& other) noexcept
+      : size_(other.size_), capacity_(other.capacity_), is_inline_(other.is_inline_) {
+    if (is_inline_) {
+      std::memcpy(inline_data_, other.inline_data_, size_ * sizeof(StorageType));
+    } else {
+      heap_data_ = other.heap_data_;
+      other.heap_data_ = nullptr;
+      other.is_inline_ = true;
+      other.size_ = 0;
+      other.capacity_ = inline_capacity;
+    }
+  }
+
+  // Copy assignment
+  SmallStringBuffer& operator=(const SmallStringBuffer& other) {
+    if (this != &other) {
+      SmallStringBuffer tmp(other);
+      swap(tmp);
+    }
+    return *this;
+  }
+
+  // Move assignment
+  SmallStringBuffer& operator=(SmallStringBuffer&& other) noexcept {
+    if (this != &other) {
+      swap(other);
+    }
+    return *this;
+  }
+
+  [[nodiscard]] constexpr const StorageType* data() const noexcept {
+    return is_inline_ ? inline_data_ : heap_data_;
+  }
+
+  [[nodiscard]] constexpr StorageType* data() noexcept {
+    return is_inline_ ? inline_data_ : heap_data_;
+  }
+
+  [[nodiscard]] constexpr std::size_t size() const noexcept { return size_; }
+
+  [[nodiscard]] constexpr std::size_t capacity() const noexcept { return capacity_; }
+
+  [[nodiscard]] constexpr bool is_inline() const noexcept { return is_inline_; }
+
+  constexpr void clear() noexcept { size_ = 0; }
+
+  void reserve(std::size_t new_capacity) {
+    if (new_capacity <= capacity_) return;
+
+    // Check for overflow
+    if (new_capacity > std::numeric_limits<std::size_t>::max() / sizeof(StorageType)) {
+      throw std::length_error("Requested capacity would overflow");
+    }
+
+    // Allocate new buffer
+    StorageType* new_data = new StorageType[new_capacity];
+
+    // Copy existing data
+    if (size_ > 0) {
+      std::memcpy(new_data, data(), size_ * sizeof(StorageType));
+    }
+
+    // Clean up old heap data if necessary
+    if (!is_inline_ && heap_data_) {
+      delete[] heap_data_;
+    }
+
+    // Switch to heap
+    heap_data_ = new_data;
+    capacity_ = new_capacity;
+    is_inline_ = false;
+  }
+
+  void push_back(StorageType value) {
+    if (size_ >= capacity_) {
+      // Check for overflow before doubling
+      std::size_t new_cap = capacity_ * 2;
+      if (new_cap < capacity_) {  // Overflow occurred
+        throw std::length_error("Capacity overflow");
+      }
+      reserve(new_cap);
+    }
+    data()[size_++] = value;
+  }
+
+  void append(const StorageType* src, std::size_t count) {
+    // Validate input
+    if (count > 0 && !src) {
+      throw std::invalid_argument("Null source pointer with non-zero count");
+    }
+
+    // Check for size overflow
+    if (count > std::numeric_limits<std::size_t>::max() - size_) {
+      throw std::length_error("String size would overflow");
+    }
+
+    std::size_t new_size = size_ + count;
+    if (new_size > capacity_) {
+      std::size_t new_cap = std::max(capacity_ * 2, new_size);
+      // Check for overflow in capacity calculation
+      if (new_cap < new_size) {
+        throw std::length_error("Capacity overflow");
+      }
+      reserve(new_cap);
+    }
+
+    if (count > 0) {
+      std::memcpy(data() + size_, src, count * sizeof(StorageType));
+      size_ = new_size;
+    }
+  }
+
+  void swap(SmallStringBuffer& other) noexcept {
+    if (is_inline_ && other.is_inline_) {
+      // Both inline - swap inline buffers
+      StorageType tmp_data[inline_capacity];
+      std::size_t tmp_size = size_;
+
+      std::memcpy(tmp_data, inline_data_, size_ * sizeof(StorageType));
+      std::memcpy(inline_data_, other.inline_data_, other.size_ * sizeof(StorageType));
+      std::memcpy(other.inline_data_, tmp_data, tmp_size * sizeof(StorageType));
+
+      size_ = other.size_;
+      other.size_ = tmp_size;
+    } else if (!is_inline_ && !other.is_inline_) {
+      // Both heap - swap pointers
+      std::swap(heap_data_, other.heap_data_);
+      std::swap(size_, other.size_);
+      std::swap(capacity_, other.capacity_);
+    } else {
+      // One inline, one heap - complex swap
+      if (is_inline_) {
+        // *this is inline, other is heap
+        StorageType inline_copy[inline_capacity];
+        std::memcpy(inline_copy, inline_data_, size_ * sizeof(StorageType));
+        std::size_t size_copy = size_;
+
+        heap_data_ = other.heap_data_;
+        capacity_ = other.capacity_;
+        size_ = other.size_;
+        is_inline_ = false;
+
+        std::memcpy(other.inline_data_, inline_copy, size_copy * sizeof(StorageType));
+        other.size_ = size_copy;
+        other.capacity_ = inline_capacity;
+        other.is_inline_ = true;
+        other.heap_data_ = nullptr;
+      } else {
+        // *this is heap, other is inline
+        other.swap(*this);
+      }
+    }
+  }
+
+ private:
+  std::size_t size_{0};
+  std::size_t capacity_{inline_capacity};
+  bool is_inline_{true};
+
+  union {
+    StorageType inline_data_[inline_capacity];
+    StorageType* heap_data_;
+  };
+};
+
+// ============================================================================
+// UTF String (Owning Container with SSO)
+// ============================================================================
+
+/// @brief Owning container for UTF-encoded strings with Small String Optimization
+/// @tparam UtfType The UTF encoding type (Utf8, Utf16, or Utf32)
+/// @tparam E The endianness (Endian::None for UTF-8, BE or LE for UTF-16/32)
+/// @details Total size is 32 bytes. Inline capacities:
+///          - UTF-8: ~16 units (exact: (32 - 17) / 1)
+///          - UTF-16: ~7 units (exact: (32 - 17) / 2)
+///          - UTF-32: ~3 units (exact: (32 - 17) / 4)
+///          Strings exceeding inline capacity are heap-allocated.
+/// @note Iterator Invalidation: append(), reserve(), operator+=, operator+ may invalidate iterators
+/// @note Exception Safety: Strong guarantee for copy operations, basic guarantee for modifications
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+class String {
+ public:
+  using value_type = CodePoint<UtfType, E>;
+  using size_type = std::size_t;
+  using storage_type = typename UtfType::storage_type;
+  using iterator = CodePointIterator<UtfType, E>;
+  using const_iterator = iterator;
+  using view_type = StringView<UtfType, E>;
+
+  /// @brief Default constructor creates an empty string
+  String() noexcept = default;
+
+  /// @brief Construct from a view
+  String(view_type view) { buffer_.append(view.data(), view.length()); }
+
+  /// @brief Construct from pointer and length
+  String(const storage_type* data, size_type length) { buffer_.append(data, length); }
+
+  /// @brief Construct from null-terminated string
+  /// @warning String must be null-terminated
+  explicit String(const storage_type* str) {
+    if (str) {
+      size_type len = 0;
+      while (str[len] != storage_type{0}) ++len;
+      buffer_.append(str, len);
+    }
+  }
+
+  /// @brief Construct from std::basic_string
+  template <typename Traits, typename Allocator>
+  explicit String(const std::basic_string<storage_type, Traits, Allocator>& str) {
+    buffer_.append(str.data(), str.size());
+  }
+
+  /// @brief Construct from initializer list of code points
+  String(std::initializer_list<value_type> code_points) {
+    for (const auto& cp : code_points) {
+      append(cp);
+    }
+  }
+
+  /// @brief Converting constructor from different encoding
+  /// @tparam SrcUtfType Source UTF encoding type
+  /// @tparam SrcEndian Source endianness
+  /// @param other String in different encoding to convert from
+  /// @throws std::invalid_argument if source contains invalid code points
+  /// @note Explicit to prevent accidental conversions
+  template <typename SrcUtfType, Endian SrcEndian>
+    requires ValidEndianness<SrcUtfType, SrcEndian> &&
+             (!std::same_as<SrcUtfType, UtfType> || SrcEndian != E)
+  explicit String(const String<SrcUtfType, SrcEndian>& other) {
+    assign_from(other);
+  }
+
+  /// @brief Get pointer to the underlying data
+  [[nodiscard]] constexpr const storage_type* data() const noexcept { return buffer_.data(); }
+
+  /// @brief Get mutable pointer to the underlying data
+  [[nodiscard]] constexpr storage_type* data() noexcept { return buffer_.data(); }
+
+  /// @brief Get the length in storage units
+  [[nodiscard]] constexpr size_type length() const noexcept { return buffer_.size(); }
+
+  /// @brief Get the size in storage units (alias for length())
+  [[nodiscard]] constexpr size_type size() const noexcept { return buffer_.size(); }
+
+  /// @brief Get the size in bytes
+  [[nodiscard]] constexpr size_type size_bytes() const noexcept {
+    return buffer_.size() * sizeof(storage_type);
+  }
+
+  /// @brief Check if the string is empty
+  [[nodiscard]] constexpr bool empty() const noexcept { return buffer_.size() == 0; }
+
+  /// @brief Check if string is stored inline (on stack)
+  [[nodiscard]] constexpr bool is_inline() const noexcept { return buffer_.is_inline(); }
+
+  /// @brief Get the inline capacity (maximum size before heap allocation)
+  [[nodiscard]] static constexpr size_type inline_capacity() noexcept {
+    return SmallStringBuffer<storage_type>::inline_capacity;
+  }
+
+  /// @brief Clear the string (does not deallocate heap memory)
+  constexpr void clear() noexcept { buffer_.clear(); }
+
+  /// @brief Reserve capacity for storage units
+  /// @note May invalidate iterators
+  void reserve(size_type capacity) { buffer_.reserve(capacity); }
+
+  /// @brief Get the capacity in storage units
+  [[nodiscard]] constexpr size_type capacity() const noexcept { return buffer_.capacity(); }
+
+  /// @brief Append a code point
+  /// @note May invalidate iterators
+  void append(const value_type& cp) {
+    auto units = cp.units();
+    buffer_.append(units.data(), units.size());
+  }
+
+  /// @brief Append a string view
+  /// @note May invalidate iterators
+  void append(view_type view) { buffer_.append(view.data(), view.length()); }
+
+  /// @brief Append operator for code point
+  /// @note May invalidate iterators
+  String& operator+=(const value_type& cp) {
+    append(cp);
+    return *this;
+  }
+
+  /// @brief Append operator for string view
+  /// @note May invalidate iterators
+  String& operator+=(view_type view) {
+    append(view);
+    return *this;
+  }
+
+  /// @brief Append operator for string
+  /// @note May invalidate iterators
+  String& operator+=(const String& other) {
+    append(other.view());
+    return *this;
+  }
+
+  /// @brief Get iterator to the beginning
+  [[nodiscard]] constexpr iterator begin() const noexcept {
+    return iterator(buffer_.data(), buffer_.data() + buffer_.size());
+  }
+
+  /// @brief Get iterator to the end
+  [[nodiscard]] constexpr iterator end() const noexcept {
+    return iterator(buffer_.data() + buffer_.size(), buffer_.data() + buffer_.size());
+  }
+
+  /// @brief Convert to view
+  [[nodiscard]] constexpr operator view_type() const noexcept {
+    return view_type(buffer_.data(), buffer_.size());
+  }
+
+  /// @brief Get a view of this string
+  [[nodiscard]] constexpr view_type view() const noexcept {
+    return view_type(buffer_.data(), buffer_.size());
+  }
+
+  /// @brief Count the number of code points
+  [[nodiscard]] constexpr size_type count_code_points() const noexcept {
+    return view().count_code_points();
+  }
+
+  /// @brief Validate the entire string
+  [[nodiscard]] constexpr bool is_valid() const noexcept { return view().is_valid(); }
+
+  /// @brief Convert to std::basic_string
+  [[nodiscard]] std::basic_string<storage_type> to_std_string() const {
+    return std::basic_string<storage_type>(buffer_.data(), buffer_.data() + buffer_.size());
+  }
+
+  // ============================================================================
+  // Factory Methods for Creating Strings from Byte Arrays
+  // ============================================================================
+
+  /// @brief Create string from raw byte array assuming correct byte order
+  /// @param bytes Pointer to byte array containing UTF data already in the encoding's expected byte
+  /// order
+  /// @param byte_count Number of bytes in the array
+  /// @return Optional string created from the byte data, or nullopt if invalid UTF sequences found
+  /// @note Assumes bytes are already in the correct byte order for the encoding (BE/LE)
+  /// @note For UTF-8: bytes are used as-is but validated
+  /// @note For UTF-16/32: bytes are assumed to be in the correct endianness already but validated
+  [[nodiscard]] static std::optional<String> from_bytes(const uint8_t* bytes, size_t byte_count) {
+    if (!bytes) {
+      return String{};
+    }
+
+    // Ensure proper alignment for multi-byte encodings
+    if constexpr (std::is_same_v<UtfType, encodings::Utf16>) {
+      if (byte_count % 2 != 0) {
+        return std::nullopt;  // Invalid alignment
+      }
+    } else if constexpr (std::is_same_v<UtfType, encodings::Utf32>) {
+      if (byte_count % 4 != 0) {
+        return std::nullopt;  // Invalid alignment
+      }
+    }
+
+    String result;
+
+    if constexpr (std::is_same_v<UtfType, encodings::Utf8>) {
+      // UTF-8: direct byte interpretation but validate
+      result.buffer_.append(reinterpret_cast<const storage_type*>(bytes), byte_count);
+    } else {
+      // UTF-16/32: assume bytes are already in correct byte order, just cast them
+      const size_t unit_count = byte_count / sizeof(storage_type);
+      result.buffer_.reserve(unit_count);
+
+      // Direct reinterpret cast - assumes bytes are in correct order already
+      const storage_type* units = reinterpret_cast<const storage_type*>(bytes);
+      result.buffer_.append(units, unit_count);
+    }
+
+    // Validate the resulting string
+    if (!result.is_valid()) {
       return std::nullopt;
     }
 
     return result;
   }
 
-  /// @brief Decode to Unicode scalar value without validation
-  /// @return The Unicode scalar value, or invalid_scalar if invalid
-  /// @warning Precondition: is_valid() must be true. Undefined behavior otherwise.
-  /// @note For performance-critical code when validity is already guaranteed.
-  [[nodiscard]] constexpr uint32_t to_scalar_unchecked() const noexcept {
-    auto result = to_scalar();
-    return result.value_or(limits::invalid_scalar);
+  /// @brief Create string from std::vector<uint8_t> byte array
+  /// @param bytes Vector containing UTF data in the encoding's expected format
+  /// @return Optional string created from the byte data, or nullopt if invalid UTF sequences found
+  [[nodiscard]] static std::optional<String> from_bytes(const std::vector<uint8_t>& bytes) {
+    return from_bytes(bytes.data(), bytes.size());
   }
 
-  /// @brief Check if this represents a valid UTF-8 encoded code point
-  /// @return true if valid, false otherwise
-  /// @details Validates:
-  ///   - Length is in valid range (1-4)
-  ///   - Decoded scalar is in valid Unicode range
-  ///   - Not a surrogate value
-  ///   - No overlong encodings
-  [[nodiscard]] constexpr bool is_valid() const noexcept {
-    using namespace limits;
-
-    if (length == 0 || length > 4) return false;
-
-    auto scalar_opt = to_scalar();
-    if (!scalar_opt) return false;
-
-    uint32_t scalar = *scalar_opt;
-    if (scalar > max_code_point) return false;
-    if (scalar >= surrogate_min && scalar <= surrogate_max) return false;
-
-    // Check for overlong encodings (security issue)
-    if (length == 2 && scalar <= utf8_1byte_max) return false;
-    if (length == 3 && scalar <= utf8_2byte_max) return false;
-    if (length == 4 && scalar <= utf8_3byte_max) return false;
-
-    return true;
+  /// @brief Create string from std::array<uint8_t> byte array
+  /// @param bytes Array containing UTF data in the encoding's expected format
+  /// @return Optional string created from the byte data, or nullopt if invalid UTF sequences found
+  template <size_t N>
+  [[nodiscard]] static std::optional<String> from_bytes(const std::array<uint8_t, N>& bytes) {
+    return from_bytes(bytes.data(), N);
   }
 
-  /// @brief Get the number of UTF-8 code units (bytes)
-  /// @return Number of valid bytes (0-4)
-  [[nodiscard]] constexpr std::size_t count() const noexcept { return length; }
+  /// @brief Swap with another string
+  void swap(String& other) noexcept { buffer_.swap(other.buffer_); }
 
-  /// @brief Get the size in bytes
-  /// @return Size in bytes (same as count() for UTF-8)
-  [[nodiscard]] constexpr std::size_t size() const noexcept { return length; }
-
-  /// @brief Compare with a Unicode scalar value
-  /// @param scalar The scalar value to compare with
-  /// @return true if this code point represents the given scalar
-  constexpr bool operator==(uint32_t scalar) const noexcept {
-    return to_scalar_unchecked() == scalar;
+  /// @brief Equality comparison
+  [[nodiscard]] constexpr bool operator==(const String& other) const noexcept {
+    return view() == other.view();
   }
 
-  /// @brief Three-way comparison operator
-  constexpr auto operator<=>(const CodePoint&) const noexcept = default;
-
-  /// @brief Swap two code points
-  friend constexpr void swap(CodePoint& a, CodePoint& b) noexcept {
-    std::swap(a.length, b.length);
-    std::swap(a.rune, b.rune);
+  /// @brief Equality comparison with view
+  [[nodiscard]] constexpr bool operator==(view_type other) const noexcept {
+    return view() == other;
   }
-};
 
-// ============================================================================
-// UTF-16 CodePoint Specialization
-// ============================================================================
+  /// @brief Three-way comparison
+  [[nodiscard]] constexpr std::strong_ordering operator<=>(const String& other) const noexcept {
+    return view() <=> other.view();
+  }
 
-/// @brief UTF-16 code point representation
-/// @tparam E Endianness (must be BE or LE, not None)
-/// @details Stores a single Unicode code point encoded as UTF-16 (1-2 units).
-/// Handles both BMP characters (single unit) and supplementary characters (surrogate pairs).
-///
-/// @note Construction may create invalid code points. Always check is_valid()
-/// after construction, or use from_scalar() factory function for safe construction.
-template <Endian E>
-  requires(MultiByteOriented<Utf16> && E != Endian::None)
-struct CodePoint<Utf16, E> {
-  using encoding_type = Utf16;
-  static constexpr Endian endianness = E;
+  /// @brief Converting assignment from different encoding
+  /// @tparam SrcUtfType Source UTF encoding type
+  /// @tparam SrcEndian Source endianness
+  /// @param other String in different encoding to convert from
+  /// @return Reference to this string
+  /// @throws std::invalid_argument if source contains invalid code points
+  /// @note May invalidate iterators
+  template <typename SrcUtfType, Endian SrcEndian>
+    requires ValidEndianness<SrcUtfType, SrcEndian> &&
+             (!std::same_as<SrcUtfType, UtfType> || SrcEndian != E)
+  String& operator=(const String<SrcUtfType, SrcEndian>& other) {
+    assign_from(other);
+    return *this;
+  }
 
-  uint8_t length{0};               ///< Number of valid units (0-2, 0 indicates invalid)
-  std::array<uint16_t, 2> rune{};  ///< UTF-16 encoded units (stored in target endianness)
+  /// @brief Non-throwing conversion assignment from different encoding
+  /// @tparam SrcUtfType Source UTF encoding type
+  /// @tparam SrcEndian Source endianness
+  /// @param other String in different encoding to convert from
+  /// @return true if conversion succeeded, false if source contains invalid code points
+  /// @note May invalidate iterators on success
+  template <typename SrcUtfType, Endian SrcEndian>
+    requires ValidEndianness<SrcUtfType, SrcEndian>
+  [[nodiscard]] bool try_assign_from(const String<SrcUtfType, SrcEndian>& other) noexcept {
+    try {
+      buffer_.clear();
+      buffer_.reserve(other.length());
 
-  /// @brief Default constructor creates an invalid code point
-  constexpr CodePoint() noexcept = default;
-
-  /// @brief Construct from a Unicode scalar value
-  /// @param unicode_scalar The Unicode code point to encode (U+0000 to U+10FFFF)
-  /// @note May create invalid CodePoint if scalar is out of range or a surrogate.
-  ///       Always check is_valid() after construction.
-  constexpr explicit CodePoint(uint32_t unicode_scalar) noexcept {
-    using namespace limits;
-
-    if (unicode_scalar <= bmp_max) {
-      // Single unit (BMP)
-      if (unicode_scalar >= surrogate_min && unicode_scalar <= surrogate_max) {
-        length = 0;  // Invalid surrogate range
-        return;
+      for (auto cp : other) {
+        auto converted = convert<value_type>(cp);
+        if (!converted) {
+          return false;
+        }
+        append(*converted);
       }
-      rune[0] = to_target_endian(static_cast<uint16_t>(unicode_scalar));
-      length = 1;
-    } else if (unicode_scalar <= max_code_point) {
-      // Surrogate pair
-      unicode_scalar -= surrogate_offset;
-      uint16_t high = static_cast<uint16_t>(high_surrogate_min + (unicode_scalar >> 10));
-      uint16_t low = static_cast<uint16_t>(low_surrogate_min + (unicode_scalar & 0x3FF));
-      rune[0] = to_target_endian(high);
-      rune[1] = to_target_endian(low);
-      length = 2;
-    } else {
-      length = 0;  // Invalid
+      return true;
+    } catch (...) {
+      return false;
     }
-  }
-
-  /// @brief Factory function for safe construction
-  /// @param scalar The Unicode code point to encode
-  /// @return CodePoint if valid, std::nullopt if invalid
-  [[nodiscard]] static constexpr std::optional<CodePoint> from_scalar(uint32_t scalar) noexcept {
-    CodePoint cp{scalar};
-    return cp.is_valid() ? std::optional{cp} : std::nullopt;
-  }
-
-  /// @brief Get a span view of the valid UTF-16 units
-  /// @return Span covering only the valid units (length 1-2)
-  [[nodiscard]] constexpr std::span<const uint16_t> units() const noexcept {
-    return std::span{rune.data(), length};
-  }
-
-  /// @brief Get direct pointer to the UTF-16 data
-  /// @return Pointer to the first unit of the encoded sequence
-  /// @note For performance-critical code. Use count() to determine valid length.
-  [[nodiscard]] constexpr const uint16_t* data() const noexcept { return rune.data(); }
-
-  /// @brief Decode to Unicode scalar value
-  /// @return The Unicode scalar value if valid, std::nullopt if invalid
-  [[nodiscard]] constexpr std::optional<uint32_t> to_scalar() const noexcept {
-    using namespace limits;
-
-    if (length == 0) return std::nullopt;
-
-    uint16_t first = from_target_endian(rune[0]);
-
-    if (length == 1) {
-      return first;
-    } else if (length == 2) {
-      uint16_t second = from_target_endian(rune[1]);
-      uint32_t high = (first - high_surrogate_min) << 10;
-      uint32_t low = second - low_surrogate_min;
-      return high + low + surrogate_offset;
-    }
-
-    return std::nullopt;
-  }
-
-  /// @brief Decode to Unicode scalar value without validation
-  /// @return The Unicode scalar value, or invalid_scalar if invalid
-  /// @warning Precondition: is_valid() must be true. Undefined behavior otherwise.
-  /// @note For performance-critical code when validity is already guaranteed.
-  [[nodiscard]] constexpr uint32_t to_scalar_unchecked() const noexcept {
-    auto result = to_scalar();
-    return result.value_or(limits::invalid_scalar);
-  }
-
-  /// @brief Check if this represents a valid UTF-16 encoded code point
-  /// @return true if valid, false otherwise
-  /// @details Validates:
-  ///   - Length is in valid range (1-2)
-  ///   - Single units are not surrogates
-  ///   - Surrogate pairs have valid high and low surrogates
-  [[nodiscard]] constexpr bool is_valid() const noexcept {
-    using namespace limits;
-
-    if (length == 0 || length > 2) return false;
-
-    uint16_t first = from_target_endian(rune[0]);
-
-    if (length == 1) {
-      // Single unit - must not be a surrogate
-      return !(first >= surrogate_min && first <= surrogate_max);
-    } else {  // length == 2
-      uint16_t second = from_target_endian(rune[1]);
-      // First must be high surrogate, second must be low surrogate
-      return (first >= high_surrogate_min && first <= high_surrogate_max) &&
-             (second >= low_surrogate_min && second <= low_surrogate_max);
-    }
-  }
-
-  /// @brief Get the number of UTF-16 code units
-  /// @return Number of valid units (0-2)
-  [[nodiscard]] constexpr std::size_t count() const noexcept { return length; }
-
-  /// @brief Get the size in bytes
-  /// @return Size in bytes (count * 2)
-  [[nodiscard]] constexpr std::size_t size() const noexcept { return length * sizeof(uint16_t); }
-
-  /// @brief Compare with a Unicode scalar value
-  /// @param scalar The scalar value to compare with
-  /// @return true if this code point represents the given scalar
-  constexpr bool operator==(uint32_t scalar) const noexcept {
-    return to_scalar_unchecked() == scalar;
-  }
-
-  /// @brief Three-way comparison operator
-  constexpr auto operator<=>(const CodePoint&) const noexcept = default;
-
-  /// @brief Swap two code points
-  friend constexpr void swap(CodePoint& a, CodePoint& b) noexcept {
-    std::swap(a.length, b.length);
-    std::swap(a.rune, b.rune);
   }
 
  private:
-  /// @brief Convert value to target endianness
-  [[nodiscard]] static constexpr uint16_t to_target_endian(uint16_t v) noexcept {
-    if constexpr ((E == Endian::LE && std::endian::native == std::endian::big) ||
-                  (E == Endian::BE && std::endian::native == std::endian::little)) {
-      return std::byteswap(v);
-    } else {
-      return v;
-    }
-  }
+  SmallStringBuffer<storage_type> buffer_;
 
-  /// @brief Convert value from target endianness to native
-  [[nodiscard]] static constexpr uint16_t from_target_endian(uint16_t v) noexcept {
-    return to_target_endian(v);  // Swap is symmetric
+  /// @brief Helper method for conversion (used by constructor and assignment)
+  /// @note Optimized to avoid intermediate string allocation
+  template <typename SrcUtfType, Endian SrcEndian>
+  void assign_from(const String<SrcUtfType, SrcEndian>& other) {
+    buffer_.clear();
+    buffer_.reserve(other.length());
+
+    for (auto cp : other) {
+      auto converted = convert<value_type>(cp);
+      if (!converted) {
+        throw std::invalid_argument("Invalid UTF code point in source string");
+      }
+      append(*converted);
+    }
   }
 };
 
 // ============================================================================
-// UTF-32 CodePoint Specialization
+// String Concatenation Operators
 // ============================================================================
 
-/// @brief UTF-32 code point representation
-/// @tparam E Endianness (must be BE or LE, not None)
-/// @details Stores a single Unicode code point as a single UTF-32 unit.
-/// This is the simplest encoding where one unit always equals one code point.
-///
-/// @note Construction may create invalid code points. Always check is_valid()
-/// after construction, or use from_scalar() factory function for safe construction.
-template <Endian E>
-  requires(MultiByteOriented<Utf32> && E != Endian::None)
-struct CodePoint<Utf32, E> {
-  using encoding_type = Utf32;
-  static constexpr Endian endianness = E;
+/// @brief Concatenate two strings of the same encoding
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+[[nodiscard]] String<UtfType, E> operator+(const String<UtfType, E>& lhs,
+                                           const String<UtfType, E>& rhs) {
+  String<UtfType, E> result;
+  result.reserve(lhs.length() + rhs.length());
+  result.append(lhs.view());
+  result.append(rhs.view());
+  return result;
+}
 
-  uint32_t rune{};  ///< The UTF-32 encoded unit (stored in target endianness)
+/// @brief Concatenate string with string view
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+[[nodiscard]] String<UtfType, E> operator+(const String<UtfType, E>& lhs,
+                                           StringView<UtfType, E> rhs) {
+  String<UtfType, E> result;
+  result.reserve(lhs.length() + rhs.length());
+  result.append(lhs.view());
+  result.append(rhs);
+  return result;
+}
 
-  /// @brief Default constructor creates a zero-valued code point
-  constexpr CodePoint() noexcept = default;
+/// @brief Concatenate string view with string
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+[[nodiscard]] String<UtfType, E> operator+(StringView<UtfType, E> lhs,
+                                           const String<UtfType, E>& rhs) {
+  String<UtfType, E> result;
+  result.reserve(lhs.length() + rhs.length());
+  result.append(lhs);
+  result.append(rhs.view());
+  return result;
+}
 
-  /// @brief Construct from a Unicode scalar value
-  /// @param unicode_scalar The Unicode code point to encode (U+0000 to U+10FFFF)
-  /// @note May create invalid CodePoint if scalar is out of range or a surrogate.
-  ///       Always check is_valid() after construction.
-  constexpr explicit CodePoint(uint32_t unicode_scalar) noexcept
-      : rune(to_target_endian(unicode_scalar)) {}
+/// @brief Concatenate string with code point
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+[[nodiscard]] String<UtfType, E> operator+(const String<UtfType, E>& lhs,
+                                           const CodePoint<UtfType, E>& rhs) {
+  String<UtfType, E> result{lhs};
+  result.append(rhs);
+  return result;
+}
 
-  /// @brief Factory function for safe construction
-  /// @param scalar The Unicode code point to encode
-  /// @return CodePoint if valid, std::nullopt if invalid
-  [[nodiscard]] static constexpr std::optional<CodePoint> from_scalar(uint32_t scalar) noexcept {
-    CodePoint cp{scalar};
-    return cp.is_valid() ? std::optional{cp} : std::nullopt;
-  }
-
-  /// @brief Get a span view of the single UTF-32 unit
-  /// @return Span covering the single unit
-  [[nodiscard]] constexpr std::span<const uint32_t> units() const noexcept {
-    return std::span{&rune, 1};
-  }
-
-  /// @brief Get direct pointer to the UTF-32 data
-  /// @return Pointer to the encoded unit
-  [[nodiscard]] constexpr const uint32_t* data() const noexcept { return &rune; }
-
-  /// @brief Decode to Unicode scalar value
-  /// @return The Unicode scalar value if valid, std::nullopt if invalid
-  [[nodiscard]] constexpr std::optional<uint32_t> to_scalar() const noexcept {
-    uint32_t scalar = from_target_endian(rune);
-    return is_valid() ? std::optional{scalar} : std::nullopt;
-  }
-
-  /// @brief Decode to Unicode scalar value without validation
-  /// @return The Unicode scalar value
-  /// @warning Precondition: is_valid() must be true. Undefined behavior otherwise.
-  /// @note For performance-critical code when validity is already guaranteed.
-  [[nodiscard]] constexpr uint32_t to_scalar_unchecked() const noexcept {
-    return from_target_endian(rune);
-  }
-
-  /// @brief Check if this represents a valid Unicode code point
-  /// @return true if valid, false otherwise
-  /// @details Validates:
-  ///   - Value is in valid Unicode range (0 to 0x10FFFF)
-  ///   - Value is not a surrogate (0xD800-0xDFFF)
-  [[nodiscard]] constexpr bool is_valid() const noexcept {
-    using namespace limits;
-    uint32_t scalar = from_target_endian(rune);
-    return scalar <= max_code_point && !(scalar >= surrogate_min && scalar <= surrogate_max);
-  }
-
-  /// @brief Get the number of UTF-32 code units (always 1)
-  /// @return 1
-  [[nodiscard]] constexpr std::size_t count() const noexcept { return 1; }
-
-  /// @brief Get the size in bytes (always 4)
-  /// @return 4
-  [[nodiscard]] constexpr std::size_t size() const noexcept { return sizeof(uint32_t); }
-
-  /// @brief Compare with a Unicode scalar value
-  /// @param scalar The scalar value to compare with
-  /// @return true if this code point represents the given scalar
-  constexpr bool operator==(uint32_t scalar) const noexcept {
-    return to_scalar_unchecked() == scalar;
-  }
-
-  /// @brief Three-way comparison (compare native values)
-  constexpr bool operator==(const CodePoint& other) const noexcept {
-    return to_scalar_unchecked() == other.to_scalar_unchecked();
-  }
-
-  /// @brief Three-way comparison operator
-  constexpr auto operator<=>(const CodePoint& other) const noexcept {
-    return to_scalar_unchecked() <=> other.to_scalar_unchecked();
-  }
-
-  /// @brief Swap two code points
-  friend constexpr void swap(CodePoint& a, CodePoint& b) noexcept { std::swap(a.rune, b.rune); }
-
- private:
-  /// @brief Convert value to target endianness
-  [[nodiscard]] static constexpr uint32_t to_target_endian(uint32_t v) noexcept {
-    if constexpr ((E == Endian::LE && std::endian::native == std::endian::big) ||
-                  (E == Endian::BE && std::endian::native == std::endian::little)) {
-      return std::byteswap(v);
-    } else {
-      return v;
-    }
-  }
-
-  /// @brief Convert value from target endianness to native
-  [[nodiscard]] static constexpr uint32_t from_target_endian(uint32_t v) noexcept {
-    return to_target_endian(v);  // Swap is symmetric
-  }
-};
+/// @brief Concatenate code point with string
+template <typename UtfType, Endian E>
+  requires ValidEndianness<UtfType, E>
+[[nodiscard]] String<UtfType, E> operator+(const CodePoint<UtfType, E>& lhs,
+                                           const String<UtfType, E>& rhs) {
+  String<UtfType, E> result;
+  result.reserve(rhs.length() + 4);  // Rough estimate
+  result.append(lhs);
+  result.append(rhs.view());
+  return result;
+}
 
 // ============================================================================
 // Type Aliases
 // ============================================================================
 
-/// UTF-8 code point (endianness not applicable)
-using Utf8CodePoint = CodePoint<Utf8, Endian::None>;
+// String Views
+using Utf8StringView = StringView<Utf8, Endian::None>;
+using Utf16BEStringView = StringView<Utf16, Endian::BE>;
+using Utf16LEStringView = StringView<Utf16, Endian::LE>;
+using Utf32BEStringView = StringView<Utf32, Endian::BE>;
+using Utf32LEStringView = StringView<Utf32, Endian::LE>;
 
-/// UTF-16 code point in big-endian byte order
-using Utf16BECodePoint = CodePoint<Utf16, Endian::BE>;
-
-/// UTF-16 code point in little-endian byte order
-using Utf16LECodePoint = CodePoint<Utf16, Endian::LE>;
-
-/// UTF-32 code point in big-endian byte order
-using Utf32BECodePoint = CodePoint<Utf32, Endian::BE>;
-
-/// UTF-32 code point in little-endian byte order
-using Utf32LECodePoint = CodePoint<Utf32, Endian::LE>;
+// Owning Strings (with SSO)
+using Utf8String = String<Utf8, Endian::None>;
+using Utf16BEString = String<Utf16, Endian::BE>;
+using Utf16LEString = String<Utf16, Endian::LE>;
+using Utf32BEString = String<Utf32, Endian::BE>;
+using Utf32LEString = String<Utf32, Endian::LE>;
 
 // ============================================================================
-// Conversion Functions
+// String Conversion Functions
 // ============================================================================
 
-/// @brief Convert between different UTF encodings and endiannesses
-/// @tparam DestCodePoint The destination CodePoint type
-/// @tparam SrcCodePoint The source CodePoint type (deduced)
-/// @param from The source code point to convert
-/// @return The converted code point, or std::nullopt if source is invalid
-///
-/// @details This function safely converts between any valid CodePoint types.
-/// If the source code point is invalid, std::nullopt is returned.
-///
-/// Example:
-/// @code
-/// utf::Utf8CodePoint u8{0x1F4A9};
-/// auto u16 = utf::convert<utf::Utf16BECodePoint>(u8);
-/// if (u16) {
-///     // Use *u16
-/// }
-/// @endcode
-template <typename DestCodePoint, typename SrcCodePoint>
-  requires IsCodePoint<DestCodePoint> && IsCodePoint<SrcCodePoint>
-[[nodiscard]] constexpr std::optional<DestCodePoint> convert(const SrcCodePoint& from) noexcept {
-  auto scalar = from.to_scalar();
-  if (!scalar) return std::nullopt;
-  return DestCodePoint::from_scalar(*scalar);
+/// @brief Convert a UTF string to a different encoding
+/// @tparam DestString The destination string type
+/// @tparam SrcUtfType The source UTF encoding type
+/// @tparam SrcEndian The source endianness
+/// @param source The source string view
+/// @return The converted string, or std::nullopt if any code point is invalid
+template <typename DestString, typename SrcUtfType, Endian SrcEndian>
+  requires ValidEndianness<SrcUtfType, SrcEndian>
+[[nodiscard]] std::optional<DestString> convert_string(StringView<SrcUtfType, SrcEndian> source) {
+  DestString result;
+  result.reserve(source.length());  // Rough estimate
+
+  for (auto cp : source) {
+    auto converted = convert<typename DestString::value_type>(cp);
+    if (!converted) {
+      return std::nullopt;  // Invalid code point encountered
+    }
+    result.append(*converted);
+  }
+
+  return result;
 }
 
-/// @brief Convert between UTF encodings without validation (fast path)
-/// @tparam DestCodePoint The destination CodePoint type
-/// @tparam SrcCodePoint The source CodePoint type (deduced)
-/// @param from The source code point to convert
-/// @return The converted code point
-///
-/// @warning Precondition: from.is_valid() must be true. Undefined behavior otherwise.
-/// @note Use this for performance-critical code when validity is guaranteed.
-///
-/// Example:
-/// @code
-/// utf::Utf8CodePoint u8{0x41};  // 'A' - known valid
-/// auto u32 = utf::convert_unchecked<utf::Utf32BECodePoint>(u8);
-/// @endcode
-template <typename DestCodePoint, typename SrcCodePoint>
-  requires IsCodePoint<DestCodePoint> && IsCodePoint<SrcCodePoint>
-[[nodiscard]] constexpr DestCodePoint convert_unchecked(const SrcCodePoint& from) noexcept {
-  uint32_t scalar = from.to_scalar_unchecked();
-  return DestCodePoint{scalar};
+/// @brief Convert a UTF string without validation (fast path)
+/// @warning All code points in source must be valid
+template <typename DestString, typename SrcUtfType, Endian SrcEndian>
+  requires ValidEndianness<SrcUtfType, SrcEndian>
+[[nodiscard]] DestString convert_string_unchecked(StringView<SrcUtfType, SrcEndian> source) {
+  DestString result;
+  result.reserve(source.length());
+
+  for (auto cp : source) {
+    auto converted = convert_unchecked<typename DestString::value_type>(cp);
+    result.append(converted);
+  }
+
+  return result;
 }
 
-/// @brief Convert any CodePoint to UTF-8
-/// @param from The source code point
-/// @return UTF-8 encoded code point, or std::nullopt if source is invalid
-template <typename SrcCodePoint>
-  requires IsCodePoint<SrcCodePoint>
-[[nodiscard]] constexpr std::optional<Utf8CodePoint> to_utf8(const SrcCodePoint& from) noexcept {
-  return convert<Utf8CodePoint>(from);
+// ============================================================================
+// Convenience Conversion Functions
+// ============================================================================
+
+/// @brief Convert any UTF string to UTF-8
+template <typename SrcUtfType, Endian SrcEndian>
+[[nodiscard]] std::optional<Utf8String> to_utf8_string(StringView<SrcUtfType, SrcEndian> source) {
+  return convert_string<Utf8String>(source);
 }
 
-/// @brief Convert any CodePoint to UTF-16 Big Endian
-/// @param from The source code point
-/// @return UTF-16 BE encoded code point, or std::nullopt if source is invalid
-template <typename SrcCodePoint>
-  requires IsCodePoint<SrcCodePoint>
-[[nodiscard]] constexpr std::optional<Utf16BECodePoint> to_utf16_be(
-    const SrcCodePoint& from) noexcept {
-  return convert<Utf16BECodePoint>(from);
+/// @brief Convert any UTF string to UTF-16 BE
+template <typename SrcUtfType, Endian SrcEndian>
+[[nodiscard]] std::optional<Utf16BEString> to_utf16_be_string(
+    StringView<SrcUtfType, SrcEndian> source) {
+  return convert_string<Utf16BEString>(source);
 }
 
-/// @brief Convert any CodePoint to UTF-16 Little Endian
-/// @param from The source code point
-/// @return UTF-16 LE encoded code point, or std::nullopt if source is invalid
-template <typename SrcCodePoint>
-  requires IsCodePoint<SrcCodePoint>
-[[nodiscard]] constexpr std::optional<Utf16LECodePoint> to_utf16_le(
-    const SrcCodePoint& from) noexcept {
-  return convert<Utf16LECodePoint>(from);
+/// @brief Convert any UTF string to UTF-16 LE
+template <typename SrcUtfType, Endian SrcEndian>
+[[nodiscard]] std::optional<Utf16LEString> to_utf16_le_string(
+    StringView<SrcUtfType, SrcEndian> source) {
+  return convert_string<Utf16LEString>(source);
 }
 
-/// @brief Convert any CodePoint to UTF-32 Big Endian
-/// @param from The source code point
-/// @return UTF-32 BE encoded code point, or std::nullopt if source is invalid
-template <typename SrcCodePoint>
-  requires IsCodePoint<SrcCodePoint>
-[[nodiscard]] constexpr std::optional<Utf32BECodePoint> to_utf32_be(
-    const SrcCodePoint& from) noexcept {
-  return convert<Utf32BECodePoint>(from);
+/// @brief Convert any UTF string to UTF-32 BE
+template <typename SrcUtfType, Endian SrcEndian>
+[[nodiscard]] std::optional<Utf32BEString> to_utf32_be_string(
+    StringView<SrcUtfType, SrcEndian> source) {
+  return convert_string<Utf32BEString>(source);
 }
 
-/// @brief Convert any CodePoint to UTF-32 Little Endian
-/// @param from The source code point
-/// @return UTF-32 LE encoded code point, or std::nullopt if source is invalid
-template <typename SrcCodePoint>
-  requires IsCodePoint<SrcCodePoint>
-[[nodiscard]] constexpr std::optional<Utf32LECodePoint> to_utf32_le(
-    const SrcCodePoint& from) noexcept {
-  return convert<Utf32LECodePoint>(from);
+/// @brief Convert any UTF string to UTF-32 LE
+template <typename SrcUtfType, Endian SrcEndian>
+[[nodiscard]] std::optional<Utf32LEString> to_utf32_le_string(
+    StringView<SrcUtfType, SrcEndian> source) {
+  return convert_string<Utf32LEString>(source);
 }
 
-}  // namespace utf
+// ============================================================================
+// Convenience Factory Functions for Creating Strings from Bytes
+// ============================================================================
 
-#endif  // UTF_CODEPOINT_HPP
+/// @brief Create UTF-8 string from byte array
+/// @param bytes Pointer to UTF-8 encoded bytes
+/// @param byte_count Number of bytes
+/// @return Optional UTF-8 string, or nullopt if invalid UTF-8 sequences found
+[[nodiscard]] inline std::optional<Utf8String> utf8_string_from_bytes(const uint8_t* bytes,
+                                                                      size_t byte_count) {
+  return Utf8String::from_bytes(bytes, byte_count);
+}
+
+/// @brief Create UTF-8 string from byte vector
+/// @param bytes Vector containing UTF-8 encoded bytes
+/// @return Optional UTF-8 string, or nullopt if invalid UTF-8 sequences found
+[[nodiscard]] inline std::optional<Utf8String> utf8_string_from_bytes(
+    const std::vector<uint8_t>& bytes) {
+  return Utf8String::from_bytes(bytes);
+}
+
+/// @brief Create UTF-16 BE string from byte array
+/// @param bytes Pointer to UTF-16 BE encoded bytes
+/// @param byte_count Number of bytes (must be even)
+/// @return Optional UTF-16 BE string, or nullopt if invalid UTF-16 sequences found
+[[nodiscard]] inline std::optional<Utf16BEString> utf16_be_string_from_bytes(const uint8_t* bytes,
+                                                                             size_t byte_count) {
+  return Utf16BEString::from_bytes(bytes, byte_count);
+}
+
+/// @brief Create UTF-16 BE string from byte vector
+/// @param bytes Vector containing UTF-16 BE encoded bytes
+/// @return Optional UTF-16 BE string, or nullopt if invalid UTF-16 sequences found
+[[nodiscard]] inline std::optional<Utf16BEString> utf16_be_string_from_bytes(
+    const std::vector<uint8_t>& bytes) {
+  return Utf16BEString::from_bytes(bytes);
+}
+
+/// @brief Create UTF-16 LE string from byte array
+/// @param bytes Pointer to UTF-16 LE encoded bytes
+/// @param byte_count Number of bytes (must be even)
+/// @return Optional UTF-16 LE string, or nullopt if invalid UTF-16 sequences found
+[[nodiscard]] inline std::optional<Utf16LEString> utf16_le_string_from_bytes(const uint8_t* bytes,
+                                                                             size_t byte_count) {
+  return Utf16LEString::from_bytes(bytes, byte_count);
+}
+
+/// @brief Create UTF-16 LE string from byte vector
+/// @param bytes Vector containing UTF-16 LE encoded bytes
+/// @return Optional UTF-16 LE string, or nullopt if invalid UTF-16 sequences found
+[[nodiscard]] inline std::optional<Utf16LEString> utf16_le_string_from_bytes(
+    const std::vector<uint8_t>& bytes) {
+  return Utf16LEString::from_bytes(bytes);
+}
+
+/// @brief Create UTF-32 BE string from byte array
+/// @param bytes Pointer to UTF-32 BE encoded bytes
+/// @param byte_count Number of bytes (must be multiple of 4)
+/// @return Optional UTF-32 BE string, or nullopt if invalid UTF-32 sequences found
+[[nodiscard]] inline std::optional<Utf32BEString> utf32_be_string_from_bytes(const uint8_t* bytes,
+                                                                             size_t byte_count) {
+  return Utf32BEString::from_bytes(bytes, byte_count);
+}
+
+/// @brief Create UTF-32 BE string from byte vector
+/// @param bytes Vector containing UTF-32 BE encoded bytes
+/// @return Optional UTF-32 BE string, or nullopt if invalid UTF-32 sequences found
+[[nodiscard]] inline std::optional<Utf32BEString> utf32_be_string_from_bytes(
+    const std::vector<uint8_t>& bytes) {
+  return Utf32BEString::from_bytes(bytes);
+}
+
+/// @brief Create UTF-32 LE string from byte array
+/// @param bytes Pointer to UTF-32 LE encoded bytes
+/// @param byte_count Number of bytes (must be multiple of 4)
+/// @return Optional UTF-32 LE string, or nullopt if invalid UTF-32 sequences found
+[[nodiscard]] inline std::optional<Utf32LEString> utf32_le_string_from_bytes(const uint8_t* bytes,
+                                                                             size_t byte_count) {
+  return Utf32LEString::from_bytes(bytes, byte_count);
+}
+
+/// @brief Create UTF-32 LE string from byte vector
+/// @param bytes Vector containing UTF-32 LE encoded bytes
+/// @return Optional UTF-32 LE string, or nullopt if invalid UTF-32 sequences found
+[[nodiscard]] inline std::optional<Utf32LEString> utf32_le_string_from_bytes(
+    const std::vector<uint8_t>& bytes) {
+  return Utf32LEString::from_bytes(bytes);
+}
+
+}  // namespace utf::string
+
+#endif  // UTF_STRING_HPP
