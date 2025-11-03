@@ -221,11 +221,16 @@ jobs:
             unzip -o api-docs.zip -d temp-api/
             # The artifact contains docs/api/ structure, so extract into docs/
             if [ -d "temp-api/docs/api" ]; then
+              echo "Found docs/api structure in artifact"
               rsync -a temp-api/docs/api/ docs/api/
             elif [ -d "temp-api/api" ]; then
+              echo "Found api/ structure in artifact"
               rsync -a temp-api/api/ docs/api/
             else
               # Fallback: copy everything to api directory
+              echo "⚠️  Unexpected artifact structure - using fallback"
+              echo "Artifact contents:"
+              find temp-api/ -type d | head -10
               rsync -a temp-api/ docs/api/
             fi
             rm -rf temp-api/
