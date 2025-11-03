@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile doxygen_version="1.9.8">
   <compound kind="file">
+    <name>DOCUMENTATION_SYSTEM.md</name>
+    <path>docs/</path>
+    <filename>d2/db2/DOCUMENTATION__SYSTEM_8md.html</filename>
+  </compound>
+  <compound kind="file">
     <name>utf.hpp</name>
     <path>include/</path>
     <filename>da/d1c/utf_8hpp.html</filename>
@@ -1425,6 +1430,11 @@
       <anchor>afcfe11d3b0fe8ccc1cc24a0cb70f8b58</anchor>
       <arglist>(const std::vector&lt; uint8_t &gt; &amp;bytes)</arglist>
     </member>
+  </compound>
+  <compound kind="page">
+    <name>md_docs_2DOCUMENTATION__SYSTEM</name>
+    <title>UTF Strings Documentation System</title>
+    <filename>d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html</filename>
   </compound>
   <compound kind="page">
     <name>index</name>

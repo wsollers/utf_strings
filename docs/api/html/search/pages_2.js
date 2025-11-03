@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['library_0',['UTF Strings - Cross-Platform C++23 Library',['../index.html',1,'']]]
+  ['documentation_20system_0',['UTF Strings Documentation System',['../d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html',1,'']]]
 ];

@@ -1,0 +1,365 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="d2/db2/DOCUMENTATION__SYSTEM_8md" kind="file" language="Markdown">
+    <compoundname>DOCUMENTATION_SYSTEM.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>UTF<sp/>Strings<sp/>Documentation<sp/>System</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>document<sp/>describes<sp/>the<sp/>comprehensive<sp/>documentation<sp/>pipeline<sp/>for<sp/>the<sp/>UTF<sp/>Strings<sp/>library,<sp/>including<sp/>API<sp/>documentation<sp/>generation,<sp/>deployment,<sp/>and<sp/>maintenance.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🏗️<sp/>Architecture</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>documentation<sp/>system<sp/>consists<sp/>of<sp/>several<sp/>integrated<sp/>components:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>1.<sp/>**Doxygen<sp/>Configuration**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**File:**<sp/>`Doxyfile`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Purpose:**<sp/>Generates<sp/>comprehensive<sp/>API<sp/>documentation<sp/>from<sp/>source<sp/>code<sp/>comments</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Features:**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>C++23<sp/>support<sp/>with<sp/>concepts<sp/>and<sp/>requires<sp/>clauses</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>SVG<sp/>diagrams<sp/>with<sp/>Graphviz<sp/>integration</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Interactive<sp/>search<sp/>functionality</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>XML<sp/>output<sp/>for<sp/>integration<sp/>with<sp/>other<sp/>tools</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Modern<sp/>responsive<sp/>styling</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>2.<sp/>**GitHub<sp/>Actions<sp/>Workflow**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**File:**<sp/>`.github/workflows/docs.yml`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Purpose:**<sp/>Automated<sp/>documentation<sp/>building<sp/>and<sp/>deployment</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Triggers:**<sp/>Push<sp/>to<sp/>main/develop,<sp/>pull<sp/>requests,<sp/>releases</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Features:**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Multi-step<sp/>documentation<sp/>generation</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Quality<sp/>metrics<sp/>and<sp/>statistics<sp/>reporting</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>PR<sp/>comments<sp/>with<sp/>build<sp/>status</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Automatic<sp/>deployment<sp/>to<sp/>GitHub<sp/>Pages</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>3.<sp/>**Custom<sp/>Styling**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**File:**<sp/>`docs/assets/css/doxygen-custom.css`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Purpose:**<sp/>Modern,<sp/>GitHub-style<sp/>appearance</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Features:**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Dark<sp/>mode<sp/>support</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Responsive<sp/>design</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Clean<sp/>typography<sp/>and<sp/>spacing</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>-<sp/>Consistent<sp/>branding</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>4.<sp/>**CMake<sp/>Integration**</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Targets:**<sp/>`docs`,<sp/>`clean-docs`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Purpose:**<sp/>Local<sp/>documentation<sp/>generation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Requirements:**<sp/>Doxygen<sp/>and<sp/>Graphviz</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>📚<sp/>Generated<sp/>Documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>system<sp/>generates<sp/>comprehensive<sp/>documentation<sp/>including:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>API<sp/>Reference</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Classes:**<sp/>All<sp/>public<sp/>classes<sp/>with<sp/>detailed<sp/>member<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Namespaces:**<sp/>Complete<sp/>namespace<sp/>hierarchy<sp/>and<sp/>organization<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Functions:**<sp/>All<sp/>public<sp/>functions<sp/>with<sp/>parameters<sp/>and<sp/>return<sp/>values</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Types:**<sp/>Type<sp/>aliases,<sp/>concepts,<sp/>and<sp/>enumerations</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Examples:**<sp/>Code<sp/>examples<sp/>and<sp/>usage<sp/>patterns</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Visual<sp/>Elements</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Class<sp/>Diagrams:**<sp/>Inheritance<sp/>and<sp/>collaboration<sp/>relationships</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Dependency<sp/>Graphs:**<sp/>Include<sp/>and<sp/>dependency<sp/>relationships</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Directory<sp/>Structure:**<sp/>Visual<sp/>project<sp/>organization</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Interactive<sp/>Navigation:**<sp/>Searchable<sp/>tree<sp/>view</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Quality<sp/>Metrics</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Coverage<sp/>Statistics:**<sp/>Documentation<sp/>coverage<sp/>by<sp/>file<sp/>and<sp/>class</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Build<sp/>Quality:**<sp/>Warnings<sp/>and<sp/>errors<sp/>from<sp/>generation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**File<sp/>Statistics:**<sp/>Counts<sp/>of<sp/>classes,<sp/>functions,<sp/>and<sp/>documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🚀<sp/>Usage</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Local<sp/>Documentation<sp/>Generation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Prerequisites</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Ubuntu/Debian</highlight></codeline>
+<codeline><highlight class="normal">sudo<sp/>apt<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>macOS<sp/>with<sp/>Homebrew<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">brew<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Windows<sp/>with<sp/>Chocolatey</highlight></codeline>
+<codeline><highlight class="normal">choco<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Build<sp/>Commands</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Using<sp/>CMake<sp/>targets<sp/>(recommended)</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset=conan-debug<sp/>--target<sp/>docs</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset=conan-debug<sp/>--target<sp/>clean-docs</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Direct<sp/>Doxygen<sp/>invocation</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>Doxyfile</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Clean<sp/>generated<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">rm<sp/>-rf<sp/>docs/api/</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Accessing<sp/>Documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Local<sp/>Access</highlight></codeline>
+<codeline><highlight class="normal">After<sp/>building<sp/>locally:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Main<sp/>Index:**<sp/>`docs/api/html/index.html`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**API<sp/>Reference:**<sp/>`docs/api/html/annotated.html`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Search:**<sp/>Available<sp/>through<sp/>the<sp/>web<sp/>interface</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Online<sp/>Access<sp/>(GitHub<sp/>Pages)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Base<sp/>URL:**<sp/>`https://wsollers.github.io/utf_strings/`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**API<sp/>Docs:**<sp/>`https://wsollers.github.io/utf_strings/api/`</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Performance:**<sp/>`https://wsollers.github.io/utf_strings/performance/`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🔧<sp/>Configuration</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Doxygen<sp/>Settings</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Key<sp/>configuration<sp/>options<sp/>in<sp/>`Doxyfile`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">PROJECT_NAME<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>&quot;UTF<sp/>Strings<sp/>Library&quot;</highlight></codeline>
+<codeline><highlight class="normal">PROJECT_VERSION<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>&quot;v1.3.0&quot;</highlight></codeline>
+<codeline><highlight class="normal">INPUT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>include/<sp/>src/<sp/>README.md<sp/>docs/</highlight></codeline>
+<codeline><highlight class="normal">RECURSIVE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">GENERATE_HTML<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">GENERATE_XML<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">USE_MATHJAX<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">HAVE_DOT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">INTERACTIVE_SVG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>=<sp/>YES</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>GitHub<sp/>Actions<sp/>Configuration</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>workflow<sp/>is<sp/>configured<sp/>for:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Build<sp/>Matrix:**<sp/>Ubuntu<sp/>latest<sp/>with<sp/>Doxygen<sp/>1.9.8+</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Deployment:**<sp/>GitHub<sp/>Pages<sp/>with<sp/>proper<sp/>permissions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Artifacts:**<sp/>30-day<sp/>retention<sp/>for<sp/>documentation<sp/>builds</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Comments:**<sp/>Automatic<sp/>PR<sp/>status<sp/>updates</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Custom<sp/>CSS<sp/>Variables</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>styling<sp/>system<sp/>uses<sp/>CSS<sp/>custom<sp/>properties:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```css</highlight></codeline>
+<codeline><highlight class="normal">:root<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--primary-color:<sp/>#0366d6;<sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Links<sp/>and<sp/>accents<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--background-color:<sp/>#ffffff;<sp/><sp/><sp/><sp/>/*<sp/>Main<sp/>background<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--surface-color:<sp/>#f6f8fa;<sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Cards<sp/>and<sp/>surfaces<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--text-color:<sp/>#24292e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Primary<sp/>text<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>--code-background:<sp/>#f6f8fa;<sp/><sp/><sp/><sp/>/*<sp/>Code<sp/>blocks<sp/>*/</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>📊<sp/>Quality<sp/>Metrics</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>documentation<sp/>system<sp/>tracks:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Coverage<sp/>Statistics</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Header<sp/>Files:**<sp/>Count<sp/>of<sp/>documented<sp/>header<sp/>files</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Source<sp/>Files:**<sp/>Count<sp/>of<sp/>documented<sp/>implementation<sp/>files<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Classes/Structs:**<sp/>Count<sp/>of<sp/>documented<sp/>classes<sp/>and<sp/>structures</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Functions:**<sp/>Count<sp/>of<sp/>documented<sp/>functions<sp/>and<sp/>methods</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Generated<sp/>Pages:**<sp/>Total<sp/>HTML<sp/>pages<sp/>created</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Build<sp/>Quality</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Doxygen<sp/>Warnings:**<sp/>Parser<sp/>and<sp/>generation<sp/>warnings</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Doxygen<sp/>Errors:**<sp/>Critical<sp/>errors<sp/>preventing<sp/>generation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Missing<sp/>Documentation:**<sp/>Undocumented<sp/>public<sp/>APIs</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Link<sp/>Resolution:**<sp/>Broken<sp/>cross-references</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Performance<sp/>Metrics</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Generation<sp/>Time:**<sp/>Time<sp/>to<sp/>build<sp/>complete<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Output<sp/>Size:**<sp/>Total<sp/>size<sp/>of<sp/>generated<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**File<sp/>Counts:**<sp/>Number<sp/>of<sp/>HTML,<sp/>CSS,<sp/>JS,<sp/>and<sp/>image<sp/>files</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🔍<sp/>Troubleshooting</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Common<sp/>Issues</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>1.<sp/>Doxygen<sp/>Not<sp/>Found</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Error:<sp/>Doxygen<sp/>not<sp/>found</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Install<sp/>Doxygen</highlight></codeline>
+<codeline><highlight class="normal">sudo<sp/>apt<sp/>install<sp/>doxygen<sp/>graphviz</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>2.<sp/>Missing<sp/>Diagrams</highlight></codeline>
+<codeline><highlight class="normal">```bash<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Error:<sp/>Graphs<sp/>not<sp/>generated</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Install<sp/>Graphviz</highlight></codeline>
+<codeline><highlight class="normal">sudo<sp/>apt<sp/>install<sp/>graphviz</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>3.<sp/>Build<sp/>Warnings</highlight></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Warning:<sp/>Undocumented<sp/>members</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Add<sp/>///<sp/>@brief<sp/>comments<sp/>to<sp/>public<sp/>APIs</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>4.<sp/>GitHub<sp/>Pages<sp/>Deployment<sp/>Fails</highlight></codeline>
+<codeline><highlight class="normal">```yaml</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Error:<sp/>Permission<sp/>denied</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Solution:<sp/>Ensure<sp/>workflow<sp/>has<sp/>pages:<sp/>write<sp/>permission</highlight></codeline>
+<codeline><highlight class="normal">permissions:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>contents:<sp/>read</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>pages:<sp/>write</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>id-token:<sp/>write</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Debug<sp/>Commands</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Check<sp/>Doxygen<sp/>version<sp/>and<sp/>features</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>--version</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>-h</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Validate<sp/>Doxyfile<sp/>syntax</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>-s<sp/>-g<sp/>/tmp/test.doxyfile</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Test<sp/>with<sp/>verbose<sp/>output</highlight></codeline>
+<codeline><highlight class="normal">doxygen<sp/>Doxyfile<sp/>2&gt;&amp;1<sp/>|<sp/>tee<sp/>doxygen.log</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Check<sp/>generated<sp/>file<sp/>structure</highlight></codeline>
+<codeline><highlight class="normal">find<sp/>docs/api/html<sp/>-name<sp/>&quot;*.html&quot;<sp/>|<sp/>head<sp/>-10</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🚦<sp/>CI/CD<sp/>Pipeline</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Workflow<sp/>Stages</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>**Setup<sp/>Phase**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Install<sp/>Doxygen<sp/>and<sp/>Graphviz</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Validate<sp/>project<sp/>structure</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Count<sp/>documentable<sp/>items</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">2.<sp/>**Generation<sp/>Phase**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Run<sp/>Doxygen<sp/>with<sp/>full<sp/>configuration</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Generate<sp/>HTML<sp/>and<sp/>XML<sp/>output</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Create<sp/>quality<sp/>metrics</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">3.<sp/>**Analysis<sp/>Phase**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Count<sp/>warnings<sp/>and<sp/>errors</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Generate<sp/>coverage<sp/>statistics</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Create<sp/>quality<sp/>report</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">4.<sp/>**Deployment<sp/>Phase**<sp/>(main<sp/>branch<sp/>only)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Prepare<sp/>for<sp/>GitHub<sp/>Pages</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Upload<sp/>artifacts</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Deploy<sp/>to<sp/>live<sp/>site</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">5.<sp/>**Reporting<sp/>Phase**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Comment<sp/>on<sp/>pull<sp/>requests</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Update<sp/>deployment<sp/>status</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>-<sp/>Archive<sp/>build<sp/>artifacts</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Status<sp/>Badges</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>system<sp/>can<sp/>generate<sp/>status<sp/>badges<sp/>for:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Documentation<sp/>Build:**<sp/>![Docs](https://img.shields.io/badge/docs-passing-green)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Coverage:**<sp/>![Coverage](https://img.shields.io/badge/coverage-85%25-yellow)</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Quality:**<sp/>![Quality](https://img.shields.io/badge/warnings-2-orange)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🔄<sp/>Maintenance</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Regular<sp/>Tasks</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Monthly</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Review<sp/>documentation<sp/>coverage<sp/>metrics</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Update<sp/>Doxygen<sp/>configuration<sp/>for<sp/>new<sp/>features</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Check<sp/>for<sp/>broken<sp/>links<sp/>and<sp/>references</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Update<sp/>styling<sp/>for<sp/>consistency</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Per<sp/>Release</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Update<sp/>version<sp/>numbers<sp/>in<sp/>Doxyfile</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Regenerate<sp/>full<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Verify<sp/>all<sp/>examples<sp/>and<sp/>code<sp/>snippets</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Update<sp/>README<sp/>and<sp/>getting<sp/>started<sp/>guides</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>As<sp/>Needed</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Fix<sp/>Doxygen<sp/>warnings</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Add<sp/>missing<sp/>API<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Update<sp/>custom<sp/>CSS<sp/>for<sp/>new<sp/>components</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>Optimize<sp/>build<sp/>performance</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Version<sp/>Management</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Documentation<sp/>versioning<sp/>follows<sp/>the<sp/>library<sp/>version:</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Major<sp/>Releases:**<sp/>Full<sp/>documentation<sp/>rebuild</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Minor<sp/>Releases:**<sp/>Incremental<sp/>updates</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Patch<sp/>Releases:**<sp/>Bug<sp/>fixes<sp/>and<sp/>corrections</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>📝<sp/>Contributing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Adding<sp/>Documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>**Source<sp/>Comments:**<sp/>Use<sp/>Doxygen-style<sp/>comments</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>```cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@brief<sp/>Brief<sp/>description<sp/>of<sp/>the<sp/>function</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@param<sp/>param_name<sp/>Description<sp/>of<sp/>parameter</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@return<sp/>Description<sp/>of<sp/>return<sp/>value</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@note<sp/>Additional<sp/>notes</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@warning<sp/>Important<sp/>warnings</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">2.<sp/>**File<sp/>Headers:**<sp/>Document<sp/>file<sp/>purpose<sp/>and<sp/>usage</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>```cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>/**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>@file<sp/>filename.hpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>@brief<sp/>Brief<sp/>description<sp/>of<sp/>file<sp/>contents</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>@details<sp/>Detailed<sp/>description<sp/>of<sp/>functionality</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">3.<sp/>**Examples:**<sp/>Include<sp/>usage<sp/>examples</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>```cpp</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@example</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@code{.cpp}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>utf::string::Utf8String<sp/>str{u8&quot;Hello&quot;};</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>for<sp/>(auto<sp/>cp<sp/>:<sp/>str)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/><sp/><sp/><sp/><sp/>//<sp/>Process<sp/>each<sp/>code<sp/>point</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>}</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>///<sp/>@endcode</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Modifying<sp/>Styling</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">1.<sp/>**CSS<sp/>Changes:**<sp/>Edit<sp/>`docs/assets/css/doxygen-custom.css`</highlight></codeline>
+<codeline><highlight class="normal">2.<sp/>**Layout<sp/>Changes:**<sp/>Edit<sp/>`docs/assets/DoxygenLayout.xml`</highlight></codeline>
+<codeline><highlight class="normal">3.<sp/>**Configuration:**<sp/>Edit<sp/>`Doxyfile`<sp/>for<sp/>structural<sp/>changes</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Testing<sp/>Changes</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```bash</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Test<sp/>locally<sp/>before<sp/>committing</highlight></codeline>
+<codeline><highlight class="normal">cmake<sp/>--build<sp/>--preset=conan-debug<sp/>--target<sp/>docs</highlight></codeline>
+<codeline><highlight class="normal">open<sp/>docs/api/html/index.html</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Check<sp/>for<sp/>warnings</highlight></codeline>
+<codeline><highlight class="normal">grep<sp/>-i<sp/>&quot;warning\|error&quot;<sp/>doxygen.log</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>🎯<sp/>Future<sp/>Enhancements</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Planned<sp/>Features</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Interactive<sp/>Examples:**<sp/>Live<sp/>code<sp/>examples<sp/>with<sp/>syntax<sp/>highlighting</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**API<sp/>Diff<sp/>Reports:**<sp/>Compare<sp/>API<sp/>changes<sp/>between<sp/>versions<sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Integration<sp/>Tests:**<sp/>Validate<sp/>documentation<sp/>examples</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Multi-language<sp/>Support:**<sp/>Internationalization<sp/>for<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Advanced<sp/>Search:**<sp/>Full-text<sp/>search<sp/>with<sp/>filters<sp/>and<sp/>facets</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Integration<sp/>Opportunities</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**IDE<sp/>Integration:**<sp/>VSCode<sp/>extension<sp/>for<sp/>documentation<sp/>preview</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Package<sp/>Managers:**<sp/>Integration<sp/>with<sp/>Conan<sp/>and<sp/>vcpkg<sp/>documentation</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Testing<sp/>Frameworks:**<sp/>Link<sp/>test<sp/>cases<sp/>to<sp/>documented<sp/>functionality</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>**Performance<sp/>Monitoring:**<sp/>Link<sp/>benchmarks<sp/>to<sp/>API<sp/>documentation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">---</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">For<sp/>questions<sp/>or<sp/>issues<sp/>with<sp/>the<sp/>documentation<sp/>system,<sp/>please<sp/>[open<sp/>an<sp/>issue](https://github.com/wsollers/utf_strings/issues)<sp/>on<sp/>GitHub.</highlight></codeline>
+    </programlisting>
+    <location file="docs/DOCUMENTATION_SYSTEM.md"/>
+  </compounddef>
+</doxygen>

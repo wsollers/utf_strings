@@ -26,6 +26,69 @@ var NAVTREE =
 [
   [ "UTF Strings Library", "index.html", [
     [ "UTF Strings - Cross-Platform C++23 Library", "index.html", "index" ],
+    [ "UTF Strings Documentation System", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html", [
+      [ "🏗️ Architecture", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md15", [
+        [ "1. <strong>Doxygen Configuration</strong>", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md16", null ],
+        [ "2. <strong>GitHub Actions Workflow</strong>", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md17", null ],
+        [ "3. <strong>Custom Styling</strong>", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md18", null ],
+        [ "4. <strong>CMake Integration</strong>", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md19", null ]
+      ] ],
+      [ "📚 Generated Documentation", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md20", [
+        [ "API Reference", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md21", null ],
+        [ "Visual Elements", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md22", null ],
+        [ "Quality Metrics", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md23", null ]
+      ] ],
+      [ "🚀 Usage", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md24", [
+        [ "Local Documentation Generation", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md25", [
+          [ "Prerequisites", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md26", null ],
+          [ "Build Commands", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md27", null ]
+        ] ],
+        [ "Accessing Documentation", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md28", [
+          [ "Local Access", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md29", null ],
+          [ "Online Access (GitHub Pages)", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md30", null ]
+        ] ]
+      ] ],
+      [ "🔧 Configuration", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md31", [
+        [ "Doxygen Settings", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md32", null ],
+        [ "GitHub Actions Configuration", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md33", null ],
+        [ "Custom CSS Variables", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md34", null ]
+      ] ],
+      [ "📊 Quality Metrics", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md35", [
+        [ "Coverage Statistics", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md36", null ],
+        [ "Build Quality", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md37", null ],
+        [ "Performance Metrics", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md38", null ]
+      ] ],
+      [ "🔍 Troubleshooting", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md39", [
+        [ "Common Issues", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md40", [
+          [ "1. Doxygen Not Found", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md41", null ],
+          [ "2. Missing Diagrams", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md42", null ],
+          [ "3. Build Warnings", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md43", null ],
+          [ "4. GitHub Pages Deployment Fails", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md44", null ]
+        ] ],
+        [ "Debug Commands", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md45", null ]
+      ] ],
+      [ "🚦 CI/CD Pipeline", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md46", [
+        [ "Workflow Stages", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md47", null ],
+        [ "Status Badges", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md48", null ]
+      ] ],
+      [ "🔄 Maintenance", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md49", [
+        [ "Regular Tasks", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md50", [
+          [ "Monthly", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md51", null ],
+          [ "Per Release", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md52", null ],
+          [ "As Needed", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md53", null ]
+        ] ],
+        [ "Version Management", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md54", null ]
+      ] ],
+      [ "📝 Contributing", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md55", [
+        [ "Adding Documentation", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md56", null ],
+        [ "Modifying Styling", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md57", null ],
+        [ "Testing Changes", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md58", null ]
+      ] ],
+      [ "🎯 Future Enhancements", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md59", [
+        [ "Planned Features", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md60", null ],
+        [ "Integration Opportunities", "d2/dc8/md_docs_2DOCUMENTATION__SYSTEM.html#autotoc_md61", null ]
+      ] ]
+    ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -59,7 +122,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d9/d34/utf__codepoints_8hpp.html#a92065af0f64383ab6e668b2f00100b1e"
+"d8/dda/classutf_1_1string_1_1CodePointIterator.html#a6aaca0cc376822350f1cbfc783bb273c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
