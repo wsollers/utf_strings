@@ -8,6 +8,14 @@ on:
   release:
     types: [published]
 
+# Global permissions for the entire workflow
+permissions:
+  contents: read
+  issues: write
+  checks: write
+  pull-requests: write
+  actions: read
+
 env:
   CONAN_USER_HOME: "${{ github.workspace }}/conan-cache"
 
@@ -569,17 +577,17 @@ jobs:
           cd build/Coverage
           # Set up coverage data collection
           export LLVM_PROFILE_FILE="utf_strings_coverage.profraw"
-          
+
           # Run the tests
           ./utf_strings-tests --gtest_output=xml:test_results_coverage.xml
-          
+
           # Verify coverage data was generated
           ls -la *.profraw || echo "No .profraw files found"
 
       - name: Process Coverage Data
         run: |
           cd build/Coverage
-          
+
           # Convert raw profile data to indexed format
           if [ -f "utf_strings_coverage.profraw" ]; then
             echo "Converting coverage data..."
@@ -725,39 +733,46 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const coverage = process.env.COVERAGE_PERCENTAGE;
             const badgeColor = process.env.BADGE_COLOR;
-            
+
             const comment = `## 📊 Code Coverage Report
-            
+
             **Coverage:** ${coverage}%
-            
+
             ![Coverage Badge](https://img.shields.io/badge/coverage-${coverage}%25-${badgeColor})
-            
+
             <details>
             <summary>📋 Coverage Details</summary>
-            
+
             - **Build:** Clang Debug with Coverage Instrumentation
             - **Test Suite:** All unit tests (65 tests across 22 test suites)
             - **Generated:** ${new Date().toISOString()}
-            
+
             📁 **Artifacts Generated:**
             - 📄 Text report: \`coverage_report.txt\`
             - 🌐 HTML report: \`coverage_html/index.html\` 
             - 📊 JSON summary: \`coverage_summary.json\`
             - ✅ Test results: \`test_results_coverage.xml\`
-            
+
             </details>
-            
+
             > 💡 **Tip:** Download the coverage artifacts to view detailed line-by-line coverage reports.`;
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+
+            try {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+              console.log('✅ Coverage comment posted successfully');
+            } catch (error) {
+              console.log('❌ Failed to post coverage comment:', error.message);
+              console.log('This is likely due to insufficient permissions or the PR being from a fork');
+            }
 
   # ============================================================================
   # Linux x64 - Clang with Fuzz Testing
