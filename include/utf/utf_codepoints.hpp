@@ -1,29 +1,3 @@
-
-/*
- * Copyright (c) 2025 William Sollers
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #pragma once
 
 // utf_codepoint.hpp - Modern C++23 UTF Code Point Library
@@ -38,6 +12,7 @@
 // - constexpr and noexcept throughout for zero runtime overhead
 // - Safe construction via factory functions returning std::optional
 // - Full validation including overlong encoding detection
+// - Optimal memory layout: all CodePoint types are exactly 4 bytes
 //
 // Requirements:
 // - C++23 or later
@@ -68,15 +43,12 @@
 #define UTF_CODEPOINT_VERSION_MINOR 0
 #define UTF_CODEPOINT_VERSION_PATCH 2
 
-// Require C++23 (accept both partial and full implementations)
-
 #include <array>
 #include <bit>
 #include <concepts>
 #include <cstdint>
 #include <optional>
 #include <span>
-#include <version>
 
 namespace utf {
 
@@ -113,16 +85,10 @@ constexpr uint16_t low_surrogate_max = 0xDFFF;
 /// Offset used in UTF-16 surrogate pair calculation
 constexpr uint32_t surrogate_offset = 0x10000;
 
-/// Maximum code point representable in 1 UTF-8 byte
+/// UTF-8 boundaries
 constexpr uint32_t utf8_1byte_max = 0x7F;
-
-/// Maximum code point representable in 2 UTF-8 bytes
 constexpr uint32_t utf8_2byte_max = 0x7FF;
-
-/// Maximum code point representable in 3 UTF-8 bytes
 constexpr uint32_t utf8_3byte_max = 0xFFFF;
-
-/// Maximum code point representable in 4 UTF-8 bytes
 constexpr uint32_t utf8_4byte_max = 0x10FFFF;
 
 /// Maximum code point in the Basic Multilingual Plane (BMP)
@@ -262,23 +228,25 @@ concept IsCodePoint = requires {
 // ============================================================================
 
 /// @brief UTF-8 code point representation
-/// @details Stores a single Unicode code point encoded as UTF-8 (1-4 bytes)
+/// @details Stores a single Unicode code point encoded as UTF-8 (1-4 bytes).
+/// Total size: exactly 4 bytes (optimal alignment).
 ///
-/// Memory layout is optimized with length before the data array for better packing.
 /// UTF-8 is byte-oriented so endianness does not apply.
+/// Length is computed on-demand from the leading byte pattern.
 ///
 /// @note Construction may create invalid code points. Always check is_valid()
 /// after construction, or use from_scalar() factory function for safe construction.
+/// Default construction creates U+0000 (null character), which is a valid code point.
 template <Endian E>
   requires(ByteOriented<Utf8> && E == Endian::None)
 struct CodePoint<Utf8, E> {
   using encoding_type = Utf8;
   static constexpr Endian endianness = E;
 
-  uint8_t length{0};              ///< Number of valid bytes (0-4, 0 indicates invalid)
   std::array<uint8_t, 4> rune{};  ///< UTF-8 encoded bytes
 
-  /// @brief Default constructor creates an invalid code point
+  /// @brief Default constructor creates a null character (U+0000)
+  /// @note U+0000 is a valid Unicode code point.
   constexpr CodePoint() noexcept = default;
 
   /// @brief Construct from a Unicode scalar value
@@ -291,32 +259,30 @@ struct CodePoint<Utf8, E> {
     if (unicode_scalar <= utf8_1byte_max) {
       // 1-byte sequence: 0xxxxxxx
       rune[0] = static_cast<uint8_t>(unicode_scalar);
-      length = 1;
     } else if (unicode_scalar <= utf8_2byte_max) {
       // 2-byte sequence: 110xxxxx 10xxxxxx
       rune[0] = static_cast<uint8_t>(0xC0 | (unicode_scalar >> 6));
       rune[1] = static_cast<uint8_t>(0x80 | (unicode_scalar & 0x3F));
-      length = 2;
     } else if (unicode_scalar <= utf8_3byte_max) {
       // 3-byte sequence: 1110xxxx 10xxxxxx 10xxxxxx
       // Check for surrogate range (invalid)
       if (unicode_scalar >= surrogate_min && unicode_scalar <= surrogate_max) {
-        length = 0;  // Invalid
+        // Mark as invalid by setting an invalid pattern
+        rune[0] = 0xFF;  // 0xFF is never a valid UTF-8 lead byte
         return;
       }
       rune[0] = static_cast<uint8_t>(0xE0 | (unicode_scalar >> 12));
       rune[1] = static_cast<uint8_t>(0x80 | ((unicode_scalar >> 6) & 0x3F));
       rune[2] = static_cast<uint8_t>(0x80 | (unicode_scalar & 0x3F));
-      length = 3;
     } else if (unicode_scalar <= utf8_4byte_max) {
       // 4-byte sequence: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
       rune[0] = static_cast<uint8_t>(0xF0 | (unicode_scalar >> 18));
       rune[1] = static_cast<uint8_t>(0x80 | ((unicode_scalar >> 12) & 0x3F));
       rune[2] = static_cast<uint8_t>(0x80 | ((unicode_scalar >> 6) & 0x3F));
       rune[3] = static_cast<uint8_t>(0x80 | (unicode_scalar & 0x3F));
-      length = 4;
     } else {
-      length = 0;  // Invalid Unicode scalar
+      // Invalid Unicode scalar - mark with invalid UTF-8 pattern
+      rune[0] = 0xFF;
     }
   }
 
@@ -328,10 +294,24 @@ struct CodePoint<Utf8, E> {
     return cp.is_valid() ? std::optional{cp} : std::nullopt;
   }
 
+  /// @brief Get the number of UTF-8 code units (bytes)
+  /// @return Number of valid bytes (0-4), 0 indicates invalid
+  [[nodiscard]] constexpr std::size_t count() const noexcept {
+    // Check for explicit invalid marker
+    if (rune[0] == 0xFF) return 0;
+
+    // Check lead byte pattern to determine length
+    if ((rune[0] & 0x80) == 0x00) return 1;  // 0xxxxxxx (1 byte)
+    if ((rune[0] & 0xE0) == 0xC0) return 2;  // 110xxxxx (2 bytes)
+    if ((rune[0] & 0xF0) == 0xE0) return 3;  // 1110xxxx (3 bytes)
+    if ((rune[0] & 0xF8) == 0xF0) return 4;  // 11110xxx (4 bytes)
+    return 0;                                // Invalid lead byte
+  }
+
   /// @brief Get a span view of the valid UTF-8 bytes
   /// @return Span covering only the valid bytes (length 1-4)
   [[nodiscard]] constexpr std::span<const uint8_t> units() const noexcept {
-    return std::span{rune.data(), length};
+    return std::span{rune.data(), count()};
   }
 
   /// @brief Get direct pointer to the UTF-8 data
@@ -344,17 +324,18 @@ struct CodePoint<Utf8, E> {
   [[nodiscard]] constexpr std::optional<uint32_t> to_scalar() const noexcept {
     using namespace limits;
 
-    if (length == 0) return std::nullopt;
+    std::size_t len = count();
+    if (len == 0) return std::nullopt;
 
     uint32_t result;
 
-    if (length == 1) {
+    if (len == 1) {
       result = rune[0];
-    } else if (length == 2) {
+    } else if (len == 2) {
       result = ((rune[0] & 0x1F) << 6) | (rune[1] & 0x3F);
-    } else if (length == 3) {
+    } else if (len == 3) {
       result = ((rune[0] & 0x0F) << 12) | ((rune[1] & 0x3F) << 6) | (rune[2] & 0x3F);
-    } else if (length == 4) {
+    } else if (len == 4) {
       result = ((rune[0] & 0x07) << 18) | ((rune[1] & 0x3F) << 12) | ((rune[2] & 0x3F) << 6) |
                (rune[3] & 0x3F);
     } else {
@@ -383,7 +364,8 @@ struct CodePoint<Utf8, E> {
   [[nodiscard]] constexpr bool is_valid() const noexcept {
     using namespace limits;
 
-    if (length == 0 || length > 4) return false;
+    std::size_t len = count();
+    if (len == 0 || len > 4) return false;
 
     auto scalar_opt = to_scalar();
     if (!scalar_opt) return false;
@@ -393,20 +375,16 @@ struct CodePoint<Utf8, E> {
     if (scalar >= surrogate_min && scalar <= surrogate_max) return false;
 
     // Check for overlong encodings (security issue)
-    if (length == 2 && scalar <= utf8_1byte_max) return false;
-    if (length == 3 && scalar <= utf8_2byte_max) return false;
-    if (length == 4 && scalar <= utf8_3byte_max) return false;
+    if (len == 2 && scalar <= utf8_1byte_max) return false;
+    if (len == 3 && scalar <= utf8_2byte_max) return false;
+    if (len == 4 && scalar <= utf8_3byte_max) return false;
 
     return true;
   }
 
-  /// @brief Get the number of UTF-8 code units (bytes)
-  /// @return Number of valid bytes (0-4)
-  [[nodiscard]] constexpr std::size_t count() const noexcept { return length; }
-
   /// @brief Get the size in bytes
   /// @return Size in bytes (same as count() for UTF-8)
-  [[nodiscard]] constexpr std::size_t size() const noexcept { return length; }
+  [[nodiscard]] constexpr std::size_t size() const noexcept { return count(); }
 
   /// @brief Compare with a Unicode scalar value
   /// @param scalar The scalar value to compare with
@@ -419,10 +397,7 @@ struct CodePoint<Utf8, E> {
   constexpr auto operator<=>(const CodePoint&) const noexcept = default;
 
   /// @brief Swap two code points
-  friend constexpr void swap(CodePoint& a, CodePoint& b) noexcept {
-    std::swap(a.length, b.length);
-    std::swap(a.rune, b.rune);
-  }
+  friend constexpr void swap(CodePoint& a, CodePoint& b) noexcept { std::swap(a.rune, b.rune); }
 };
 
 // ============================================================================
@@ -432,20 +407,23 @@ struct CodePoint<Utf8, E> {
 /// @brief UTF-16 code point representation
 /// @tparam E Endianness (must be BE or LE, not None)
 /// @details Stores a single Unicode code point encoded as UTF-16 (1-2 units).
+/// Total size: exactly 4 bytes (optimal alignment).
 /// Handles both BMP characters (single unit) and supplementary characters (surrogate pairs).
+/// Length is computed on-demand from surrogate detection.
 ///
 /// @note Construction may create invalid code points. Always check is_valid()
 /// after construction, or use from_scalar() factory function for safe construction.
+/// Default construction creates U+0000 (null character), which is a valid code point.
 template <Endian E>
   requires(MultiByteOriented<Utf16> && E != Endian::None)
 struct CodePoint<Utf16, E> {
   using encoding_type = Utf16;
   static constexpr Endian endianness = E;
 
-  uint8_t length{0};               ///< Number of valid units (0-2, 0 indicates invalid)
   std::array<uint16_t, 2> rune{};  ///< UTF-16 encoded units (stored in target endianness)
 
-  /// @brief Default constructor creates an invalid code point
+  /// @brief Default constructor creates a null character (U+0000)
+  /// @note U+0000 is a valid Unicode code point.
   constexpr CodePoint() noexcept = default;
 
   /// @brief Construct from a Unicode scalar value
@@ -458,11 +436,14 @@ struct CodePoint<Utf16, E> {
     if (unicode_scalar <= bmp_max) {
       // Single unit (BMP)
       if (unicode_scalar >= surrogate_min && unicode_scalar <= surrogate_max) {
-        length = 0;  // Invalid surrogate range
+        // Mark as invalid with unambiguous pattern:
+        // High surrogate + high surrogate (never valid together)
+        rune[0] = to_target_endian(high_surrogate_min);
+        rune[1] = to_target_endian(high_surrogate_min);
         return;
       }
       rune[0] = to_target_endian(static_cast<uint16_t>(unicode_scalar));
-      length = 1;
+      rune[1] = 0;  // Second unit unused
     } else if (unicode_scalar <= max_code_point) {
       // Surrogate pair
       unicode_scalar -= surrogate_offset;
@@ -470,9 +451,10 @@ struct CodePoint<Utf16, E> {
       uint16_t low = static_cast<uint16_t>(low_surrogate_min + (unicode_scalar & 0x3FF));
       rune[0] = to_target_endian(high);
       rune[1] = to_target_endian(low);
-      length = 2;
     } else {
-      length = 0;  // Invalid
+      // Invalid - mark with invalid pattern (high surrogate + high surrogate)
+      rune[0] = to_target_endian(high_surrogate_min);
+      rune[1] = to_target_endian(high_surrogate_min);
     }
   }
 
@@ -484,10 +466,35 @@ struct CodePoint<Utf16, E> {
     return cp.is_valid() ? std::optional{cp} : std::nullopt;
   }
 
+  /// @brief Get the number of UTF-16 code units
+  /// @return Number of valid units (0-2), 0 indicates invalid
+  [[nodiscard]] constexpr std::size_t count() const noexcept {
+    uint16_t first = from_target_endian(rune[0]);
+
+    if (first == 0) return 1;  // Null character
+
+    // Check if high surrogate (start of pair)
+    if (is_high_surrogate(first)) {
+      uint16_t second = from_target_endian(rune[1]);
+      if (is_low_surrogate(second)) {
+        return 2;  // Valid surrogate pair
+      }
+      return 0;  // Orphaned high surrogate - invalid
+    }
+
+    // Check if low surrogate (orphaned - invalid)
+    if (is_low_surrogate(first)) {
+      return 0;
+    }
+
+    // Regular BMP character
+    return 1;
+  }
+
   /// @brief Get a span view of the valid UTF-16 units
   /// @return Span covering only the valid units (length 1-2)
   [[nodiscard]] constexpr std::span<const uint16_t> units() const noexcept {
-    return std::span{rune.data(), length};
+    return std::span{rune.data(), count()};
   }
 
   /// @brief Get direct pointer to the UTF-16 data
@@ -500,13 +507,14 @@ struct CodePoint<Utf16, E> {
   [[nodiscard]] constexpr std::optional<uint32_t> to_scalar() const noexcept {
     using namespace limits;
 
-    if (length == 0) return std::nullopt;
+    std::size_t len = count();
+    if (len == 0) return std::nullopt;
 
     uint16_t first = from_target_endian(rune[0]);
 
-    if (length == 1) {
+    if (len == 1) {
       return first;
-    } else if (length == 2) {
+    } else if (len == 2) {
       uint16_t second = from_target_endian(rune[1]);
       uint32_t high = (first - high_surrogate_min) << 10;
       uint32_t low = second - low_surrogate_min;
@@ -534,28 +542,24 @@ struct CodePoint<Utf16, E> {
   [[nodiscard]] constexpr bool is_valid() const noexcept {
     using namespace limits;
 
-    if (length == 0 || length > 2) return false;
+    std::size_t len = count();
+    if (len == 0) return false;
 
     uint16_t first = from_target_endian(rune[0]);
 
-    if (length == 1) {
+    if (len == 1) {
       // Single unit - must not be a surrogate
-      return !(first >= surrogate_min && first <= surrogate_max);
-    } else {  // length == 2
+      return !is_surrogate(first);
+    } else {  // len == 2
       uint16_t second = from_target_endian(rune[1]);
       // First must be high surrogate, second must be low surrogate
-      return (first >= high_surrogate_min && first <= high_surrogate_max) &&
-             (second >= low_surrogate_min && second <= low_surrogate_max);
+      return is_high_surrogate(first) && is_low_surrogate(second);
     }
   }
 
-  /// @brief Get the number of UTF-16 code units
-  /// @return Number of valid units (0-2)
-  [[nodiscard]] constexpr std::size_t count() const noexcept { return length; }
-
   /// @brief Get the size in bytes
   /// @return Size in bytes (count * 2)
-  [[nodiscard]] constexpr std::size_t size() const noexcept { return length * sizeof(uint16_t); }
+  [[nodiscard]] constexpr std::size_t size() const noexcept { return count() * sizeof(uint16_t); }
 
   /// @brief Compare with a Unicode scalar value
   /// @param scalar The scalar value to compare with
@@ -568,12 +572,24 @@ struct CodePoint<Utf16, E> {
   constexpr auto operator<=>(const CodePoint&) const noexcept = default;
 
   /// @brief Swap two code points
-  friend constexpr void swap(CodePoint& a, CodePoint& b) noexcept {
-    std::swap(a.length, b.length);
-    std::swap(a.rune, b.rune);
-  }
+  friend constexpr void swap(CodePoint& a, CodePoint& b) noexcept { std::swap(a.rune, b.rune); }
 
  private:
+  /// @brief Check if a UTF-16 unit is any surrogate (high or low)
+  [[nodiscard]] static constexpr bool is_surrogate(uint16_t u) noexcept {
+    return u >= 0xD800 && u <= 0xDFFF;
+  }
+
+  /// @brief Check if a UTF-16 unit is a high surrogate
+  [[nodiscard]] static constexpr bool is_high_surrogate(uint16_t u) noexcept {
+    return u >= 0xD800 && u <= 0xDBFF;
+  }
+
+  /// @brief Check if a UTF-16 unit is a low surrogate
+  [[nodiscard]] static constexpr bool is_low_surrogate(uint16_t u) noexcept {
+    return u >= 0xDC00 && u <= 0xDFFF;
+  }
+
   /// @brief Convert value to target endianness
   [[nodiscard]] static constexpr uint16_t to_target_endian(uint16_t v) noexcept {
     if constexpr ((E == Endian::LE && std::endian::native == std::endian::big) ||
@@ -597,10 +613,12 @@ struct CodePoint<Utf16, E> {
 /// @brief UTF-32 code point representation
 /// @tparam E Endianness (must be BE or LE, not None)
 /// @details Stores a single Unicode code point as a single UTF-32 unit.
+/// Total size: exactly 4 bytes (optimal alignment).
 /// This is the simplest encoding where one unit always equals one code point.
 ///
 /// @note Construction may create invalid code points. Always check is_valid()
 /// after construction, or use from_scalar() factory function for safe construction.
+/// Default construction creates U+0000 (null character), which is a valid code point.
 template <Endian E>
   requires(MultiByteOriented<Utf32> && E != Endian::None)
 struct CodePoint<Utf32, E> {
@@ -609,7 +627,8 @@ struct CodePoint<Utf32, E> {
 
   uint32_t rune{};  ///< The UTF-32 encoded unit (stored in target endianness)
 
-  /// @brief Default constructor creates a zero-valued code point
+  /// @brief Default constructor creates a null character (U+0000)
+  /// @note U+0000 is a valid Unicode code point.
   constexpr CodePoint() noexcept = default;
 
   /// @brief Construct from a Unicode scalar value

@@ -27,9 +27,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <utf.hpp>
 #include <vector>
-
-#include "utf/utf_codepoints.hpp"
 
 // Fuzz target for UTF-16 Little Endian CodePoint validation and parsing
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
