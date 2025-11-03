@@ -33,99 +33,99 @@
 
 using namespace utf::string;
 
-// Test data representing "Hello 世界! 🌍🚀" in different encodings
+// Test data representing "Hello World! Earth-globeRocket" in different encodings
 namespace test_data {
-// UTF-8 encoding of "Hello 世界! 🌍🚀"
+// UTF-8 encoding of "Hello World! Earth-globeRocket"
 const std::vector<uint8_t> utf8_hello_world = {
     0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20,  // "Hello "
-    0xE4, 0xB8, 0x96, 0xE7, 0x95, 0x8C,  // "世界"
+    0xE4, 0xB8, 0x96, 0xE7, 0x95, 0x8C,  // "World"
     0x21, 0x20,                          // "! "
-    0xF0, 0x9F, 0x8C, 0x8D,              // 🌍
-    0xF0, 0x9F, 0x9A, 0x80               // 🚀
+    0xF0, 0x9F, 0x8C, 0x8D,              // Earth-globe
+    0xF0, 0x9F, 0x9A, 0x80               // Rocket
 };
 
-// UTF-16 BE encoding of "Hello 世界! 🌍🚀" as logical uint16 values
+// UTF-16 BE encoding of "Hello World! Earth-globeRocket" as logical uint16 values
 // These are the actual UTF-16 code units, which will be interpreted with BE endianness by the
 // library
 const std::vector<uint16_t> utf16be_hello_world = {
     0x0048, 0x0065, 0x006C, 0x006C, 0x006F, 0x0020,  // "Hello "
-    0x4E16, 0x754C,                                  // "世界"
+    0x4E16, 0x754C,                                  // "World"
     0x0021, 0x0020,                                  // "! "
-    0xD83C, 0xDF0D,                                  // 🌍 (surrogate pair)
-    0xD83D, 0xDE80                                   // 🚀 (surrogate pair)
+    0xD83C, 0xDF0D,                                  // Earth-globe (surrogate pair)
+    0xD83D, 0xDE80                                   // Rocket (surrogate pair)
 };
 
-// UTF-16 LE encoding of "Hello 世界! 🌍🚀" as logical uint16 values
+// UTF-16 LE encoding of "Hello World! Earth-globeRocket" as logical uint16 values
 // These are the same logical values, endianness handled by the library
 const std::vector<uint16_t> utf16le_hello_world = {
     0x0048, 0x0065, 0x006C, 0x006C, 0x006F, 0x0020,  // "Hello "
-    0x4E16, 0x754C,                                  // "世界"
+    0x4E16, 0x754C,                                  // "World"
     0x0021, 0x0020,                                  // "! "
-    0xD83C, 0xDF0D,                                  // 🌍 (surrogate pair)
-    0xD83D, 0xDE80                                   // 🚀 (surrogate pair)
+    0xD83C, 0xDF0D,                                  // Earth-globe (surrogate pair)
+    0xD83D, 0xDE80                                   // Rocket (surrogate pair)
 };
 
 // Raw byte arrays for factory method testing (actual byte representation)
 const std::vector<uint8_t> utf16be_hello_world_bytes = {
     0x00, 0x48, 0x00, 0x65, 0x00, 0x6C, 0x00, 0x6C, 0x00, 0x6F, 0x00, 0x20,  // "Hello "
-    0x4E, 0x16, 0x75, 0x4C,                                                  // "世界"
+    0x4E, 0x16, 0x75, 0x4C,                                                  // "World"
     0x00, 0x21, 0x00, 0x20,                                                  // "! "
-    0xD8, 0x3C, 0xDF, 0x0D,  // 🌍 (surrogate pair)
-    0xD8, 0x3D, 0xDE, 0x80   // 🚀 (surrogate pair)
+    0xD8, 0x3C, 0xDF, 0x0D,  // Earth globe (surrogate pair)
+    0xD8, 0x3D, 0xDE, 0x80   // Rocket (surrogate pair)
 };
 
 const std::vector<uint8_t> utf16le_hello_world_bytes = {
     0x48, 0x00, 0x65, 0x00, 0x6C, 0x00, 0x6C, 0x00, 0x6F, 0x00, 0x20, 0x00,  // "Hello "
-    0x16, 0x4E, 0x4C, 0x75,                                                  // "世界"
+    0x16, 0x4E, 0x4C, 0x75,                                                  // "World"
     0x21, 0x00, 0x20, 0x00,                                                  // "! "
-    0x3C, 0xD8, 0x0D, 0xDF,  // 🌍 (surrogate pair)
-    0x3D, 0xD8, 0x80, 0xDE   // 🚀 (surrogate pair)
+    0x3C, 0xD8, 0x0D, 0xDF,  // Earth globe (surrogate pair)
+    0x3D, 0xD8, 0x80, 0xDE   // Rocket (surrogate pair)
 };
 
-// UTF-32 BE encoding of "Hello 世界! 🌍🚀" as logical uint32 values
+// UTF-32 BE encoding of "Hello World! Earth-globeRocket" as logical uint32 values
 const std::vector<uint32_t> utf32be_hello_world = {
     0x00000048, 0x00000065, 0x0000006C, 0x0000006C, 0x0000006F, 0x00000020,  // "Hello "
-    0x00004E16, 0x0000754C,                                                  // "世界"
+    0x00004E16, 0x0000754C,                                                  // "World"
     0x00000021, 0x00000020,                                                  // "! "
-    0x0001F30D,                                                              // 🌍
-    0x0001F680                                                               // 🚀
+    0x0001F30D,                                                              // Earth-globe
+    0x0001F680                                                               // Rocket
 };
 
-// UTF-32 LE encoding of "Hello 世界! 🌍🚀" as logical uint32 values
+// UTF-32 LE encoding of "Hello World! Earth-globeRocket" as logical uint32 values
 const std::vector<uint32_t> utf32le_hello_world = {
     0x00000048, 0x00000065, 0x0000006C, 0x0000006C, 0x0000006F, 0x00000020,  // "Hello "
-    0x00004E16, 0x0000754C,                                                  // "世界"
+    0x00004E16, 0x0000754C,                                                  // "World"
     0x00000021, 0x00000020,                                                  // "! "
-    0x0001F30D,                                                              // 🌍
-    0x0001F680                                                               // 🚀
+    0x0001F30D,                                                              // Earth-globe
+    0x0001F680                                                               // Rocket
 };
 
 // Raw byte arrays for factory method testing
 const std::vector<uint8_t> utf32be_hello_world_bytes = {
     0x00, 0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x65, 0x00, 0x00, 0x00, 0x6C,
     0x00, 0x00, 0x00, 0x6C, 0x00, 0x00, 0x00, 0x6F, 0x00, 0x00, 0x00, 0x20,  // "Hello "
-    0x00, 0x00, 0x4E, 0x16, 0x00, 0x00, 0x75, 0x4C,                          // "世界"
+    0x00, 0x00, 0x4E, 0x16, 0x00, 0x00, 0x75, 0x4C,                          // "World"
     0x00, 0x00, 0x00, 0x21, 0x00, 0x00, 0x00, 0x20,                          // "! "
-    0x00, 0x01, 0xF3, 0x0D,                                                  // 🌍
-    0x00, 0x01, 0xF6, 0x80                                                   // 🚀
+    0x00, 0x01, 0xF3, 0x0D,                                                  // Earth-globe
+    0x00, 0x01, 0xF6, 0x80                                                   // Rocket
 };
 
 const std::vector<uint8_t> utf32le_hello_world_bytes = {
     0x48, 0x00, 0x00, 0x00, 0x65, 0x00, 0x00, 0x00, 0x6C, 0x00, 0x00, 0x00,
     0x6C, 0x00, 0x00, 0x00, 0x6F, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,  // "Hello "
-    0x16, 0x4E, 0x00, 0x00, 0x4C, 0x75, 0x00, 0x00,                          // "世界"
+    0x16, 0x4E, 0x00, 0x00, 0x4C, 0x75, 0x00, 0x00,                          // "World"
     0x21, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,                          // "! "
-    0x0D, 0xF3, 0x01, 0x00,                                                  // 🌍
-    0x80, 0xF6, 0x01, 0x00                                                   // 🚀
+    0x0D, 0xF3, 0x01, 0x00,                                                  // Earth-globe
+    0x80, 0xF6, 0x01, 0x00                                                   // Rocket
 };
 
 // Expected Unicode scalars for validation
 const std::vector<uint32_t> expected_scalars = {
     0x48,    0x65,   0x6C, 0x6C, 0x6F, 0x20,  // "Hello "
-    0x4E16,  0x754C,                          // "世界"
+    0x4E16,  0x754C,                          // "World"
     0x21,    0x20,                            // "! "
-    0x1F30D,                                  // 🌍
-    0x1F680                                   // 🚀
+    0x1F30D,                                  // Earth-globe
+    0x1F680                                   // Rocket
 };
 
 // ============================================================================
@@ -262,7 +262,7 @@ TEST_F(UTF8StringViewTest, Substr) {
   EXPECT_TRUE(past_end.empty());
 
   // Test npos
-  auto to_end = view_.substr(6);  // From "世界! 🌍🚀"
+  auto to_end = view_.substr(6);  // From "World! Earth-globeRocket"
   EXPECT_GT(to_end.size(), 0u);
 }
 
@@ -1026,7 +1026,7 @@ TEST(StringEdgeCasesTest, SingleCharacterStrings) {
       0x41,    // ASCII 'A'
       0x00E9,  // Latin é
       0x4E2D,  // CJK 中
-      0x1F680  // Emoji 🚀
+      0x1F680  // Emoji Rocket
   };
 
   for (uint32_t scalar : test_chars) {
