@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="0;url=html/index.html">
@@ -15,13 +16,15 @@
             margin: 0;
             background-color: #f5f5f5;
         }
+
         .redirect-message {
             text-align: center;
             padding: 2rem;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .spinner {
             display: inline-block;
             width: 20px;
@@ -32,31 +35,41 @@
             animation: spin 1s linear infinite;
             margin-right: 10px;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         a {
             color: #007bff;
             text-decoration: none;
         }
+
         a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     <div class="redirect-message">
         <div class="spinner"></div>
         <h2>Redirecting to API Documentation...</h2>
         <p>If you are not automatically redirected, <a href="html/index.html">click here</a>.</p>
     </div>
-    
+
     <script>
         // Fallback redirect in case meta refresh doesn't work
-        setTimeout(function() {
+        setTimeout(function () {
             window.location.href = 'html/index.html';
         }, 100);
     </script>
 </body>
+
 </html>
