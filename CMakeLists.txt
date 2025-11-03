@@ -428,7 +428,7 @@ if(UTF_STRINGS_BUILD_TESTS)
 
   find_package(GTest CONFIG REQUIRED)
 
-  add_executable(utf_strings-tests tests/utf8_tests.cpp tests/utf_strings_tests.cpp)
+  add_executable(utf_strings-tests tests/utf8_tests.cpp tests/utf_strings_tests.cpp tests/utf_streams_tests.cpp)
   target_link_libraries(utf_strings-tests PRIVATE utf_strings_static GTest::gtest GTest::gtest_main)
   target_compile_features(utf_strings-tests PRIVATE cxx_std_23)
   
