@@ -98,6 +98,7 @@
 // Include all UTF library components
 #include "utf/export.hpp"          // Platform-specific export macros
 #include "utf/utf_codepoints.hpp"  // Core UTF codepoint functionality
+#include "utf/utf_streams.hpp"     // UTF streams and BOM support
 #include "utf/utf_strings.hpp"     // UTF string types and operations
 #include "utf/version.hpp"         // Detailed version information
 
