@@ -1,9 +1,9 @@
 name: Deploy GitHub Pages
 
 on:
-  # Trigger on successful CI completion OR performance baseline completion
+  # Trigger on successful CI completion OR performance baseline completion OR documentation
   workflow_run:
-    workflows: ["CI/CD Pipeline", "Performance Baseline Tracking"]
+    workflows: ["CI/CD Pipeline", "Performance Baseline Tracking", "Documentation"]
     branches: [main, master]
     types:
       - completed
@@ -95,6 +95,8 @@ jobs:
               foundDocs = await downloadArtifact(currentRunId, "docs-for-pages", "docs.zip");
             } else if ('${{ github.event.workflow_run.name }}' === 'Performance Baseline Tracking') {
               foundDocs = await downloadArtifact(currentRunId, "performance-docs-for-pages", "perf-docs.zip");
+            } else if ('${{ github.event.workflow_run.name }}' === 'Documentation') {
+              foundDocs = await downloadArtifact(currentRunId, "api-documentation", "api-docs.zip");
             }
 
             // If this is a CI run, also look for recent Performance Baseline artifacts
@@ -143,6 +145,28 @@ jobs:
                 console.log(`📋 Found recent CI run: ${recentCIRun.id}`);
                 await downloadArtifact(recentCIRun.id, "docs-for-pages", "ci-docs.zip");
               }
+            } else if ('${{ github.event.workflow_run.name }}' === 'Documentation') {
+              console.log('📚 Documentation workflow triggered - looking for CI docs...');
+              
+              // Get recent CI workflow runs for base documentation
+              const workflowRuns = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'ci.yml',
+                branch: 'main',
+                status: 'completed',
+                per_page: 5
+              });
+              
+              const recentCIRun = workflowRuns.data.workflow_runs.find(run => 
+                run.conclusion === 'success' &&
+                new Date(run.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000) // Within 24 hours
+              );
+              
+              if (recentCIRun) {
+                console.log(`📋 Found recent CI run: ${recentCIRun.id}`);
+                await downloadArtifact(recentCIRun.id, "docs-for-pages", "ci-docs.zip");
+              }
             }
 
             if (!foundDocs) {
@@ -154,15 +178,15 @@ jobs:
         run: |
           # Remove any existing docs directory to avoid conflicts
           rm -rf docs/
-
+          
           echo "🔧 Extracting documentation artifacts..."
-
+          
           # Create base docs structure from repository
-          mkdir -p docs/performance
-
+          mkdir -p docs/performance docs/api
+          
           # Copy base documentation from repository
           cp -r /tmp/repo-docs/* docs/ 2>/dev/null || echo "No base docs found in repo"
-
+          
           # Extract CI docs first (base documentation)
           if [ -f "docs.zip" ]; then
             echo "📋 Extracting CI documentation..."
@@ -178,7 +202,7 @@ jobs:
             rm -rf temp-docs/
             echo "✅ CI docs extracted"
           fi
-
+          
           # Extract performance docs second (will overlay/merge with CI docs)
           if [ -f "perf-docs.zip" ]; then
             echo "🔥 Extracting performance documentation..."
@@ -190,7 +214,24 @@ jobs:
             rm -rf temp-perf/
             echo "✅ Performance docs extracted and merged"
           fi
-
+          
+          # Extract API documentation third (will overlay/merge with existing docs)
+          if [ -f "api-docs.zip" ]; then
+            echo "📚 Extracting API documentation..."
+            unzip -o api-docs.zip -d temp-api/
+            # The artifact contains docs/api/ structure, so extract into docs/
+            if [ -d "temp-api/docs/api" ]; then
+              rsync -a temp-api/docs/api/ docs/api/
+            elif [ -d "temp-api/api" ]; then
+              rsync -a temp-api/api/ docs/api/
+            else
+              # Fallback: copy everything to api directory
+              rsync -a temp-api/ docs/api/
+            fi
+            rm -rf temp-api/
+            echo "✅ API docs extracted and merged"
+          fi
+          
           # Ensure performance directory exists with minimum required files
           mkdir -p docs/performance
           if [ ! -f "docs/performance/index.html" ]; then
@@ -199,14 +240,18 @@ jobs:
               cp /tmp/repo-docs/performance/index.html docs/performance/
             fi
           fi
-
+          
           echo ""
           echo "📁 Final merged documentation structure:"
           find docs/ -type f | sort
-
+          
           echo ""
           echo "🔍 Performance files check:"
           ls -la docs/performance/ 2>/dev/null || echo "❌ No performance directory found"
+          
+          echo ""
+          echo "🔍 API docs check:"
+          ls -la docs/api/ 2>/dev/null || echo "❌ No API directory found"
 
       - name: Prepare Jekyll site for Pages deployment
         run: |
